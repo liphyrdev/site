@@ -19,7 +19,6 @@
             min-height: 100vh;
         }
 
-        /* Partículas animadas */
         .particles {
             position: fixed;
             width: 100%;
@@ -45,7 +44,6 @@
             50% { transform: translateY(-100px) translateX(50px); }
         }
 
-        /* Header */
         header {
             padding: 20px 50px;
             display: flex;
@@ -70,6 +68,7 @@
             margin-left: 30px;
             transition: all 0.3s;
             font-weight: 500;
+            cursor: pointer;
         }
 
         nav a:hover {
@@ -77,14 +76,12 @@
             text-shadow: 0 0 10px #b794f6;
         }
 
-        /* Container */
         .container {
             max-width: 1200px;
             margin: 50px auto;
             padding: 0 20px;
         }
 
-        /* Seção Hero */
         .hero {
             text-align: center;
             padding: 60px 20px;
@@ -105,7 +102,6 @@
             margin-bottom: 40px;
         }
 
-        /* Cards de Keys */
         .keys-section {
             margin-top: 50px;
         }
@@ -192,7 +188,6 @@
             color: #ff6b6b;
         }
 
-        /* Verificador de Key */
         .verify-section {
             background: rgba(0, 0, 0, 0.3);
             border: 2px solid #b794f6;
@@ -215,7 +210,9 @@
             margin: 20px auto;
         }
 
-        input[type="text"] {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
             flex: 1;
             padding: 15px;
             background: rgba(183, 148, 246, 0.1);
@@ -225,7 +222,7 @@
             font-size: 16px;
         }
 
-        input[type="text"]:focus {
+        input:focus {
             outline: none;
             box-shadow: 0 0 20px rgba(183, 148, 246, 0.4);
         }
@@ -266,7 +263,6 @@
             color: #ff6b6b;
         }
 
-        /* Admin Panel (escondido) */
         .admin-panel {
             display: none;
             background: rgba(0, 0, 0, 0.5);
@@ -334,6 +330,11 @@
             padding: 30px;
             border-radius: 10px;
             margin-top: 20px;
+            display: none;
+        }
+
+        .key-form.active {
+            display: block;
         }
 
         .form-group {
@@ -383,7 +384,6 @@
             font-size: 12px;
         }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 30px;
@@ -392,7 +392,6 @@
             color: #b794f6;
         }
 
-        /* Login Modal */
         .login-modal {
             display: none;
             position: fixed;
@@ -431,22 +430,39 @@
             cursor: pointer;
             color: #b794f6;
         }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <!-- Partículas -->
     <div class="particles" id="particles"></div>
 
-    <!-- Login Modal -->
     <div class="login-modal" id="loginModal">
         <div class="login-box">
             <span class="close-modal" onclick="closeLogin()">×</span>
-            <h2>🔐 Acesso Admin</h2>
+            <h2>🔐 Login Admin</h2>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="adminEmail" placeholder="seu@email.com">
+            </div>
             <div class="form-group">
                 <label>Senha:</label>
-                <input type="password" id="adminPassword" placeholder="Digite a senha">
+                <input type="password" id="adminPassword" placeholder="••••••••">
             </div>
             <button class="btn" onclick="login()" style="width: 100%; margin-top: 20px;">Entrar</button>
+            <div id="loginError" style="color: #ff6b6b; text-align: center; margin-top: 15px; display: none;"></div>
         </div>
     </div>
 
@@ -455,69 +471,36 @@
         <nav>
             <a href="#home">Início</a>
             <a href="#verify">Verificar Key</a>
-            <a href="#" onclick="openAdminLogin()">Admin</a>
+            <a onclick="openAdminLogin()">Admin</a>
         </nav>
     </header>
 
     <div class="container">
-        <!-- Hero Section -->
         <section class="hero" id="home">
             <h1>LIPHYR HUB</h1>
             <p>Sistema de gerenciamento de licenças premium</p>
         </section>
 
-        <!-- Keys Públicas -->
         <section class="keys-section">
             <h2 class="section-title">📋 Keys Ativas</h2>
             <div class="keys-grid" id="publicKeys">
-                <!-- Keys serão carregadas aqui -->
-                <div class="key-card">
-                    <div class="key-info">
-                        <h3>Key #1</h3>
-                        <div class="key-value">XXXX-XXXX-XXXX-XXXX</div>
-                        <div class="key-status">
-                            <span>Status: <span class="status-active">Ativa</span></span>
-                            <span>Expira em: <strong>15 dias</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="key-card">
-                    <div class="key-info">
-                        <h3>Key #2</h3>
-                        <div class="key-value">YYYY-YYYY-YYYY-YYYY</div>
-                        <div class="key-status">
-                            <span>Status: <span class="status-expiring">Expirando</span></span>
-                            <span>Expira em: <strong>3 dias</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="key-card">
-                    <div class="key-info">
-                        <h3>Key #3</h3>
-                        <div class="key-value">ZZZZ-ZZZZ-ZZZZ-ZZZZ</div>
-                        <div class="key-status">
-                            <span>Status: <span class="status-active">Ativa</span></span>
-                            <span>Expira em: <strong>30 dias</strong></span>
-                        </div>
-                    </div>
+                <div style="text-align: center; color: #b794f6; padding: 40px;">
+                    <div class="loading"></div>
+                    <p style="margin-top: 10px;">Carregando keys...</p>
                 </div>
             </div>
         </section>
 
-        <!-- Verificador -->
         <section class="verify-section" id="verify">
             <h2>🔍 Verificar Licença</h2>
             <p>Digite sua key para verificar o status e validade</p>
             <div class="verify-input">
-                <input type="text" id="keyInput" placeholder="Digite sua key aqui...">
+                <input type="text" id="keyInput" placeholder="XXXX-XXXX-XXXX-XXXX">
                 <button class="btn" onclick="verifyKey()">Verificar</button>
             </div>
             <div class="verify-result" id="verifyResult"></div>
         </section>
 
-        <!-- Painel Admin (escondido) -->
         <section class="admin-panel" id="adminPanel">
             <div class="admin-header">
                 <h2>🛠️ Painel Administrativo</h2>
@@ -529,18 +512,17 @@
                     <h3>➕ Gerar Nova Key</h3>
                     <p>Criar nova licença</p>
                 </div>
-                <div class="action-card">
-                    <h3>📊 Estatísticas</h3>
-                    <p>Ver relatórios</p>
+                <div class="action-card" onclick="loadAdminKeys()">
+                    <h3>🔄 Atualizar Lista</h3>
+                    <p>Recarregar keys</p>
                 </div>
-                <div class="action-card">
+                <div class="action-card" onclick="cleanExpiredKeys()">
                     <h3>🗑️ Limpar Expiradas</h3>
                     <p>Remover keys antigas</p>
                 </div>
             </div>
 
-            <!-- Formulário de Nova Key -->
-            <div class="key-form" id="keyForm" style="display: none;">
+            <div class="key-form" id="keyForm">
                 <h3 style="color: #b794f6; margin-bottom: 20px;">Nova Licença</h3>
                 <div class="form-group">
                     <label>Nome do Cliente:</label>
@@ -564,11 +546,12 @@
                 <button class="btn" onclick="generateKey()" style="width: 100%; margin-top: 20px;">Gerar Key</button>
             </div>
 
-            <!-- Lista de Keys Admin -->
             <div class="admin-keys-list">
                 <h3 style="color: #b794f6; margin-bottom: 20px;">Todas as Licenças</h3>
                 <div id="adminKeysList">
-                    <!-- Keys do admin aparecerão aqui -->
+                    <div style="text-align: center; color: #b794f6; padding: 20px;">
+                        <div class="loading"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -578,8 +561,39 @@
         <p>&copy; 2024 LIPHYR HUB - Todos os direitos reservados</p>
     </footer>
 
-    <script>
-        // Criar partículas animadas
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getDatabase, ref, set, get, remove, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRkHyb4gSTcZqCp1RcRuanI-Mu_yj9DVk",
+            authDomain: "site-liphyr.firebaseapp.com",
+            databaseURL: "https://site-liphyr-default-rtdb.firebaseio.com",
+            projectId: "site-liphyr",
+            storageBucket: "site-liphyr.firebasestorage.app",
+            messagingSenderId: "984832602210",
+            appId: "1:984832602210:web:8b4b43e77cd0fc7e4ca13b",
+            measurementId: "G-9S7KE7VP3N"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // Expor funções globalmente
+        window.openAdminLogin = openAdminLogin;
+        window.closeLogin = closeLogin;
+        window.login = login;
+        window.logout = logout;
+        window.toggleKeyForm = toggleKeyForm;
+        window.generateKey = generateKey;
+        window.verifyKey = verifyKey;
+        window.loadAdminKeys = loadAdminKeys;
+        window.deleteKey = deleteKey;
+        window.cleanExpiredKeys = cleanExpiredKeys;
+
+        // Criar partículas
         function createParticles() {
             const container = document.getElementById('particles');
             for (let i = 0; i < 50; i++) {
@@ -593,41 +607,56 @@
         }
         createParticles();
 
-        // Senha do admin (MUDE ISSO!)
-        const ADMIN_PASSWORD = "admin123";
+        // Monitorar estado de autenticação
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('adminPanel').classList.add('active');
+                loadAdminKeys();
+            } else {
+                document.getElementById('adminPanel').classList.remove('active');
+            }
+        });
 
-        // Sistema de login
         function openAdminLogin() {
             document.getElementById('loginModal').classList.add('active');
         }
 
         function closeLogin() {
             document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('loginError').style.display = 'none';
         }
 
-        function login() {
+        async function login() {
+            const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                document.getElementById('adminPanel').classList.add('active');
+            const errorDiv = document.getElementById('loginError');
+
+            if (!email || !password) {
+                errorDiv.textContent = '❌ Preencha todos os campos!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
                 closeLogin();
+                document.getElementById('adminEmail').value = '';
                 document.getElementById('adminPassword').value = '';
-                loadAdminKeys();
-            } else {
-                alert('❌ Senha incorreta!');
+            } catch (error) {
+                errorDiv.textContent = '❌ Email ou senha incorretos!';
+                errorDiv.style.display = 'block';
             }
         }
 
-        function logout() {
-            document.getElementById('adminPanel').classList.remove('active');
+        async function logout() {
+            await signOut(auth);
         }
 
-        // Toggle formulário
         function toggleKeyForm() {
             const form = document.getElementById('keyForm');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            form.classList.toggle('active');
         }
 
-        // Gerar key aleatória
         function generateRandomKey() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let key = '';
@@ -640,40 +669,48 @@
             return key;
         }
 
-        // Gerar nova key
-        function generateKey() {
+        async function generateKey() {
             const clientName = document.getElementById('clientName').value;
             const clientDiscord = document.getElementById('clientDiscord').value;
-            const duration = document.getElementById('keyDuration').value;
+            const duration = parseInt(document.getElementById('keyDuration').value);
 
             if (!clientName || !clientDiscord) {
                 alert('❌ Preencha todos os campos!');
                 return;
             }
 
-            const newKey = {
-                key: generateRandomKey(),
+            const newKeyValue = generateRandomKey();
+            const now = Date.now();
+            const expiresAt = duration === 9999 ? null : now + (duration * 24 * 60 * 60 * 1000);
+
+            const keyData = {
+                key: newKeyValue,
                 client: clientName,
                 discord: clientDiscord,
                 duration: duration,
-                createdAt: new Date().toISOString(),
-                expiresAt: new Date(Date.now() + duration * 24 * 60 * 60 * 1000).toISOString()
+                createdAt: now,
+                expiresAt: expiresAt,
+                active: true
             };
 
-            // Aqui você conectaria com Firebase
-            console.log('Nova key gerada:', newKey);
-            
-            alert(`✅ Key gerada com sucesso!\n\nKey: ${newKey.key}\nCliente: ${clientName}\nValidade: ${duration} dias`);
-            
-            // Limpar formulário
-            document.getElementById('clientName').value = '';
-            document.getElementById('clientDiscord').value = '';
-            toggleKeyForm();
+            try {
+                const keysRef = ref(database, 'keys/' + newKeyValue.replace(/-/g, '_'));
+                await set(keysRef, keyData);
+                
+                alert(`✅ Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${duration === 9999 ? 'Vitalícia' : duration + ' dias'}`);
+                
+                document.getElementById('clientName').value = '';
+                document.getElementById('clientDiscord').value = '';
+                toggleKeyForm();
+                loadPublicKeys();
+                loadAdminKeys();
+            } catch (error) {
+                alert('❌ Erro ao gerar key: ' + error.message);
+            }
         }
 
-        // Verificar key
-        function verifyKey() {
-            const keyInput = document.getElementById('keyInput').value.trim();
+        async function verifyKey() {
+            const keyInput = document.getElementById('keyInput').value.trim().toUpperCase();
             const resultDiv = document.getElementById('verifyResult');
 
             if (!keyInput) {
@@ -681,41 +718,164 @@
                 return;
             }
 
-            // Aqui você verificaria no Firebase
-            // Por enquanto, simulação:
-            resultDiv.style.display = 'block';
-            resultDiv.className = 'verify-result result-success';
-            resultDiv.innerHTML = `
-                <h3>✅ Key Válida!</h3>
-                <p><strong>Status:</strong> Ativa</p>
-                <p><strong>Expira em:</strong> 15 dias</p>
-                <p><strong>Tipo:</strong> Premium 30 dias</p>
-            `;
-        }
+            try {
+                const keyRef = ref(database, 'keys/' + keyInput.replace(/-/g, '_'));
+                const snapshot = await get(keyRef);
 
-        // Carregar keys do admin
-        function loadAdminKeys() {
-            const adminList = document.getElementById('adminKeysList');
-            // Aqui você carregaria do Firebase
-            // Exemplo estático:
-            adminList.innerHTML = `
-                <div class="admin-key-item">
-                    <div>
-                        <strong>ABCD-1234-EFGH-5678</strong><br>
-                        <small>Cliente: João Silva | Expira: 15 dias</small>
-                    </div>
-                    <button class="delete-btn" onclick="deleteKey('ABCD-1234-EFGH-5678')">Deletar</button>
-                </div>
-            `;
-        }
-
-        function deleteKey(key) {
-            if (confirm(`Deletar a key ${key}?`)) {
-                // Aqui você deletaria do Firebase
-                alert('✅ Key deletada!');
-                loadAdminKeys();
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    const now = Date.now();
+                    
+                    if (!data.active) {
+                        resultDiv.className = 'verify-result result-error';
+                        resultDiv.innerHTML = '<h3>❌ Key Inativa!</h3><p>Esta key foi desativada.</p>';
+                    } else if (data.expiresAt && now > data.expiresAt) {
+                        resultDiv.className = 'verify-result result-error';
+                        resultDiv.innerHTML = '<h3>❌ Key Expirada!</h3><p>Esta key não é mais válida.</p>';
+                    } else {
+                        const daysLeft = data.expiresAt ? Math.ceil((data.expiresAt - now) / (1000 * 60 * 60 * 24)) : '∞';
+                        resultDiv.className = 'verify-result result-success';
+                        resultDiv.innerHTML = `
+                            <h3>✅ Key Válida!</h3>
+                            <p><strong>Status:</strong> Ativa</p>
+                            <p><strong>Expira em:</strong> ${daysLeft === '∞' ? 'Vitalícia' : daysLeft + ' dias'}</p>
+                            <p><strong>Cliente:</strong> ${data.client}</p>
+                        `;
+                    }
+                } else {
+                    resultDiv.className = 'verify-result result-error';
+                    resultDiv.innerHTML = '<h3>❌ Key Não Encontrada!</h3><p>Esta key não existe no sistema.</p>';
+                }
+                
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                alert('❌ Erro ao verificar key: ' + error.message);
             }
         }
+
+        function loadPublicKeys() {
+            const keysRef = ref(database, 'keys');
+            onValue(keysRef, (snapshot) => {
+                const container = document.getElementById('publicKeys');
+                container.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p style="text-align: center; color: #b794f6;">Nenhuma key cadastrada ainda.</p>';
+                    return;
+                }
+
+                const keys = [];
+                snapshot.forEach((child) => {
+                    keys.push(child.val());
+                });
+
+                keys.forEach((data) => {
+                    if (!data.active) return;
+
+                    const now = Date.now();
+                    const isExpired = data.expiresAt && now > data.expiresAt;
+                    if (isExpired) return;
+
+                    const daysLeft = data.expiresAt ? Math.ceil((data.expiresAt - now) / (1000 * 60 * 60 * 24)) : '∞';
+                    const statusClass = daysLeft === '∞' ? 'status-active' : daysLeft <= 3 ? 'status-expiring' : 'status-active';
+
+                    const card = document.createElement('div');
+                    card.className = 'key-card';
+                    card.innerHTML = `
+                        <div class="key-info">
+                            <h3>${data.client}</h3>
+                            <div class="key-value">${data.key}</div>
+                            <div class="key-status">
+                                <span>Status: <span class="${statusClass}">Ativa</span></span>
+                                <span>Expira: <strong>${daysLeft === '∞' ? 'Vitalícia' : daysLeft + ' dias'}</strong></span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                if (container.children.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #b794f6;">Nenhuma key ativa no momento.</p>';
+                }
+            });
+        }
+
+        function loadAdminKeys() {
+            const keysRef = ref(database, 'keys');
+            onValue(keysRef, (snapshot) => {
+                const container = document.getElementById('adminKeysList');
+                container.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p style="text-align: center; color: #b794f6;">Nenhuma key cadastrada.</p>';
+                    return;
+                }
+
+                snapshot.forEach((child) => {
+                    const data = child.val();
+                    const now = Date.now();
+                    const daysLeft = data.expiresAt ? Math.ceil((data.expiresAt - now) / (1000 * 60 * 60 * 24)) : '∞';
+                    const statusText = !data.active ? 'Inativa' : (data.expiresAt && now > data.expiresAt) ? 'Expirada' : 'Ativa';
+
+                    const item = document.createElement('div');
+                    item.className = 'admin-key-item';
+                    item.innerHTML = `
+                        <div>
+                            <strong>${data.key}</strong><br>
+                            <small>Cliente: ${data.client} | Discord: ${data.discord} | Status: ${statusText} | Expira: ${daysLeft === '∞' ? 'Vitalícia' : daysLeft + ' dias'}</small>
+                        </div>
+                        <button class="delete-btn" onclick="deleteKey('${data.key}')">Deletar</button>
+                    `;
+                    container.appendChild(item);
+                });
+            });
+        }
+
+        async function deleteKey(key) {
+            if (!confirm(`Deletar a key ${key}?`)) return;
+
+            try {
+                const keyRef = ref(database, 'keys/' + key.replace(/-/g, '_'));
+                await remove(keyRef);
+                alert('✅ Key deletada com sucesso!');
+            } catch (error) {
+                alert('❌ Erro ao deletar key: ' + error.message);
+            }
+        }
+
+        async function cleanExpiredKeys() {
+            if (!confirm('Deseja remover todas as keys expiradas?')) return;
+
+            try {
+                const keysRef = ref(database, 'keys');
+                const snapshot = await get(keysRef);
+                
+                if (!snapshot.exists()) {
+                    alert('Nenhuma key encontrada.');
+                    return;
+                }
+
+                const now = Date.now();
+                let deletedCount = 0;
+
+                const deletePromises = [];
+                snapshot.forEach((child) => {
+                    const data = child.val();
+                    if (data.expiresAt && now > data.expiresAt) {
+                        deletePromises.push(remove(child.ref));
+                        deletedCount++;
+                    }
+                });
+
+                await Promise.all(deletePromises);
+                alert(`✅ ${deletedCount} key(s) expirada(s) removida(s)!`);
+            } catch (error) {
+                alert('❌ Erro ao limpar keys: ' + error.message);
+            }
+        }
+
+        // Carregar keys públicas ao iniciar
+        loadPublicKeys();
     </script>
 </body>
 </html>
