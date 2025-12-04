@@ -392,7 +392,7 @@
             color: #b794f6;
         }
 
-        .login-modal {
+        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -405,11 +405,11 @@
             align-items: center;
         }
 
-        .login-modal.active {
+        .modal.active {
             display: flex;
         }
 
-        .login-box {
+        .modal-box {
             background: linear-gradient(135deg, #1a0033, #4a0080);
             border: 2px solid #b794f6;
             border-radius: 15px;
@@ -418,7 +418,7 @@
             width: 90%;
         }
 
-        .login-box h2 {
+        .modal-box h2 {
             color: #b794f6;
             margin-bottom: 30px;
             text-align: center;
@@ -444,25 +444,138 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #b794f6, #7b2cbf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .tab-switcher {
+            display: flex;
+            margin-bottom: 30px;
+            background: rgba(183, 148, 246, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            color: #b794f6;
+            border: none;
+            font-size: 16px;
+        }
+
+        .tab.active {
+            background: rgba(183, 148, 246, 0.3);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .user-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #b794f6;
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .user-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #7b2cbf, #4a0080);
+        }
     </style>
 </head>
 <body>
     <div class="particles" id="particles"></div>
 
-    <div class="login-modal" id="loginModal">
-        <div class="login-box">
-            <span class="close-modal" onclick="closeLogin()">×</span>
+    <!-- Modal Login/Cadastro -->
+    <div class="modal" id="userModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeUserModal()">×</span>
+            <h2 id="modalTitle">Entrar / Cadastrar</h2>
+            
+            <div class="tab-switcher">
+                <button class="tab active" onclick="switchTab('login')">Login</button>
+                <button class="tab" onclick="switchTab('register')">Cadastro</button>
+            </div>
+            
+            <div class="tab-content active" id="loginTab">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha:</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••">
+                </div>
+                <button class="btn" onclick="userLogin()" style="width: 100%; margin-top: 20px;">Entrar</button>
+                <div id="loginError" style="color: #ff6b6b; text-align: center; margin-top: 15px; display: none;"></div>
+            </div>
+            
+            <div class="tab-content" id="registerTab">
+                <div class="form-group">
+                    <label>Nome:</label>
+                    <input type="text" id="registerName" placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="registerEmail" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha:</label>
+                    <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres">
+                </div>
+                <button class="btn" onclick="userRegister()" style="width: 100%; margin-top: 20px;">Cadastrar</button>
+                <div id="registerError" style="color: #ff6b6b; text-align: center; margin-top: 15px; display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Admin -->
+    <div class="modal" id="adminModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeAdminModal()">×</span>
             <h2>🔐 Login Admin</h2>
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" id="adminEmail" placeholder="seu@email.com">
+                <input type="email" id="adminEmail" placeholder="admin@email.com">
             </div>
             <div class="form-group">
                 <label>Senha:</label>
                 <input type="password" id="adminPassword" placeholder="••••••••">
             </div>
-            <button class="btn" onclick="login()" style="width: 100%; margin-top: 20px;">Entrar</button>
-            <div id="loginError" style="color: #ff6b6b; text-align: center; margin-top: 15px; display: none;"></div>
+            <button class="btn" onclick="adminLogin()" style="width: 100%; margin-top: 20px;">Entrar</button>
+            <div id="adminLoginError" style="color: #ff6b6b; text-align: center; margin-top: 15px; display: none;"></div>
         </div>
     </div>
 
@@ -471,7 +584,13 @@
         <nav>
             <a href="#home">Início</a>
             <a href="#verify">Verificar Key</a>
-            <a onclick="openAdminLogin()">Admin</a>
+            <a onclick="openUserModal()" id="userNav">Minha Conta</a>
+            <a onclick="openAdminModal()">Admin</a>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userName"></span>
+                <button class="logout-btn" onclick="userLogout()" style="margin-left: 10px; padding: 5px 10px;">Sair</button>
+            </div>
         </nav>
     </header>
 
@@ -501,10 +620,18 @@
             <div class="verify-result" id="verifyResult"></div>
         </section>
 
+        <section class="user-section" id="userSection">
+            <h2>👤 Área do Usuário</h2>
+            <p>Faça login ou cadastre-se para gerenciar suas keys</p>
+            <div class="user-buttons">
+                <button class="btn" onclick="openUserModal()">Entrar / Cadastrar</button>
+            </div>
+        </section>
+
         <section class="admin-panel" id="adminPanel">
             <div class="admin-header">
                 <h2>🛠️ Painel Administrativo</h2>
-                <button class="logout-btn" onclick="logout()">Sair</button>
+                <button class="logout-btn" onclick="adminLogout()">Sair</button>
             </div>
 
             <div class="admin-actions">
@@ -558,13 +685,31 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 LIPHYR HUB - Todos os direitos reservados</p>
+        <p>&copy; 2025 LIPHYR HUB - Todos os direitos reservados</p>
     </footer>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getDatabase, ref, set, get, remove, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged,
+            updateProfile 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        import { 
+            getDatabase, 
+            ref, 
+            set, 
+            get, 
+            remove, 
+            onValue, 
+            push,
+            query,
+            orderByChild 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRkHyb4gSTcZqCp1RcRuanI-Mu_yj9DVk",
@@ -581,11 +726,20 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
+        // Lista de emails admin autorizados (você pode adicionar mais)
+        const ADMIN_EMAILS = ['admin@liphyr.com', 'liphyrdev@gmail.com'];
+
         // Expor funções globalmente
-        window.openAdminLogin = openAdminLogin;
-        window.closeLogin = closeLogin;
-        window.login = login;
-        window.logout = logout;
+        window.openUserModal = openUserModal;
+        window.closeUserModal = closeUserModal;
+        window.openAdminModal = openAdminModal;
+        window.closeAdminModal = closeAdminModal;
+        window.switchTab = switchTab;
+        window.userLogin = userLogin;
+        window.userRegister = userRegister;
+        window.userLogout = userLogout;
+        window.adminLogin = adminLogin;
+        window.adminLogout = adminLogout;
         window.toggleKeyForm = toggleKeyForm;
         window.generateKey = generateKey;
         window.verifyKey = verifyKey;
@@ -607,28 +761,110 @@
         }
         createParticles();
 
+        // Verificar se usuário é admin
+        function isAdmin(email) {
+            return ADMIN_EMAILS.includes(email);
+        }
+
+        // Inicializar usuário admin padrão se não existir
+        async function initializeAdminUser() {
+            try {
+                // Verificar se já existe algum admin
+                const adminUser = ADMIN_EMAILS[0];
+                const adminRef = ref(database, 'admins/' + adminUser.replace(/[^a-zA-Z0-9]/g, '_'));
+                const snapshot = await get(adminRef);
+                
+                if (!snapshot.exists()) {
+                    // Criar usuário admin padrão
+                    await set(adminRef, {
+                        email: adminUser,
+                        createdAt: Date.now(),
+                        isSuperAdmin: true
+                    });
+                    console.log('Usuário admin inicial criado');
+                }
+            } catch (error) {
+                console.error('Erro ao inicializar admin:', error);
+            }
+        }
+
         // Monitorar estado de autenticação
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                document.getElementById('adminPanel').classList.add('active');
-                loadAdminKeys();
+                // Verificar se é admin
+                if (isAdmin(user.email)) {
+                    document.getElementById('adminPanel').classList.add('active');
+                    loadAdminKeys();
+                    // Esconder seção de usuário normal
+                    document.getElementById('userSection').style.display = 'none';
+                } else {
+                    // Usuário normal
+                    document.getElementById('adminPanel').classList.remove('active');
+                    document.getElementById('userSection').style.display = 'none';
+                    showUserInfo(user);
+                }
+                document.getElementById('userNav').style.display = 'none';
             } else {
+                // Não está logado
                 document.getElementById('adminPanel').classList.remove('active');
+                document.getElementById('userSection').style.display = 'block';
+                document.getElementById('userInfo').style.display = 'none';
+                document.getElementById('userNav').style.display = 'inline';
             }
         });
 
-        function openAdminLogin() {
-            document.getElementById('loginModal').classList.add('active');
+        function showUserInfo(user) {
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('userName').textContent = user.displayName || user.email;
+            const avatar = document.getElementById('userAvatar');
+            if (user.displayName) {
+                avatar.textContent = user.displayName.charAt(0).toUpperCase();
+            } else if (user.email) {
+                avatar.textContent = user.email.charAt(0).toUpperCase();
+            }
         }
 
-        function closeLogin() {
-            document.getElementById('loginModal').classList.remove('active');
+        // Modal de usuário
+        function openUserModal() {
+            document.getElementById('userModal').classList.add('active');
+            switchTab('login');
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.remove('active');
+            clearUserForm();
+        }
+
+        function switchTab(tabName) {
+            // Atualizar tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            
+            // Limpar erros
             document.getElementById('loginError').style.display = 'none';
+            document.getElementById('registerError').style.display = 'none';
         }
 
-        async function login() {
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
+        function clearUserForm() {
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('registerError').style.display = 'none';
+        }
+
+        async function userLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
             const errorDiv = document.getElementById('loginError');
 
             if (!email || !password) {
@@ -638,20 +874,136 @@
             }
 
             try {
+                // Verificar se é tentativa de login admin
+                if (isAdmin(email)) {
+                    errorDiv.textContent = '❌ Use o painel Admin para login administrativo!';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
                 await signInWithEmailAndPassword(auth, email, password);
-                closeLogin();
-                document.getElementById('adminEmail').value = '';
-                document.getElementById('adminPassword').value = '';
+                closeUserModal();
+            } catch (error) {
+                let message = '❌ Erro ao fazer login!';
+                if (error.code === 'auth/user-not-found') {
+                    message = '❌ Usuário não encontrado!';
+                } else if (error.code === 'auth/wrong-password') {
+                    message = '❌ Senha incorreta!';
+                }
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        async function userRegister() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const errorDiv = document.getElementById('registerError');
+
+            if (!name || !email || !password) {
+                errorDiv.textContent = '❌ Preencha todos os campos!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorDiv.textContent = '❌ A senha deve ter no mínimo 6 caracteres!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Verificar se é tentativa de cadastro admin
+            if (isAdmin(email)) {
+                errorDiv.textContent = '❌ Este email é reservado para administradores!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // Atualizar perfil com nome
+                await updateProfile(userCredential.user, {
+                    displayName: name
+                });
+
+                // Salvar dados adicionais no Realtime Database
+                const userRef = ref(database, 'users/' + userCredential.user.uid);
+                await set(userRef, {
+                    name: name,
+                    email: email,
+                    createdAt: Date.now(),
+                    isAdmin: false
+                });
+
+                closeUserModal();
+            } catch (error) {
+                let message = '❌ Erro ao criar conta!';
+                if (error.code === 'auth/email-already-in-use') {
+                    message = '❌ Este email já está em uso!';
+                } else if (error.code === 'auth/invalid-email') {
+                    message = '❌ Email inválido!';
+                } else if (error.code === 'auth/weak-password') {
+                    message = '❌ Senha muito fraca!';
+                }
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        async function userLogout() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+            }
+        }
+
+        // Modal admin
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.add('active');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.remove('active');
+            document.getElementById('adminLoginError').style.display = 'none';
+            document.getElementById('adminEmail').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        async function adminLogin() {
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('adminLoginError');
+
+            if (!email || !password) {
+                errorDiv.textContent = '❌ Preencha todos os campos!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Verificar se email está na lista de admins
+            if (!isAdmin(email)) {
+                errorDiv.textContent = '❌ Acesso não autorizado!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                closeAdminModal();
             } catch (error) {
                 errorDiv.textContent = '❌ Email ou senha incorretos!';
                 errorDiv.style.display = 'block';
             }
         }
 
-        async function logout() {
+        async function adminLogout() {
             await signOut(auth);
         }
 
+        // Funções do painel admin
         function toggleKeyForm() {
             const form = document.getElementById('keyForm');
             form.classList.toggle('active');
@@ -690,7 +1042,8 @@
                 duration: duration,
                 createdAt: now,
                 expiresAt: expiresAt,
-                active: true
+                active: true,
+                createdBy: auth.currentUser.email
             };
 
             try {
@@ -740,6 +1093,7 @@
                             <p><strong>Status:</strong> Ativa</p>
                             <p><strong>Expira em:</strong> ${daysLeft === '∞' ? 'Vitalícia' : daysLeft + ' dias'}</p>
                             <p><strong>Cliente:</strong> ${data.client}</p>
+                            <p><strong>Discord:</strong> ${data.discord}</p>
                         `;
                     }
                 } else {
@@ -769,6 +1123,10 @@
                     keys.push(child.val());
                 });
 
+                // Ordenar por data de criação
+                keys.sort((a, b) => b.createdAt - a.createdAt);
+
+                let activeKeys = 0;
                 keys.forEach((data) => {
                     if (!data.active) return;
 
@@ -776,6 +1134,7 @@
                     const isExpired = data.expiresAt && now > data.expiresAt;
                     if (isExpired) return;
 
+                    activeKeys++;
                     const daysLeft = data.expiresAt ? Math.ceil((data.expiresAt - now) / (1000 * 60 * 60 * 24)) : '∞';
                     const statusClass = daysLeft === '∞' ? 'status-active' : daysLeft <= 3 ? 'status-expiring' : 'status-active';
 
@@ -794,9 +1153,13 @@
                     container.appendChild(card);
                 });
 
-                if (container.children.length === 0) {
+                if (activeKeys === 0) {
                     container.innerHTML = '<p style="text-align: center; color: #b794f6;">Nenhuma key ativa no momento.</p>';
                 }
+            }, (error) => {
+                console.error('Erro ao carregar keys:', error);
+                document.getElementById('publicKeys').innerHTML = 
+                    '<p style="text-align: center; color: #ff6b6b;">Erro ao carregar keys. Tente novamente.</p>';
             });
         }
 
@@ -811,8 +1174,15 @@
                     return;
                 }
 
+                const keys = [];
                 snapshot.forEach((child) => {
-                    const data = child.val();
+                    keys.push(child.val());
+                });
+
+                // Ordenar por data de criação
+                keys.sort((a, b) => b.createdAt - a.createdAt);
+
+                keys.forEach((data) => {
                     const now = Date.now();
                     const daysLeft = data.expiresAt ? Math.ceil((data.expiresAt - now) / (1000 * 60 * 60 * 24)) : '∞';
                     const statusText = !data.active ? 'Inativa' : (data.expiresAt && now > data.expiresAt) ? 'Expirada' : 'Ativa';
@@ -822,17 +1192,23 @@
                     item.innerHTML = `
                         <div>
                             <strong>${data.key}</strong><br>
-                            <small>Cliente: ${data.client} | Discord: ${data.discord} | Status: ${statusText} | Expira: ${daysLeft === '∞' ? 'Vitalícia' : daysLeft + ' dias'}</small>
+                            <small>Cliente: ${data.client} | Discord: ${data.discord}<br>
+                            Status: ${statusText} | Expira: ${daysLeft === '∞' ? 'Vitalícia' : daysLeft + ' dias'}<br>
+                            Criado por: ${data.createdBy || 'Admin'}</small>
                         </div>
                         <button class="delete-btn" onclick="deleteKey('${data.key}')">Deletar</button>
                     `;
                     container.appendChild(item);
                 });
+            }, (error) => {
+                console.error('Erro ao carregar admin keys:', error);
+                document.getElementById('adminKeysList').innerHTML = 
+                    '<p style="text-align: center; color: #ff6b6b;">Erro ao carregar lista.</p>';
             });
         }
 
         async function deleteKey(key) {
-            if (!confirm(`Deletar a key ${key}?`)) return;
+            if (!confirm(`Deletar a key ${key}? Esta ação não pode ser desfeita.`)) return;
 
             try {
                 const keyRef = ref(database, 'keys/' + key.replace(/-/g, '_'));
@@ -869,13 +1245,26 @@
 
                 await Promise.all(deletePromises);
                 alert(`✅ ${deletedCount} key(s) expirada(s) removida(s)!`);
+                loadPublicKeys();
+                loadAdminKeys();
             } catch (error) {
                 alert('❌ Erro ao limpar keys: ' + error.message);
             }
         }
 
-        // Carregar keys públicas ao iniciar
-        loadPublicKeys();
+        // Inicializar o sistema
+        async function initializeSystem() {
+            try {
+                await initializeAdminUser();
+                loadPublicKeys();
+                console.log('Sistema inicializado com sucesso!');
+            } catch (error) {
+                console.error('Erro ao inicializar sistema:', error);
+            }
+        }
+
+        // Iniciar quando a página carregar
+        window.addEventListener('DOMContentLoaded', initializeSystem);
     </script>
 </body>
 </html>
