@@ -876,7 +876,10 @@
             remove, 
             onValue,
             push,
-            update
+            update,
+            query,
+            orderByChild,
+            equalTo
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
@@ -1110,8 +1113,12 @@
             const now = Date.now();
             const expiresAt = timeUnit === 'lifetime' ? null : now + durationInMs;
 
+            // Criar uma chave segura para o Firebase (substituir - por _)
+            const firebaseKey = newKeyValue.replace(/-/g, '_');
+
             const keyData = {
                 key: newKeyValue,
+                firebaseKey: firebaseKey, // Adicionar a chave do Firebase
                 client: clientName,
                 duration: durationValue,
                 timeUnit: timeUnit,
@@ -1123,8 +1130,8 @@
             };
 
             try {
-                // Salvar no Firebase
-                const keyRef = ref(database, 'keys/' + newKeyValue.replace(/-/g, '_'));
+                // Salvar no Firebase usando a chave segura
+                const keyRef = ref(database, 'keys/' + firebaseKey);
                 await set(keyRef, keyData);
                 
                 // Mostrar mensagem de sucesso
@@ -1157,7 +1164,9 @@
             }
 
             try {
-                const keyRef = ref(database, 'keys/' + keyInput.replace(/-/g, '_'));
+                // Converter a key para o formato do Firebase
+                const firebaseKey = keyInput.replace(/-/g, '_');
+                const keyRef = ref(database, 'keys/' + firebaseKey);
                 const snapshot = await get(keyRef);
 
                 if (!snapshot.exists()) {
@@ -1302,7 +1311,9 @@
 
                 const keys = [];
                 snapshot.forEach((child) => {
-                    keys.push(child.val());
+                    const keyData = child.val();
+                    keyData.firebaseKey = child.key; // Adicionar a chave do Firebase
+                    keys.push(keyData);
                 });
 
                 // Ordenar por data de criação (mais novas primeiro)
@@ -1338,9 +1349,10 @@
                             <small>Criado em: ${createdDate}</small>
                             <small>Criado por: ${data.createdBy || 'Admin'}</small>
                             <small>Status: <span class="${statusClass}">${status}</span></small>
+                            <small>Firebase Key: ${data.firebaseKey}</small>
                         </div>
                         <div class="key-actions">
-                            <button class="btn btn-danger" onclick="deleteKey('${data.key}')">Deletar</button>
+                            <button class="btn btn-danger" onclick="deleteKey('${data.firebaseKey}', '${data.key}')">Deletar</button>
                         </div>
                     `;
                     container.appendChild(item);
@@ -1352,26 +1364,26 @@
             });
         }
 
-        async function deleteKey(key) {
+        async function deleteKey(firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
                 return;
             }
             
-            if (!key) return;
+            if (!firebaseKey || !originalKey) return;
             
-            if (!confirm(`Tem certeza que deseja deletar a key:\n${key}\n\nEsta ação não pode ser desfeita!`)) {
+            if (!confirm(`Tem certeza que deseja deletar a key:\n${originalKey}\n\nEsta ação não pode ser desfeita!`)) {
                 return;
             }
 
             try {
-                const keyRef = ref(database, 'keys/' + key.replace(/-/g, '_'));
+                const keyRef = ref(database, 'keys/' + firebaseKey);
                 await remove(keyRef);
                 
                 // Mostrar feedback visual
                 const successDiv = document.createElement('div');
                 successDiv.className = 'success-message';
-                successDiv.textContent = `✅ Key "${key}" deletada com sucesso!`;
+                successDiv.textContent = `✅ Key "${originalKey}" deletada com sucesso!`;
                 successDiv.style.margin = '10px 0';
                 document.getElementById('adminKeysList').prepend(successDiv);
                 
@@ -1473,10 +1485,6 @@
 
             try {
                 // Primeiro precisamos encontrar o usuário pelo email
-                // Nota: O Firebase Auth não permite buscar usuários pelo email diretamente
-                // Precisamos de uma estrutura alternativa
-                
-                // Solução: Criar um índice de usuários no Realtime Database
                 const usersRef = ref(database, 'users');
                 const snapshot = await get(usersRef);
                 
