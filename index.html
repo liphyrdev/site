@@ -879,7 +879,10 @@
             update,
             query,
             orderByChild,
-            equalTo
+            equalTo,
+            orderByKey,
+            startAt,
+            endAt
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
@@ -1118,7 +1121,7 @@
 
             const keyData = {
                 key: newKeyValue,
-                firebaseKey: firebaseKey, // Adicionar a chave do Firebase
+                firebaseKey: firebaseKey,
                 client: clientName,
                 duration: durationValue,
                 timeUnit: timeUnit,
@@ -1312,7 +1315,7 @@
                 const keys = [];
                 snapshot.forEach((child) => {
                     const keyData = child.val();
-                    keyData.firebaseKey = child.key; // Adicionar a chave do Firebase
+                    keyData.firebaseKey = child.key;
                     keys.push(keyData);
                 });
 
@@ -1349,7 +1352,7 @@
                             <small>Criado em: ${createdDate}</small>
                             <small>Criado por: ${data.createdBy || 'Admin'}</small>
                             <small>Status: <span class="${statusClass}">${status}</span></small>
-                            <small>Firebase Key: ${data.firebaseKey}</small>
+                            <small>ID Firebase: ${data.firebaseKey}</small>
                         </div>
                         <div class="key-actions">
                             <button class="btn btn-danger" onclick="deleteKey('${data.firebaseKey}', '${data.key}')">Deletar</button>
@@ -1364,21 +1367,41 @@
             });
         }
 
+        // CORREÇÃO 1: FUNÇÃO PARA APAGAR KEY - CORRIGIDA
         async function deleteKey(firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
                 return;
             }
             
-            if (!firebaseKey || !originalKey) return;
+            if (!firebaseKey || !originalKey) {
+                alert('Key inválida!');
+                return;
+            }
             
             if (!confirm(`Tem certeza que deseja deletar a key:\n${originalKey}\n\nEsta ação não pode ser desfeita!`)) {
                 return;
             }
 
             try {
+                console.log('🗑️ Tentando deletar key:', firebaseKey);
+                
+                // CORREÇÃO: Usar a chave diretamente como está no Firebase
                 const keyRef = ref(database, 'keys/' + firebaseKey);
+                
+                console.log('🔍 Caminho no Firebase:', keyRef.toString());
+                
+                // Verificar se a key existe
+                const snapshot = await get(keyRef);
+                if (!snapshot.exists()) {
+                    alert('❌ Key não encontrada no banco de dados!');
+                    return;
+                }
+                
+                // Deletar a key
                 await remove(keyRef);
+                
+                console.log('✅ Key deletada com sucesso!');
                 
                 // Mostrar feedback visual
                 const successDiv = document.createElement('div');
@@ -1398,6 +1421,7 @@
                 loadAdminKeys();
                 loadPublicKeys();
                 loadStats();
+                
             } catch (error) {
                 console.error('Error deleting key:', error);
                 alert('❌ Erro ao deletar key: ' + error.message);
@@ -1466,6 +1490,7 @@
             document.getElementById('sendBalanceModal').classList.remove('active');
         }
 
+        // CORREÇÃO 3: ENVIAR SALDO - CORRIGIDO
         async function sendBalance() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -1484,54 +1509,72 @@
             }
 
             try {
-                // Primeiro precisamos encontrar o usuário pelo email
-                const usersRef = ref(database, 'users');
-                const snapshot = await get(usersRef);
+                console.log('💰 Procurando usuário:', userEmail);
                 
-                let userFound = null;
-                let userId = null;
+                // CORREÇÃO: Buscar carteira do usuário no caminho CORRETO
+                const walletsRef = ref(database, 'wallets');
+                const snapshot = await get(walletsRef);
+                
+                let walletFound = null;
+                let walletId = null;
                 
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
-                        const userData = child.val();
-                        if (userData.email === userEmail) {
-                            userFound = userData;
-                            userId = child.key;
+                        const walletData = child.val();
+                        if (walletData.userEmail === userEmail) {
+                            walletFound = walletData;
+                            walletId = child.key;
+                            console.log('✅ Carteira encontrada:', walletId);
                         }
                     });
                 }
 
-                if (!userFound) {
-                    // Se não encontrar, criar um novo registro
-                    userId = 'user_' + Date.now();
-                    userFound = {
-                        email: userEmail,
-                        createdAt: Date.now(),
+                if (!walletFound) {
+                    // CORREÇÃO: Se não encontrar carteira, criar uma nova
+                    walletId = 'wallet_' + Date.now();
+                    walletFound = {
                         balance: 0,
-                        status: 'active'
+                        totalReceived: 0,
+                        userEmail: userEmail,
+                        createdAt: Date.now(),
+                        history: []
                     };
                     
-                    await set(ref(database, 'users/' + userId), userFound);
+                    await set(ref(database, 'wallets/' + walletId), walletFound);
+                    console.log('🆕 Nova carteira criada:', walletId);
                 }
 
-                // Atualizar o saldo do usuário
-                const newBalance = (userFound.balance || 0) + amount;
-                await update(ref(database, 'users/' + userId), {
+                // Atualizar o saldo do usuário - CORREÇÃO: Usar o caminho correto
+                const newBalance = (walletFound.balance || 0) + amount;
+                const newTotal = (walletFound.totalReceived || 0) + amount;
+                
+                const newHistory = walletFound.history || [];
+                newHistory.push({
+                    amount: amount,
+                    description: message || 'Saldo enviado pelo administrador',
+                    timestamp: Date.now(),
+                    type: 'admin_credit',
+                    adminEmail: auth.currentUser.email
+                });
+
+                await update(ref(database, 'wallets/' + walletId), {
                     balance: newBalance,
+                    totalReceived: newTotal,
+                    history: newHistory.slice(-50), // Manter apenas últimas 50 transações
                     lastUpdated: Date.now()
                 });
 
-                // Registrar a transação
+                // Registrar a transação também em transactions
                 const transactionId = 'trans_' + Date.now();
                 const transactionData = {
-                    userId: userId,
+                    walletId: walletId,
                     userEmail: userEmail,
                     amount: amount,
                     type: 'credit',
                     message: message || 'Saldo enviado pelo administrador',
                     adminEmail: auth.currentUser.email,
                     timestamp: Date.now(),
-                    previousBalance: userFound.balance || 0,
+                    previousBalance: walletFound.balance || 0,
                     newBalance: newBalance
                 };
 
@@ -1567,8 +1610,11 @@
             // Rolagem suave
             document.getElementById('usersListSection').scrollIntoView({ behavior: 'smooth' });
 
-            const usersRef = ref(database, 'users');
-            onValue(usersRef, (snapshot) => {
+            try {
+                // CORREÇÃO 2: Buscar usuários de forma CORRETA
+                const usersRef = ref(database, 'users');
+                const snapshot = await get(usersRef);
+                
                 const container = document.getElementById('usersList');
                 container.innerHTML = '';
 
@@ -1589,9 +1635,26 @@
                 // Ordenar por data de criação
                 users.sort((a, b) => b.createdAt - a.createdAt);
 
-                users.forEach((user) => {
+                // Para cada usuário, buscar também a carteira
+                for (const user of users) {
+                    let balance = 0;
+                    let walletId = null;
+                    
+                    // Buscar carteira deste usuário
+                    const walletsRef = ref(database, 'wallets');
+                    const walletsSnapshot = await get(walletsRef);
+                    
+                    if (walletsSnapshot.exists()) {
+                        walletsSnapshot.forEach((walletChild) => {
+                            const walletData = walletChild.val();
+                            if (walletData.userEmail === user.email) {
+                                balance = walletData.balance || 0;
+                                walletId = walletChild.key;
+                            }
+                        });
+                    }
+                    
                     const createdDate = new Date(user.createdAt).toLocaleDateString('pt-BR');
-                    const balance = user.balance || 0;
                     const status = user.status || 'active';
                     
                     let statusColor = '#00ff00';
@@ -1604,31 +1667,37 @@
                         <div class="user-details">
                             <strong>${user.email}</strong>
                             <small>ID: ${user.id}</small>
+                            <small>UID: ${user.firebaseUid || 'N/A'}</small>
                             <small>Saldo: R$ ${balance.toFixed(2)}</small>
+                            <small>Carteira: ${walletId || 'Não encontrada'}</small>
                             <small>Criado em: ${createdDate}</small>
                             <small>Status: <span style="color: ${statusColor}">${status === 'active' ? 'Ativo' : status === 'suspended' ? 'Suspenso' : 'Banido'}</span></small>
                         </div>
                         <div class="user-actions">
-                            <button class="btn btn-warning" onclick="manageUser('${user.id}')">Gerenciar</button>
+                            <button class="btn btn-warning" onclick="manageUser('${user.id}', '${user.email}')">Gerenciar</button>
                         </div>
                     `;
                     container.appendChild(item);
-                });
-            }, (error) => {
+                }
+                
+            } catch (error) {
                 console.error('Error loading users:', error);
                 document.getElementById('usersList').innerHTML = 
-                    '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar usuários.</p>';
-            });
+                    '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar usuários: ' + error.message + '</p>';
+            }
         }
 
         let currentManagingUserId = null;
+        let currentManagingUserEmail = null;
 
-        async function manageUser(userId) {
+        // CORREÇÃO: Adicionar email como parâmetro
+        async function manageUser(userId, userEmail) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 return;
             }
 
             currentManagingUserId = userId;
+            currentManagingUserEmail = userEmail;
 
             try {
                 const userRef = ref(database, 'users/' + userId);
@@ -1640,7 +1709,21 @@
                 }
 
                 const user = snapshot.val();
-                const balance = user.balance || 0;
+                let balance = 0;
+                
+                // Buscar saldo da carteira
+                const walletsRef = ref(database, 'wallets');
+                const walletsSnapshot = await get(walletsRef);
+                
+                if (walletsSnapshot.exists()) {
+                    walletsSnapshot.forEach((child) => {
+                        const walletData = child.val();
+                        if (walletData.userEmail === userEmail) {
+                            balance = walletData.balance || 0;
+                        }
+                    });
+                }
+                
                 const status = user.status || 'active';
 
                 document.getElementById('userManageInfo').innerHTML = `
@@ -1667,10 +1750,11 @@
         function closeManageUserModal() {
             document.getElementById('manageUserModal').classList.remove('active');
             currentManagingUserId = null;
+            currentManagingUserEmail = null;
         }
 
         async function updateUser() {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email) || !currentManagingUserId) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email) || !currentManagingUserId || !currentManagingUserEmail) {
                 return;
             }
 
@@ -1684,18 +1768,61 @@
             }
 
             try {
-                // Atualizar usuário
+                // Atualizar status do usuário
                 await update(ref(database, 'users/' + currentManagingUserId), {
-                    balance: newBalance,
                     status: newStatus,
                     lastUpdated: Date.now()
                 });
+
+                // Atualizar saldo na carteira
+                const walletsRef = ref(database, 'wallets');
+                const walletsSnapshot = await get(walletsRef);
+                
+                let walletId = null;
+                let oldBalance = 0;
+                
+                if (walletsSnapshot.exists()) {
+                    walletsSnapshot.forEach((child) => {
+                        const walletData = child.val();
+                        if (walletData.userEmail === currentManagingUserEmail) {
+                            walletId = child.key;
+                            oldBalance = walletData.balance || 0;
+                        }
+                    });
+                }
+                
+                if (walletId) {
+                    // Atualizar saldo
+                    await update(ref(database, 'wallets/' + walletId), {
+                        balance: newBalance,
+                        lastUpdated: Date.now()
+                    });
+                    
+                    // Adicionar ao histórico
+                    const walletRef = ref(database, 'wallets/' + walletId);
+                    const walletSnap = await get(walletRef);
+                    const walletData = walletSnap.val();
+                    const newHistory = walletData.history || [];
+                    
+                    newHistory.push({
+                        amount: newBalance - oldBalance,
+                        description: 'Ajuste de saldo pelo administrador',
+                        timestamp: Date.now(),
+                        type: 'admin_adjustment',
+                        adminEmail: auth.currentUser.email
+                    });
+                    
+                    await update(ref(database, 'wallets/' + walletId), {
+                        history: newHistory.slice(-50)
+                    });
+                }
 
                 // Registrar a alteração
                 const logId = 'log_' + Date.now();
                 await set(ref(database, 'logs/' + logId), {
                     action: 'update_user',
                     userId: currentManagingUserId,
+                    userEmail: currentManagingUserEmail,
                     adminEmail: auth.currentUser.email,
                     newBalance: newBalance,
                     newStatus: newStatus,
@@ -1714,29 +1841,69 @@
             }
         }
 
+        // CORREÇÃO 2: DELETAR USUÁRIO - CORRIGIDO
         async function deleteUserAccount() {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email) || !currentManagingUserId) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email) || !currentManagingUserId || !currentManagingUserEmail) {
                 return;
             }
 
-            if (!confirm('ATENÇÃO!\n\nTem certeza que deseja EXCLUIR esta conta?\n\nEsta ação não pode ser desfeita e todos os dados do usuário serão perdidos!')) {
+            if (!confirm('ATENÇÃO!\n\nTem certeza que deseja EXCLUIR esta conta?\n\nEsta ação não pode ser desfeita e todos os dados do usuário serão perdidos!\n\nIsso inclui:\n• Dados do usuário\n• Carteira\n• Histórico\n• Todas as keys associadas')) {
                 return;
             }
 
             try {
-                // Remover usuário
+                // 1. Remover usuário da tabela users
                 await remove(ref(database, 'users/' + currentManagingUserId));
 
-                // Registrar a exclusão
+                // 2. Remover carteira do usuário
+                const walletsRef = ref(database, 'wallets');
+                const walletsSnapshot = await get(walletsRef);
+                
+                if (walletsSnapshot.exists()) {
+                    const deletePromises = [];
+                    walletsSnapshot.forEach((child) => {
+                        const walletData = child.val();
+                        if (walletData.userEmail === currentManagingUserEmail) {
+                            deletePromises.push(remove(child.ref));
+                            console.log('🗑️ Removendo carteira:', child.key);
+                        }
+                    });
+                    
+                    if (deletePromises.length > 0) {
+                        await Promise.all(deletePromises);
+                    }
+                }
+
+                // 3. Remover todas as keys deste usuário
+                const keysRef = ref(database, 'keys');
+                const keysSnapshot = await get(keysRef);
+                
+                if (keysSnapshot.exists()) {
+                    const deleteKeyPromises = [];
+                    keysSnapshot.forEach((child) => {
+                        const keyData = child.val();
+                        if (keyData.clientEmail === currentManagingUserEmail) {
+                            deleteKeyPromises.push(remove(child.ref));
+                            console.log('🗑️ Removendo key:', child.key);
+                        }
+                    });
+                    
+                    if (deleteKeyPromises.length > 0) {
+                        await Promise.all(deleteKeyPromises);
+                    }
+                }
+
+                // 4. Registrar a exclusão
                 const logId = 'log_' + Date.now();
                 await set(ref(database, 'logs/' + logId), {
                     action: 'delete_user',
                     userId: currentManagingUserId,
+                    userEmail: currentManagingUserEmail,
                     adminEmail: auth.currentUser.email,
                     timestamp: Date.now()
                 });
 
-                alert('✅ Conta excluída com sucesso!');
+                alert('✅ Conta excluída com sucesso!\n\nUsuário: ' + currentManagingUserEmail);
                 closeManageUserModal();
                 loadAllUsers();
                 loadStats();
@@ -1779,13 +1946,19 @@
                 const usersSnapshot = await get(usersRef);
                 
                 let totalUsers = 0;
-                let totalBalance = 0;
-
                 if (usersSnapshot.exists()) {
-                    usersSnapshot.forEach((child) => {
-                        totalUsers++;
-                        const user = child.val();
-                        totalBalance += user.balance || 0;
+                    totalUsers = Object.keys(usersSnapshot.val()).length;
+                }
+
+                // Carregar total de saldo
+                const walletsRef = ref(database, 'wallets');
+                const walletsSnapshot = await get(walletsRef);
+                
+                let totalBalance = 0;
+                if (walletsSnapshot.exists()) {
+                    walletsSnapshot.forEach((child) => {
+                        const wallet = child.val();
+                        totalBalance += wallet.balance || 0;
                     });
                 }
 
@@ -1808,9 +1981,10 @@
 
             try {
                 // Coletar todos os dados
-                const [keysSnapshot, usersSnapshot, transactionsSnapshot] = await Promise.all([
+                const [keysSnapshot, usersSnapshot, walletsSnapshot, transactionsSnapshot] = await Promise.all([
                     get(ref(database, 'keys')),
                     get(ref(database, 'users')),
+                    get(ref(database, 'wallets')),
                     get(ref(database, 'transactions'))
                 ]);
 
@@ -1819,6 +1993,7 @@
                     exportedBy: auth.currentUser.email,
                     keys: {},
                     users: {},
+                    wallets: {},
                     transactions: {}
                 };
 
@@ -1831,6 +2006,12 @@
                 if (usersSnapshot.exists()) {
                     usersSnapshot.forEach((child) => {
                         exportData.users[child.key] = child.val();
+                    });
+                }
+
+                if (walletsSnapshot.exists()) {
+                    walletsSnapshot.forEach((child) => {
+                        exportData.wallets[child.key] = child.val();
                     });
                 }
 
@@ -1862,7 +2043,7 @@
         // Inicializar sistema
         function initializeSystem() {
             loadPublicKeys();
-            console.log('Sistema LIPHYR HUB inicializado');
+            console.log('Sistema LIPHYR HUB ADMIN inicializado');
         }
 
         // Iniciar quando a página carregar
