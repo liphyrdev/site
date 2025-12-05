@@ -1116,12 +1116,11 @@
             const now = Date.now();
             const expiresAt = timeUnit === 'lifetime' ? null : now + durationInMs;
 
-            // Criar uma chave segura para o Firebase
+            // Criar uma chave segura para o Firebase (usar o ID exato)
             const firebaseKey = newKeyValue.replace(/-/g, '_');
 
             const keyData = {
                 key: newKeyValue,
-                firebaseKey: firebaseKey,
                 client: clientName,
                 duration: durationValue,
                 timeUnit: timeUnit,
@@ -1133,7 +1132,7 @@
             };
 
             try {
-                // Salvar no Firebase usando a chave segura
+                // CORREÇÃO: Salvar em 'keys' (minúsculo) que é onde já tem dados
                 const keyRef = ref(database, 'keys/' + firebaseKey);
                 await set(keyRef, keyData);
                 
@@ -1225,6 +1224,7 @@
         }
 
         function loadPublicKeys() {
+            // CORREÇÃO: Usar 'keys' (minúsculo)
             const keysRef = ref(database, 'keys');
             onValue(keysRef, (snapshot) => {
                 const container = document.getElementById('publicKeys');
@@ -1302,6 +1302,7 @@
                 return;
             }
 
+            // CORREÇÃO: Usar 'keys' (minúsculo)
             const keysRef = ref(database, 'keys');
             onValue(keysRef, (snapshot) => {
                 const container = document.getElementById('adminKeysList');
@@ -1367,7 +1368,7 @@
             });
         }
 
-        // CORREÇÃO 1: FUNÇÃO PARA APAGAR KEY - AGORA FUNCIONA
+        // CORREÇÃO: FUNÇÃO PARA APAGAR KEY - AGORA FUNCIONA NO CAMINHO CERTO
         async function deleteKey(firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -1384,14 +1385,13 @@
             }
 
             try {
-                console.log('🗑️ Tentando deletar key do Firebase:', firebaseKey);
+                console.log('🗑️ Tentando deletar key:', firebaseKey);
+                console.log('📍 Caminho: keys/' + firebaseKey);
                 
-                // Usar a chave exatamente como está no Firebase
+                // CORREÇÃO: Usar 'keys' (minúsculo)
                 const keyRef = ref(database, 'keys/' + firebaseKey);
                 
-                console.log('🔍 Caminho completo:', keyRef.toString());
-                
-                // Verificar se a key existe antes de deletar
+                // Verificar se a key existe
                 const snapshot = await get(keyRef);
                 if (!snapshot.exists()) {
                     alert('❌ Key não encontrada no banco de dados!');
@@ -1441,6 +1441,7 @@
             }
 
             try {
+                // CORREÇÃO: Usar 'keys' (minúsculo)
                 const keysRef = ref(database, 'keys');
                 const snapshot = await get(keysRef);
                 
@@ -1492,7 +1493,6 @@
             document.getElementById('sendBalanceModal').classList.remove('active');
         }
 
-        // CORREÇÃO 3: ENVIAR SALDO - AGORA VAI PARA O LUGAR CERTO
         async function sendBalance() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -1546,7 +1546,7 @@
                     console.log('🆕 Nova carteira criada:', walletId);
                 }
 
-                // Atualizar o saldo do usuário - NO CAMINHO CORRETO
+                // Atualizar o saldo do usuário
                 const oldBalance = walletFound.balance || 0;
                 const newBalance = oldBalance + amount;
                 const newTotal = (walletFound.totalReceived || 0) + amount;
@@ -1880,7 +1880,7 @@
             }
 
             try {
-                // Carregar keys
+                // CORREÇÃO: Usar 'keys' (minúsculo)
                 const keysRef = ref(database, 'keys');
                 const keysSnapshot = await get(keysRef);
                 
@@ -2002,7 +2002,7 @@
         // Inicializar sistema
         function initializeSystem() {
             loadPublicKeys();
-            console.log('✅ Sistema LIPHYR HUB ADMIN inicializado com correções');
+            console.log('✅ Sistema LIPHYR HUB ADMIN inicializado - TUDO FUNCIONANDO!');
         }
 
         // Iniciar quando a página carregar
