@@ -280,6 +280,23 @@
             background: #b71c1c;
         }
 
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
         .verify-result {
             margin-top: 20px;
             padding: 15px;
@@ -465,7 +482,7 @@
             border: 1px solid #8a2be2;
             border-radius: 10px;
             padding: 30px;
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
             box-shadow: 0 0 30px rgba(138, 43, 226, 0.3);
         }
@@ -542,6 +559,84 @@
         .logout-btn:hover {
             background: rgba(255, 68, 68, 0.1);
         }
+
+        .user-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333333;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-item:hover {
+            border-color: #8a2be2;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-details strong {
+            color: #ffffff;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .user-details small {
+            color: #cccccc;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .balance-info {
+            background: rgba(138, 43, 226, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .balance-info h4 {
+            color: #8a2be2;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            color: #8a2be2;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -562,6 +657,52 @@
             </div>
             <button class="btn" onclick="login()" style="width: 100%; margin-top: 20px;">Entrar</button>
             <div id="loginError" class="error-message" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- Modal Enviar Saldo -->
+    <div class="modal" id="sendBalanceModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeSendBalanceModal()">×</span>
+            <h2>Enviar Saldo</h2>
+            <div class="form-group">
+                <label>Email do Usuário:</label>
+                <input type="email" id="sendUserEmail" placeholder="usuario@email.com">
+            </div>
+            <div class="form-group">
+                <label>Valor (R$):</label>
+                <input type="number" id="sendAmount" placeholder="100.00" step="0.01" min="0.01">
+            </div>
+            <div class="form-group">
+                <label>Mensagem (opcional):</label>
+                <textarea id="sendMessage" placeholder="Motivo do envio..." rows="3" style="width: 100%; background: rgba(255, 255, 255, 0.1); border: 1px solid #333333; border-radius: 6px; color: #ffffff; padding: 10px; font-family: inherit;"></textarea>
+            </div>
+            <button class="btn btn-success" onclick="sendBalance()" style="width: 100%; margin-top: 20px;">Enviar Saldo</button>
+            <div id="sendBalanceError" class="error-message" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- Modal Gerenciar Usuário -->
+    <div class="modal" id="manageUserModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeManageUserModal()">×</span>
+            <h2>Gerenciar Usuário</h2>
+            <div id="userManageInfo"></div>
+            <div class="form-group">
+                <label>Novo Saldo (R$):</label>
+                <input type="number" id="newUserBalance" placeholder="0.00" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Status da Conta:</label>
+                <select id="userStatus" style="width: 100%;">
+                    <option value="active">Ativa</option>
+                    <option value="suspended">Suspensa</option>
+                    <option value="banned">Banida</option>
+                </select>
+            </div>
+            <button class="btn btn-warning" onclick="updateUser()" style="width: 100%; margin-top: 10px;">Atualizar Usuário</button>
+            <button class="btn btn-danger" onclick="deleteUserAccount()" style="width: 100%; margin-top: 10px;">Excluir Conta</button>
+            <div id="manageUserError" class="error-message" style="display: none; margin-top: 15px;"></div>
         </div>
     </div>
 
@@ -615,6 +756,26 @@
                 </div>
             </div>
 
+            <!-- ESTATÍSTICAS -->
+            <div class="stats-grid" id="adminStats">
+                <div class="stat-card">
+                    <h4>Total de Keys</h4>
+                    <div class="value" id="totalKeys">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Keys Ativas</h4>
+                    <div class="value" id="activeKeys">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total de Usuários</h4>
+                    <div class="value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Saldo Total</h4>
+                    <div class="value" id="totalBalance">R$ 0,00</div>
+                </div>
+            </div>
+
             <div class="admin-actions">
                 <div class="action-card" onclick="toggleKeyForm()">
                     <h3>Gerar Nova Key</h3>
@@ -624,12 +785,25 @@
                     <h3>Atualizar Lista</h3>
                     <p>Recarregar todas as keys</p>
                 </div>
+                <div class="action-card" onclick="openSendBalanceModal()">
+                    <h3>Enviar Saldo</h3>
+                    <p>Transferir para usuário</p>
+                </div>
+                <div class="action-card" onclick="loadAllUsers()">
+                    <h3>Gerenciar Usuários</h3>
+                    <p>Ver e editar contas</p>
+                </div>
                 <div class="action-card" onclick="cleanExpiredKeys()">
                     <h3>Limpar Expiradas</h3>
                     <p>Remover keys antigas</p>
                 </div>
+                <div class="action-card" onclick="exportData()">
+                    <h3>Exportar Dados</h3>
+                    <p>Backup do sistema</p>
+                </div>
             </div>
 
+            <!-- FORMULÁRIO PARA GERAR KEY -->
             <div class="key-form" id="keyForm">
                 <h3 style="color: #8a2be2; margin-bottom: 20px;">Gerar Nova Key</h3>
                 <div class="form-group">
@@ -658,9 +832,20 @@
                 <button class="btn" onclick="generateKey()" style="width: 100%; margin-top: 20px;">Gerar Key</button>
             </div>
 
+            <!-- LISTA DE TODAS AS KEYS -->
             <div class="admin-keys-list">
                 <h3>Todas as Licenças</h3>
                 <div id="adminKeysList">
+                    <div style="text-align: center; color: #8a2be2; padding: 20px;">
+                        <div class="loading"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LISTA DE TODOS OS USUÁRIOS -->
+            <div class="admin-keys-list" id="usersListSection" style="display: none;">
+                <h3>Todos os Usuários</h3>
+                <div id="usersList">
                     <div style="text-align: center; color: #8a2be2; padding: 20px;">
                         <div class="loading"></div>
                     </div>
@@ -679,7 +864,8 @@
             getAuth, 
             signInWithEmailAndPassword, 
             signOut,
-            onAuthStateChanged 
+            onAuthStateChanged,
+            createUserWithEmailAndPassword
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         
         import { 
@@ -688,7 +874,9 @@
             set, 
             get, 
             remove, 
-            onValue
+            onValue,
+            push,
+            update
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
@@ -706,8 +894,8 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
-        // Lista de emails autorizados como admin (você pode adicionar mais)
-        const ADMIN_EMAILS = ['liphyrdev@gmail.com']; // ADICIONE SEU EMAIL AQUI
+        // Email do admin
+        const ADMIN_EMAIL = 'liphyrdev@gmail.com';
 
         // Expor funções globalmente
         window.openAdminPanel = openAdminPanel;
@@ -720,6 +908,15 @@
         window.loadAdminKeys = loadAdminKeys;
         window.deleteKey = deleteKey;
         window.cleanExpiredKeys = cleanExpiredKeys;
+        window.openSendBalanceModal = openSendBalanceModal;
+        window.closeSendBalanceModal = closeSendBalanceModal;
+        window.sendBalance = sendBalance;
+        window.loadAllUsers = loadAllUsers;
+        window.manageUser = manageUser;
+        window.closeManageUserModal = closeManageUserModal;
+        window.updateUser = updateUser;
+        window.deleteUserAccount = deleteUserAccount;
+        window.exportData = exportData;
 
         // Criar partículas
         function createParticles() {
@@ -737,7 +934,7 @@
 
         // Verificar se usuário é admin
         function isAdmin(email) {
-            return ADMIN_EMAILS.includes(email);
+            return email === ADMIN_EMAIL;
         }
 
         // Mostrar/ocultar informações do usuário
@@ -770,6 +967,7 @@
                 updateUserUI(user);
                 loadAdminKeys();
                 loadPublicKeys();
+                loadStats();
             } else {
                 // Não é admin ou não está logado
                 document.getElementById('adminPanel').classList.remove('active');
@@ -810,16 +1008,17 @@
                 // Fazer login no Firebase Authentication
                 await signInWithEmailAndPassword(auth, email, password);
                 
-                // Verificar se o email está na lista de admins
+                // Verificar se o email é o do admin
                 if (!isAdmin(email)) {
                     await signOut(auth);
-                    errorDiv.textContent = 'Acesso não autorizado! Este email não é administrador.';
+                    errorDiv.textContent = 'Acesso não autorizado! Apenas o administrador pode acessar.';
                     errorDiv.style.display = 'block';
                     return;
                 }
                 
                 closeLoginModal();
                 document.getElementById('adminPanel').classList.add('active');
+                loadStats();
             } catch (error) {
                 console.error('Login error:', error);
                 let errorMessage = 'Email ou senha incorretos!';
@@ -842,6 +1041,7 @@
                 await signOut(auth);
                 document.getElementById('adminPanel').classList.remove('active');
                 document.getElementById('keyForm').classList.remove('active');
+                document.getElementById('usersListSection').style.display = 'none';
                 document.getElementById('userInfo').style.display = 'none';
                 document.getElementById('adminNav').style.display = 'inline';
             } catch (error) {
@@ -852,6 +1052,9 @@
         function toggleKeyForm() {
             const form = document.getElementById('keyForm');
             form.classList.toggle('active');
+            
+            // Ocultar lista de usuários
+            document.getElementById('usersListSection').style.display = 'none';
             
             // Rolagem suave para o formulário
             if (form.classList.contains('active')) {
@@ -935,6 +1138,7 @@
                 // Atualizar listas
                 loadAdminKeys();
                 loadPublicKeys();
+                loadStats();
             } catch (error) {
                 console.error('Error generating key:', error);
                 alert('❌ Erro ao gerar key: ' + error.message);
@@ -1181,6 +1385,7 @@
                 // Atualizar listas
                 loadAdminKeys();
                 loadPublicKeys();
+                loadStats();
             } catch (error) {
                 console.error('Error deleting key:', error);
                 alert('❌ Erro ao deletar key: ' + error.message);
@@ -1229,16 +1434,427 @@
                 // Atualizar listas
                 loadAdminKeys();
                 loadPublicKeys();
+                loadStats();
             } catch (error) {
                 console.error('Error cleaning expired keys:', error);
                 alert('❌ Erro ao limpar keys: ' + error.message);
             }
         }
 
+        // FUNÇÕES PARA ENVIAR SALDO
+        function openSendBalanceModal() {
+            document.getElementById('sendBalanceModal').classList.add('active');
+            document.getElementById('sendUserEmail').value = '';
+            document.getElementById('sendAmount').value = '';
+            document.getElementById('sendMessage').value = '';
+            document.getElementById('sendBalanceError').style.display = 'none';
+        }
+
+        function closeSendBalanceModal() {
+            document.getElementById('sendBalanceModal').classList.remove('active');
+        }
+
+        async function sendBalance() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+
+            const userEmail = document.getElementById('sendUserEmail').value.trim();
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            const message = document.getElementById('sendMessage').value.trim();
+            const errorDiv = document.getElementById('sendBalanceError');
+
+            if (!userEmail || !amount || amount <= 0) {
+                errorDiv.textContent = 'Preencha todos os campos corretamente!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Primeiro precisamos encontrar o usuário pelo email
+                // Nota: O Firebase Auth não permite buscar usuários pelo email diretamente
+                // Precisamos de uma estrutura alternativa
+                
+                // Solução: Criar um índice de usuários no Realtime Database
+                const usersRef = ref(database, 'users');
+                const snapshot = await get(usersRef);
+                
+                let userFound = null;
+                let userId = null;
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        const userData = child.val();
+                        if (userData.email === userEmail) {
+                            userFound = userData;
+                            userId = child.key;
+                        }
+                    });
+                }
+
+                if (!userFound) {
+                    // Se não encontrar, criar um novo registro
+                    userId = 'user_' + Date.now();
+                    userFound = {
+                        email: userEmail,
+                        createdAt: Date.now(),
+                        balance: 0,
+                        status: 'active'
+                    };
+                    
+                    await set(ref(database, 'users/' + userId), userFound);
+                }
+
+                // Atualizar o saldo do usuário
+                const newBalance = (userFound.balance || 0) + amount;
+                await update(ref(database, 'users/' + userId), {
+                    balance: newBalance,
+                    lastUpdated: Date.now()
+                });
+
+                // Registrar a transação
+                const transactionId = 'trans_' + Date.now();
+                const transactionData = {
+                    userId: userId,
+                    userEmail: userEmail,
+                    amount: amount,
+                    type: 'credit',
+                    message: message || 'Saldo enviado pelo administrador',
+                    adminEmail: auth.currentUser.email,
+                    timestamp: Date.now(),
+                    previousBalance: userFound.balance || 0,
+                    newBalance: newBalance
+                };
+
+                await set(ref(database, 'transactions/' + transactionId), transactionData);
+
+                // Mostrar sucesso
+                alert(`✅ Saldo enviado com sucesso!\n\nUsuário: ${userEmail}\nValor: R$ ${amount.toFixed(2)}\nNovo Saldo: R$ ${newBalance.toFixed(2)}`);
+                
+                // Fechar modal
+                closeSendBalanceModal();
+                
+                // Atualizar estatísticas
+                loadStats();
+                
+            } catch (error) {
+                console.error('Error sending balance:', error);
+                errorDiv.textContent = 'Erro ao enviar saldo: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // FUNÇÕES PARA GERENCIAR USUÁRIOS
+        async function loadAllUsers() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+
+            // Mostrar seção de usuários
+            document.getElementById('usersListSection').style.display = 'block';
+            document.getElementById('keyForm').classList.remove('active');
+            
+            // Rolagem suave
+            document.getElementById('usersListSection').scrollIntoView({ behavior: 'smooth' });
+
+            const usersRef = ref(database, 'users');
+            onValue(usersRef, (snapshot) => {
+                const container = document.getElementById('usersList');
+                container.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 20px;">Nenhum usuário cadastrado.</p>';
+                    return;
+                }
+
+                const users = [];
+                snapshot.forEach((child) => {
+                    const userData = child.val();
+                    users.push({
+                        id: child.key,
+                        ...userData
+                    });
+                });
+
+                // Ordenar por data de criação
+                users.sort((a, b) => b.createdAt - a.createdAt);
+
+                users.forEach((user) => {
+                    const createdDate = new Date(user.createdAt).toLocaleDateString('pt-BR');
+                    const balance = user.balance || 0;
+                    const status = user.status || 'active';
+                    
+                    let statusColor = '#00ff00';
+                    if (status === 'suspended') statusColor = '#ffa500';
+                    if (status === 'banned') statusColor = '#ff4444';
+
+                    const item = document.createElement('div');
+                    item.className = 'user-item';
+                    item.innerHTML = `
+                        <div class="user-details">
+                            <strong>${user.email}</strong>
+                            <small>ID: ${user.id}</small>
+                            <small>Saldo: R$ ${balance.toFixed(2)}</small>
+                            <small>Criado em: ${createdDate}</small>
+                            <small>Status: <span style="color: ${statusColor}">${status === 'active' ? 'Ativo' : status === 'suspended' ? 'Suspenso' : 'Banido'}</span></small>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-warning" onclick="manageUser('${user.id}')">Gerenciar</button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            }, (error) => {
+                console.error('Error loading users:', error);
+                document.getElementById('usersList').innerHTML = 
+                    '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar usuários.</p>';
+            });
+        }
+
+        let currentManagingUserId = null;
+
+        async function manageUser(userId) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                return;
+            }
+
+            currentManagingUserId = userId;
+
+            try {
+                const userRef = ref(database, 'users/' + userId);
+                const snapshot = await get(userRef);
+
+                if (!snapshot.exists()) {
+                    alert('Usuário não encontrado!');
+                    return;
+                }
+
+                const user = snapshot.val();
+                const balance = user.balance || 0;
+                const status = user.status || 'active';
+
+                document.getElementById('userManageInfo').innerHTML = `
+                    <div class="balance-info">
+                        <h4>Usuário: ${user.email}</h4>
+                        <p>ID: ${userId}</p>
+                        <p>Saldo Atual: R$ ${balance.toFixed(2)}</p>
+                        <p>Status: ${status === 'active' ? 'Ativo' : status === 'suspended' ? 'Suspenso' : 'Banido'}</p>
+                    </div>
+                `;
+
+                document.getElementById('newUserBalance').value = balance;
+                document.getElementById('userStatus').value = status;
+
+                document.getElementById('manageUserModal').classList.add('active');
+                document.getElementById('manageUserError').style.display = 'none';
+
+            } catch (error) {
+                console.error('Error loading user:', error);
+                alert('Erro ao carregar dados do usuário!');
+            }
+        }
+
+        function closeManageUserModal() {
+            document.getElementById('manageUserModal').classList.remove('active');
+            currentManagingUserId = null;
+        }
+
+        async function updateUser() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email) || !currentManagingUserId) {
+                return;
+            }
+
+            const newBalance = parseFloat(document.getElementById('newUserBalance').value);
+            const newStatus = document.getElementById('userStatus').value;
+
+            if (isNaN(newBalance) || newBalance < 0) {
+                document.getElementById('manageUserError').textContent = 'Saldo inválido!';
+                document.getElementById('manageUserError').style.display = 'block';
+                return;
+            }
+
+            try {
+                // Atualizar usuário
+                await update(ref(database, 'users/' + currentManagingUserId), {
+                    balance: newBalance,
+                    status: newStatus,
+                    lastUpdated: Date.now()
+                });
+
+                // Registrar a alteração
+                const logId = 'log_' + Date.now();
+                await set(ref(database, 'logs/' + logId), {
+                    action: 'update_user',
+                    userId: currentManagingUserId,
+                    adminEmail: auth.currentUser.email,
+                    newBalance: newBalance,
+                    newStatus: newStatus,
+                    timestamp: Date.now()
+                });
+
+                alert('✅ Usuário atualizado com sucesso!');
+                closeManageUserModal();
+                loadAllUsers();
+                loadStats();
+
+            } catch (error) {
+                console.error('Error updating user:', error);
+                document.getElementById('manageUserError').textContent = 'Erro ao atualizar usuário: ' + error.message;
+                document.getElementById('manageUserError').style.display = 'block';
+            }
+        }
+
+        async function deleteUserAccount() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email) || !currentManagingUserId) {
+                return;
+            }
+
+            if (!confirm('ATENÇÃO!\n\nTem certeza que deseja EXCLUIR esta conta?\n\nEsta ação não pode ser desfeita e todos os dados do usuário serão perdidos!')) {
+                return;
+            }
+
+            try {
+                // Remover usuário
+                await remove(ref(database, 'users/' + currentManagingUserId));
+
+                // Registrar a exclusão
+                const logId = 'log_' + Date.now();
+                await set(ref(database, 'logs/' + logId), {
+                    action: 'delete_user',
+                    userId: currentManagingUserId,
+                    adminEmail: auth.currentUser.email,
+                    timestamp: Date.now()
+                });
+
+                alert('✅ Conta excluída com sucesso!');
+                closeManageUserModal();
+                loadAllUsers();
+                loadStats();
+
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('❌ Erro ao excluir conta: ' + error.message);
+            }
+        }
+
+        // FUNÇÃO PARA CARREGAR ESTATÍSTICAS
+        async function loadStats() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                return;
+            }
+
+            try {
+                // Carregar keys
+                const keysRef = ref(database, 'keys');
+                const keysSnapshot = await get(keysRef);
+                
+                let totalKeys = 0;
+                let activeKeys = 0;
+                const now = Date.now();
+
+                if (keysSnapshot.exists()) {
+                    keysSnapshot.forEach((child) => {
+                        totalKeys++;
+                        const data = child.val();
+                        if (data.active) {
+                            if (!data.expiresAt || data.expiresAt > now) {
+                                activeKeys++;
+                            }
+                        }
+                    });
+                }
+
+                // Carregar usuários
+                const usersRef = ref(database, 'users');
+                const usersSnapshot = await get(usersRef);
+                
+                let totalUsers = 0;
+                let totalBalance = 0;
+
+                if (usersSnapshot.exists()) {
+                    usersSnapshot.forEach((child) => {
+                        totalUsers++;
+                        const user = child.val();
+                        totalBalance += user.balance || 0;
+                    });
+                }
+
+                // Atualizar interface
+                document.getElementById('totalKeys').textContent = totalKeys;
+                document.getElementById('activeKeys').textContent = activeKeys;
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('totalBalance').textContent = `R$ ${totalBalance.toFixed(2)}`;
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // FUNÇÃO PARA EXPORTAR DADOS
+        async function exportData() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                return;
+            }
+
+            try {
+                // Coletar todos os dados
+                const [keysSnapshot, usersSnapshot, transactionsSnapshot] = await Promise.all([
+                    get(ref(database, 'keys')),
+                    get(ref(database, 'users')),
+                    get(ref(database, 'transactions'))
+                ]);
+
+                const exportData = {
+                    exportDate: new Date().toISOString(),
+                    exportedBy: auth.currentUser.email,
+                    keys: {},
+                    users: {},
+                    transactions: {}
+                };
+
+                if (keysSnapshot.exists()) {
+                    keysSnapshot.forEach((child) => {
+                        exportData.keys[child.key] = child.val();
+                    });
+                }
+
+                if (usersSnapshot.exists()) {
+                    usersSnapshot.forEach((child) => {
+                        exportData.users[child.key] = child.val();
+                    });
+                }
+
+                if (transactionsSnapshot.exists()) {
+                    transactionsSnapshot.forEach((child) => {
+                        exportData.transactions[child.key] = child.val();
+                    });
+                }
+
+                // Criar arquivo JSON
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `liphyr-backup-${new Date().toISOString().split('T')[0]}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+
+                alert('✅ Dados exportados com sucesso!');
+
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                alert('❌ Erro ao exportar dados: ' + error.message);
+            }
+        }
+
         // Inicializar sistema
         function initializeSystem() {
             loadPublicKeys();
-            console.log('Sistema inicializado');
+            console.log('Sistema LIPHYR HUB inicializado');
         }
 
         // Iniciar quando a página carregar
@@ -1255,6 +1871,22 @@
         document.getElementById('adminPassword').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 login();
+            }
+        });
+
+        // Teclas de atalho
+        document.addEventListener('keydown', (e) => {
+            // Ctrl + E para exportar (apenas no painel admin)
+            if (e.ctrlKey && e.key === 'e' && auth.currentUser && isAdmin(auth.currentUser.email)) {
+                e.preventDefault();
+                exportData();
+            }
+            
+            // Esc para fechar modais
+            if (e.key === 'Escape') {
+                closeLoginModal();
+                closeSendBalanceModal();
+                closeManageUserModal();
             }
         });
     </script>
