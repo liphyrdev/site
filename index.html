@@ -228,7 +228,8 @@
         input[type="email"],
         input[type="password"],
         input[type="number"],
-        select {
+        select,
+        textarea {
             flex: 1;
             padding: 12px 15px;
             background: rgba(255, 255, 255, 0.1);
@@ -239,7 +240,8 @@
         }
 
         input:focus,
-        select:focus {
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: #8a2be2;
             box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
@@ -295,6 +297,14 @@
 
         .btn-warning:hover {
             background: #e0a800;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background: #138496;
         }
 
         .verify-result {
@@ -637,6 +647,62 @@
             font-weight: bold;
             color: #ffffff;
         }
+
+        .folder-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(23, 162, 184, 0.2);
+            color: #17a2b8;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+
+        .folders-list {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid #333333;
+        }
+
+        .folders-list h4 {
+            color: #8a2be2;
+            margin-bottom: 15px;
+        }
+
+        .folders-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .folder-tag {
+            background: rgba(138, 43, 226, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .folder-tag .key-count {
+            background: #8a2be2;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .form-group select {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -703,6 +769,20 @@
             <button class="btn btn-warning" onclick="updateUser()" style="width: 100%; margin-top: 10px;">Atualizar Usuário</button>
             <button class="btn btn-danger" onclick="deleteUserAccount()" style="width: 100%; margin-top: 10px;">Excluir Conta</button>
             <div id="manageUserError" class="error-message" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- MODAL NOVO: Criar Pasta Personalizada -->
+    <div class="modal" id="createFolderModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeCreateFolderModal()">×</span>
+            <h2>Criar Nova Pasta</h2>
+            <div class="form-group">
+                <label>Escolha um nome para sua pasta:</label>
+                <input type="text" id="folderName" placeholder="Ex: keys igor, cliente joao, etc">
+            </div>
+            <button class="btn btn-info" onclick="createNewFolder()" style="width: 100%; margin-top: 20px;">Criar Pasta</button>
+            <div id="createFolderError" class="error-message" style="display: none; margin-top: 15px;"></div>
         </div>
     </div>
 
@@ -777,6 +857,12 @@
             </div>
 
             <div class="admin-actions">
+                <!-- BOTÃO NOVO: Criar Pasta -->
+                <div class="action-card" onclick="openCreateFolderModal()">
+                    <h3>Nova Pasta/Cliente</h3>
+                    <p>Criar pasta personalizada</p>
+                </div>
+                
                 <div class="action-card" onclick="toggleKeyForm()">
                     <h3>Gerar Nova Key</h3>
                     <p>Criar nova licença</p>
@@ -803,7 +889,15 @@
                 </div>
             </div>
 
-            <!-- FORMULÁRIO PARA GERAR KEY -->
+            <!-- SEÇÃO PARA MOSTRAR PASTAS CRIADAS -->
+            <div class="folders-list" id="foldersList" style="display: none;">
+                <h4>Pastas/Clientes Criados:</h4>
+                <div class="folders-container" id="foldersContainer">
+                    <!-- As pastas serão carregadas aqui -->
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO PARA GERAR KEY (MODIFICADO) -->
             <div class="key-form" id="keyForm">
                 <h3 style="color: #8a2be2; margin-bottom: 20px;">Gerar Nova Key</h3>
                 <div class="form-group">
@@ -828,6 +922,14 @@
                             <option value="lifetime">Vitalícia</option>
                         </select>
                     </div>
+                </div>
+                <!-- NOVO: Selecionar Pasta -->
+                <div class="form-group">
+                    <label>Salvar na pasta:</label>
+                    <select id="folderSelect">
+                        <option value="">Sem pasta (Global)</option>
+                        <!-- As pastas serão carregadas aqui -->
+                    </select>
                 </div>
                 <button class="btn" onclick="generateKey()" style="width: 100%; margin-top: 20px;">Gerar Key</button>
             </div>
@@ -903,7 +1005,7 @@
         // Email do admin
         const ADMIN_EMAIL = 'liphyrdev@gmail.com';
 
-        // Expor funções globalmente
+        // Expor funções globalmente (ADICIONEI AS NOVAS)
         window.openAdminPanel = openAdminPanel;
         window.closeLoginModal = closeLoginModal;
         window.login = login;
@@ -923,6 +1025,11 @@
         window.updateUser = updateUser;
         window.deleteUserAccount = deleteUserAccount;
         window.exportData = exportData;
+        
+        // NOVAS FUNÇÕES PARA PASTAS
+        window.openCreateFolderModal = openCreateFolderModal;
+        window.closeCreateFolderModal = closeCreateFolderModal;
+        window.createNewFolder = createNewFolder;
 
         // Criar partículas
         function createParticles() {
@@ -974,6 +1081,7 @@
                 loadAdminKeys();
                 loadPublicKeys();
                 loadStats();
+                loadFolders(); // Carregar pastas quando admin logar
             } else {
                 // Não é admin ou não está logado
                 document.getElementById('adminPanel').classList.remove('active');
@@ -1080,6 +1188,7 @@
             return key;
         }
 
+        // MODIFIQUEI A FUNÇÃO generateKey PARA SUPORTAR PASTAS
         async function generateKey() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -1089,6 +1198,7 @@
             const clientName = document.getElementById('clientName').value.trim();
             const durationValue = parseInt(document.getElementById('durationValue').value);
             const timeUnit = document.getElementById('timeUnit').value;
+            const folderSelect = document.getElementById('folderSelect').value;
 
             if (!clientName || !durationValue || durationValue <= 0) {
                 alert('Preencha todos os campos corretamente!');
@@ -1119,6 +1229,20 @@
             // Criar uma chave segura para o Firebase (usar o ID exato)
             const firebaseKey = newKeyValue.replace(/-/g, '_');
 
+            // Buscar nome da pasta se selecionada
+            let folderName = '';
+            if (folderSelect) {
+                try {
+                    const folderRef = ref(database, 'folders/' + folderSelect);
+                    const folderSnapshot = await get(folderRef);
+                    if (folderSnapshot.exists()) {
+                        folderName = folderSnapshot.val().name;
+                    }
+                } catch (error) {
+                    console.error('Error fetching folder:', error);
+                }
+            }
+
             const keyData = {
                 key: newKeyValue,
                 client: clientName,
@@ -1128,17 +1252,37 @@
                 expiresAt: expiresAt,
                 active: true,
                 createdBy: auth.currentUser.email,
-                createdById: auth.currentUser.uid
+                createdById: auth.currentUser.uid,
+                folderId: folderSelect || null,
+                folderName: folderName || null
             };
 
             try {
-                // CORREÇÃO: Salvar em 'keys' (minúsculo) que é onde já tem dados
+                // Salvar em 'keys' (minúsculo) que é onde já tem dados
                 const keyRef = ref(database, 'keys/' + firebaseKey);
                 await set(keyRef, keyData);
                 
+                // Atualizar contador na pasta se tiver pasta
+                if (folderSelect && folderName) {
+                    const folderRef = ref(database, 'folders/' + folderSelect);
+                    const folderSnapshot = await get(folderRef);
+                    
+                    if (folderSnapshot.exists()) {
+                        const folderData = folderSnapshot.val();
+                        const currentCount = folderData.keyCount || 0;
+                        
+                        await update(folderRef, {
+                            keyCount: currentCount + 1,
+                            lastUpdated: now
+                        });
+                    }
+                }
+                
                 // Mostrar mensagem de sucesso
                 const durationText = timeUnit === 'lifetime' ? 'Vitalícia' : `${durationValue} ${timeUnit}`;
-                alert(`✅ Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}`);
+                const folderText = folderName ? `\nPasta: ${folderName}` : '';
+                
+                alert(`✅ Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}${folderText}`);
                 
                 // Limpar formulário
                 document.getElementById('clientName').value = '';
@@ -1148,6 +1292,7 @@
                 loadAdminKeys();
                 loadPublicKeys();
                 loadStats();
+                loadFolders(); // Atualizar lista de pastas
             } catch (error) {
                 console.error('Error generating key:', error);
                 alert('❌ Erro ao gerar key: ' + error.message);
@@ -1203,11 +1348,13 @@
                     }
                     
                     const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
+                    const folderInfo = data.folderName ? `<p><strong>Pasta:</strong> ${data.folderName}</p>` : '';
                     
                     resultDiv.className = 'verify-result result-success';
                     resultDiv.innerHTML = `
                         <h3>✅ Key válida!</h3>
                         <p><strong>Cliente:</strong> ${data.client}</p>
+                        ${folderInfo}
                         <p><strong>Status:</strong> Ativa</p>
                         <p><strong>Tempo restante:</strong> ${timeLeftText}</p>
                         <p><strong>Criada em:</strong> ${createdDate}</p>
@@ -1223,6 +1370,7 @@
             }
         }
 
+        // MODIFIQUEI A FUNÇÃO loadPublicKeys PARA MOSTRAR PASTA
         function loadPublicKeys() {
             // CORREÇÃO: Usar 'keys' (minúsculo)
             const keysRef = ref(database, 'keys');
@@ -1271,12 +1419,16 @@
                     
                     const statusClass = data.timeUnit === 'lifetime' ? 'status-active' : 
                                      (data.expiresAt - now < 24 * 60 * 60 * 1000) ? 'status-expiring' : 'status-active';
+                    
+                    // Adicionar badge da pasta se existir
+                    const folderBadge = data.folderName ? 
+                        `<span class="folder-badge">${data.folderName}</span>` : '';
 
                     const card = document.createElement('div');
                     card.className = 'key-card';
                     card.innerHTML = `
                         <div class="key-info">
-                            <h3>${data.client}</h3>
+                            <h3>${data.client} ${folderBadge}</h3>
                             <div class="key-value">${data.key}</div>
                             <div class="key-status">
                                 <span>Status: <span class="${statusClass}">Ativa</span></span>
@@ -1297,6 +1449,7 @@
             });
         }
 
+        // MODIFIQUEI A FUNÇÃO loadAdminKeys PARA MOSTRAR PASTA
         function loadAdminKeys() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 return;
@@ -1342,6 +1495,9 @@
                     const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
                     const timeUnitText = data.timeUnit === 'lifetime' ? 'Vitalícia' : 
                                        `${data.duration} ${data.timeUnit}`;
+                    
+                    // Adicionar informação da pasta
+                    const folderInfo = data.folderName ? `<small>Pasta: ${data.folderName}</small>` : '';
 
                     const item = document.createElement('div');
                     item.className = 'admin-key-item';
@@ -1349,6 +1505,7 @@
                         <div class="key-details">
                             <strong>${data.key}</strong>
                             <small>Cliente: ${data.client}</small>
+                            ${folderInfo}
                             <small>Validade: ${timeUnitText}</small>
                             <small>Criado em: ${createdDate}</small>
                             <small>Criado por: ${data.createdBy || 'Admin'}</small>
@@ -1368,7 +1525,7 @@
             });
         }
 
-        // CORREÇÃO: FUNÇÃO PARA APAGAR KEY - AGORA FUNCIONA NO CAMINHO CERTO
+        // MODIFIQUEI A FUNÇÃO deleteKey PARA ATUALIZAR CONTADOR DA PASTA
         async function deleteKey(firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -1388,20 +1545,41 @@
                 console.log('🗑️ Tentando deletar key:', firebaseKey);
                 console.log('📍 Caminho: keys/' + firebaseKey);
                 
-                // CORREÇÃO: Usar 'keys' (minúsculo)
+                // Primeiro buscar informações da key para saber se está em uma pasta
                 const keyRef = ref(database, 'keys/' + firebaseKey);
-                
-                // Verificar se a key existe
                 const snapshot = await get(keyRef);
+                
                 if (!snapshot.exists()) {
                     alert('❌ Key não encontrada no banco de dados!');
                     return;
                 }
                 
+                const keyData = snapshot.val();
+                const folderId = keyData.folderId;
+                
                 console.log('✅ Key encontrada, deletando...');
                 
                 // Deletar a key
                 await remove(keyRef);
+                
+                // Atualizar contador da pasta se a key estava em uma pasta
+                if (folderId) {
+                    const folderRef = ref(database, 'folders/' + folderId);
+                    const folderSnapshot = await get(folderRef);
+                    
+                    if (folderSnapshot.exists()) {
+                        const folderData = folderSnapshot.val();
+                        const currentCount = folderData.keyCount || 0;
+                        const newCount = Math.max(0, currentCount - 1);
+                        
+                        await update(folderRef, {
+                            keyCount: newCount,
+                            lastUpdated: Date.now()
+                        });
+                        
+                        console.log(`✅ Contador da pasta atualizado: ${newCount} keys`);
+                    }
+                }
                 
                 console.log('✅ Key deletada com sucesso!');
                 
@@ -1423,6 +1601,7 @@
                 loadAdminKeys();
                 loadPublicKeys();
                 loadStats();
+                loadFolders(); // Atualizar lista de pastas
                 
             } catch (error) {
                 console.error('❌ Error deleting key:', error);
@@ -1460,6 +1639,23 @@
                     const isInactive = !data.active;
                     
                     if (isExpired || isInactive) {
+                        // Se a key estava em uma pasta, atualizar contador
+                        if (data.folderId) {
+                            const folderRef = ref(database, 'folders/' + data.folderId);
+                            get(folderRef).then((folderSnapshot) => {
+                                if (folderSnapshot.exists()) {
+                                    const folderData = folderSnapshot.val();
+                                    const currentCount = folderData.keyCount || 0;
+                                    const newCount = Math.max(0, currentCount - 1);
+                                    
+                                    update(folderRef, {
+                                        keyCount: newCount,
+                                        lastUpdated: Date.now()
+                                    });
+                                }
+                            });
+                        }
+                        
                         deletePromises.push(remove(child.ref));
                         deletedCount++;
                     }
@@ -1474,6 +1670,7 @@
                 loadAdminKeys();
                 loadPublicKeys();
                 loadStats();
+                loadFolders(); // Atualizar lista de pastas
             } catch (error) {
                 console.error('Error cleaning expired keys:', error);
                 alert('❌ Erro ao limpar keys: ' + error.message);
@@ -1996,6 +2193,115 @@
             } catch (error) {
                 console.error('Error exporting data:', error);
                 alert('❌ Erro ao exportar dados: ' + error.message);
+            }
+        }
+
+        // ===========================================
+        // NOVAS FUNÇÕES PARA CRIAR PASTAS
+        // ===========================================
+
+        function openCreateFolderModal() {
+            document.getElementById('createFolderModal').classList.add('active');
+            document.getElementById('folderName').value = '';
+            document.getElementById('createFolderError').style.display = 'none';
+        }
+
+        function closeCreateFolderModal() {
+            document.getElementById('createFolderModal').classList.remove('active');
+        }
+
+        async function createNewFolder() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+
+            const folderName = document.getElementById('folderName').value.trim();
+            const errorDiv = document.getElementById('createFolderError');
+
+            if (!folderName) {
+                errorDiv.textContent = 'Digite um nome para a pasta!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Criar ID único para a pasta
+                const folderId = 'folder_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                const folderData = {
+                    id: folderId,
+                    name: folderName,
+                    createdAt: Date.now(),
+                    createdBy: auth.currentUser.email,
+                    keyCount: 0
+                };
+
+                // Salvar no Firebase na pasta 'folders'
+                await set(ref(database, 'folders/' + folderId), folderData);
+                
+                alert(`✅ Pasta criada com sucesso!\n\nNome: ${folderName}\n\nAgora quando você gerar uma key, pode selecionar esta pasta no dropdown.`);
+                
+                closeCreateFolderModal();
+                loadFolders(); // Atualizar a lista de pastas
+                
+            } catch (error) {
+                console.error('Error creating folder:', error);
+                errorDiv.textContent = 'Erro ao criar pasta: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // FUNÇÃO PARA CARREGAR PASTAS DO FIREBASE
+        async function loadFolders() {
+            try {
+                const foldersRef = ref(database, 'folders');
+                const snapshot = await get(foldersRef);
+                
+                const foldersContainer = document.getElementById('foldersContainer');
+                const folderSelect = document.getElementById('folderSelect');
+                
+                // Limpar containers
+                foldersContainer.innerHTML = '';
+                folderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
+                
+                if (!snapshot.exists()) {
+                    document.getElementById('foldersList').style.display = 'none';
+                    return;
+                }
+                
+                // Mostrar seção de pastas
+                document.getElementById('foldersList').style.display = 'block';
+                
+                const folders = [];
+                snapshot.forEach((child) => {
+                    const folderData = child.val();
+                    folders.push(folderData);
+                });
+                
+                // Ordenar por data de criação
+                folders.sort((a, b) => b.createdAt - a.createdAt);
+                
+                folders.forEach((folder) => {
+                    // Adicionar ao container visual
+                    const folderTag = document.createElement('div');
+                    folderTag.className = 'folder-tag';
+                    folderTag.innerHTML = `
+                        ${folder.name}
+                        <span class="key-count">${folder.keyCount || 0}</span>
+                    `;
+                    foldersContainer.appendChild(folderTag);
+                    
+                    // Adicionar ao dropdown
+                    const option = document.createElement('option');
+                    option.value = folder.id;
+                    option.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
+                    folderSelect.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading folders:', error);
+                document.getElementById('foldersList').style.display = 'none';
             }
         }
 
