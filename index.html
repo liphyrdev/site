@@ -44,6 +44,164 @@
             50% { transform: translateY(-100px) translateX(50px); }
         }
 
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            nav a {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+            
+            .container {
+                padding: 0 10px;
+                margin: 20px auto;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .keys-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .admin-actions {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            
+            .action-card {
+                padding: 15px;
+            }
+            
+            .action-card h3 {
+                font-size: 14px;
+            }
+            
+            .shop-plans-manager {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .shop-plan-card {
+                padding: 15px;
+            }
+            
+            .shop-plan-title {
+                font-size: 18px;
+            }
+            
+            .shop-plan-price {
+                font-size: 24px;
+            }
+            
+            .shop-plan-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .key-form,
+            .shop-form {
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .verify-input {
+                flex-direction: column;
+            }
+            
+            .verify-input input {
+                width: 100%;
+            }
+            
+            .modal-box {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            .admin-key-item,
+            .user-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .key-actions,
+            .user-actions {
+                width: 100%;
+                display: flex;
+                gap: 10px;
+            }
+            
+            .key-actions button,
+            .user-actions button {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .section-title {
+                font-size: 22px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 10px;
+            }
+            
+            .stat-card .value {
+                font-size: 20px;
+            }
+            
+            .folders-container {
+                justify-content: center;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 14px;
+                min-width: 100px;
+            }
+        }
+
         header {
             padding: 20px 50px;
             display: flex;
@@ -871,111 +1029,20 @@
             display: block;
         }
 
-        /* ESTILOS RESPONSIVOS PARA CELULAR */
-        @media (max-width: 768px) {
-            header {
-                padding: 15px 20px;
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .logo {
-                font-size: 24px;
-            }
-
-            nav {
-                width: 100%;
-                justify-content: center;
-                gap: 15px;
-            }
-
-            nav a {
-                padding: 6px 12px;
-                font-size: 14px;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .section-title {
-                font-size: 22px;
-            }
-
-            .verify-input {
-                flex-direction: column;
-            }
-
-            .btn {
-                padding: 10px 20px;
-                min-width: 100px;
-                font-size: 14px;
-            }
-
-            .admin-actions {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .action-card {
-                padding: 15px;
-            }
-
-            .action-card h3 {
-                font-size: 14px;
-            }
-
-            .action-card p {
-                font-size: 11px;
-            }
-
-            .form-row {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .modal-box {
-                padding: 20px;
-                width: 95%;
-            }
-
-            .shop-plan-actions {
-                flex-direction: column;
-            }
-
-            .user-actions {
-                flex-direction: column;
-                width: 100px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stat-card .value {
-                font-size: 18px;
-            }
-
-            .keys-grid {
-                grid-template-columns: 1fr;
-            }
+        .clean-folders-btn {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            margin-left: 10px;
         }
 
-        @media (max-width: 480px) {
-            .admin-actions {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .shop-plans-manager {
-                grid-template-columns: 1fr;
-            }
+        .clean-folders-btn:hover {
+            background: #b71c1c;
         }
     </style>
 </head>
@@ -1060,7 +1127,33 @@
         </div>
     </div>
 
-    <!-- MODAL NOVO: Gerenciar Plano do Shop -->
+    <!-- MODAL: Limpar Pastas -->
+    <div class="modal" id="cleanFoldersModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeCleanFoldersModal()">×</span>
+            <h2>Limpar Todas as Pastas</h2>
+            <div style="color: #ff4444; margin-bottom: 20px; text-align: center;">
+                ⚠️ <strong>ATENÇÃO!</strong> ⚠️
+            </div>
+            <p style="color: #cccccc; margin-bottom: 15px;">
+                Esta ação irá <strong>REMOVER TODAS</strong> as pastas e as keys dentro delas.
+            </p>
+            <p style="color: #cccccc; margin-bottom: 20px;">
+                Você tem certeza absoluta que deseja continuar?
+            </p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-danger" onclick="cleanAllFolders()" style="flex: 1;">
+                    SIM, LIMPAR TUDO
+                </button>
+                <button class="btn btn-secondary" onclick="closeCleanFoldersModal()" style="flex: 1;">
+                    CANCELAR
+                </button>
+            </div>
+            <div id="cleanFoldersError" class="error-message" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: Gerenciar Plano do Shop -->
     <div class="modal" id="manageShopPlanModal">
         <div class="modal-box" style="max-width: 600px;">
             <span class="close-modal" onclick="closeManageShopPlanModal()">×</span>
@@ -1090,21 +1183,12 @@
                 <label>Pasta para salvar a key:</label>
                 <select id="shopPlanFolderSelect">
                     <option value="">Sem pasta (Global)</option>
-                    <!-- As pastas serão carregadas aqui -->
                 </select>
-            </div>
-            
-            <div class="form-group">
-                <label style="display: flex; align-items: center; gap: 10px;">
-                    <input type="checkbox" id="shopPlanPopular">
-                    Marcar como "POPULAR"
-                </label>
             </div>
             
             <div class="form-group">
                 <label>Recursos/Features (um por linha):</label>
                 <div class="features-container" id="shopFeaturesContainer">
-                    <!-- Features serão adicionadas aqui -->
                 </div>
                 <div class="feature-item">
                     <input type="text" id="newFeature" placeholder="Digite um recurso...">
@@ -1190,13 +1274,11 @@
             </div>
 
             <div class="admin-actions">
-                <!-- BOTÃO NOVO: Gerenciar Shop -->
                 <div class="action-card" onclick="openShopManager()">
                     <h3>Gerenciar Shop</h3>
                     <p>Editar planos e preços</p>
                 </div>
                 
-                <!-- BOTÃO NOVO: Criar Pasta -->
                 <div class="action-card" onclick="openCreateFolderModal()">
                     <h3>Nova Pasta/Cliente</h3>
                     <p>Criar pasta personalizada</p>
@@ -1206,22 +1288,32 @@
                     <h3>Gerar Nova Key</h3>
                     <p>Criar nova licença</p>
                 </div>
+                
                 <div class="action-card" onclick="loadAllKeys()">
                     <h3>Atualizar Lista</h3>
                     <p>Recarregar todas as keys</p>
                 </div>
+                
                 <div class="action-card" onclick="openSendBalanceModal()">
                     <h3>Enviar Saldo</h3>
                     <p>Transferir para usuário</p>
                 </div>
+                
                 <div class="action-card" onclick="loadAllUsers()">
                     <h3>Gerenciar Usuários</h3>
                     <p>Ver e editar contas</p>
                 </div>
+                
                 <div class="action-card" onclick="cleanExpiredKeys()">
                     <h3>Limpar Expiradas</h3>
                     <p>Remover keys antigas</p>
                 </div>
+                
+                <div class="action-card" onclick="openCleanFoldersModal()">
+                    <h3>Limpar Pastas</h3>
+                    <p>Remover todas as pastas</p>
+                </div>
+                
                 <div class="action-card" onclick="exportData()">
                     <h3>Exportar Dados</h3>
                     <p>Backup do sistema</p>
@@ -1234,7 +1326,7 @@
                 
                 <div style="display: flex; gap: 15px; margin-bottom: 20px;">
                     <button class="btn btn-success" onclick="openNewShopPlanModal()">
-                        Adicionar Novo Plano
+                        + Adicionar Novo Plano
                     </button>
                     <button class="btn btn-info" onclick="loadShopPlans()">
                         Atualizar Lista
@@ -1251,13 +1343,17 @@
 
             <!-- SEÇÃO PARA MOSTRAR PASTAS CRIADAS -->
             <div class="folders-list" id="foldersList" style="display: none;">
-                <h4>Pastas/Clientes Criados:</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h4>Pastas/Clientes Criados:</h4>
+                    <button class="clean-folders-btn" onclick="openCleanFoldersModal()">
+                        Limpar Todas
+                    </button>
+                </div>
                 <div class="folders-container" id="foldersContainer">
-                    <!-- As pastas serão carregadas aqui -->
                 </div>
             </div>
 
-            <!-- FORMULÁRIO PARA GERAR KEY (MODIFICADO) -->
+            <!-- FORMULÁRIO PARA GERAR KEY -->
             <div class="key-form" id="keyForm">
                 <h3 style="color: #8a2be2; margin-bottom: 20px;">Gerar Nova Key</h3>
                 <div class="form-group">
@@ -1283,12 +1379,10 @@
                         </select>
                     </div>
                 </div>
-                <!-- NOVO: Selecionar Pasta -->
                 <div class="form-group">
                     <label>Salvar na pasta:</label>
                     <select id="folderSelect">
                         <option value="">Sem pasta (Global)</option>
-                        <!-- As pastas serão carregadas aqui -->
                     </select>
                 </div>
                 <button class="btn" onclick="generateKey()" style="width: 100%; margin-top: 20px;">Gerar Key</button>
@@ -1338,13 +1432,7 @@
             remove, 
             onValue,
             push,
-            update,
-            query,
-            orderByChild,
-            equalTo,
-            orderByKey,
-            startAt,
-            endAt
+            update
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
@@ -1362,14 +1450,11 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
-        // Email do admin
         const ADMIN_EMAIL = 'liphyrdev@gmail.com';
 
-        // Variáveis globais
         let currentShopPlanId = null;
         let shopFeatures = [];
 
-        // Expor funções globalmente
         window.openAdminPanel = openAdminPanel;
         window.closeLoginModal = closeLoginModal;
         window.login = login;
@@ -1391,13 +1476,12 @@
         window.deleteUserAccount = deleteUserAccount;
         window.exportData = exportData;
         window.selectFolder = selectFolder;
-        
-        // FUNÇÕES PARA PASTAS
         window.openCreateFolderModal = openCreateFolderModal;
         window.closeCreateFolderModal = closeCreateFolderModal;
         window.createNewFolder = createNewFolder;
-        
-        // NOVAS FUNÇÕES PARA SHOP
+        window.openCleanFoldersModal = openCleanFoldersModal;
+        window.closeCleanFoldersModal = closeCleanFoldersModal;
+        window.cleanAllFolders = cleanAllFolders;
         window.openShopManager = openShopManager;
         window.openNewShopPlanModal = openNewShopPlanModal;
         window.closeManageShopPlanModal = closeManageShopPlanModal;
@@ -1409,7 +1493,6 @@
         window.deleteShopPlan = deleteShopPlan;
         window.toggleShopPlanPopular = toggleShopPlanPopular;
 
-        // Criar partículas
         function createParticles() {
             const container = document.getElementById('particles');
             for (let i = 0; i < 50; i++) {
@@ -1423,46 +1506,37 @@
         }
         createParticles();
 
-        // Verificar se usuário é admin
         function isAdmin(email) {
             return email === ADMIN_EMAIL;
         }
 
-        // Mostrar/ocultar informações do usuário
         function updateUserUI(user) {
             const userInfo = document.getElementById('userInfo');
             const adminNav = document.getElementById('adminNav');
             
             if (user && isAdmin(user.email)) {
-                // É admin - mostrar informações
                 userInfo.style.display = 'flex';
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
                 adminNav.style.display = 'none';
-                
-                // Atualizar também no painel admin
                 document.getElementById('adminEmailDisplay').textContent = user.email;
                 document.getElementById('adminAvatar').textContent = user.email.charAt(0).toUpperCase();
             } else {
-                // Não é admin ou não está logado
                 userInfo.style.display = 'none';
                 adminNav.style.display = 'inline';
             }
         }
 
-        // Monitorar estado de autenticação
         onAuthStateChanged(auth, (user) => {
             if (user && isAdmin(user.email)) {
-                // É admin logado
                 document.getElementById('adminPanel').classList.add('active');
                 updateUserUI(user);
                 loadAllKeys();
                 loadPublicKeys();
                 loadStats();
                 loadFolders();
-                loadShopPlans(); // Carregar planos do shop
+                loadShopPlans();
             } else {
-                // Não é admin ou não está logado
                 document.getElementById('adminPanel').classList.remove('active');
                 updateUserUI(user);
                 loadPublicKeys();
@@ -1471,10 +1545,8 @@
 
         function openAdminPanel() {
             if (auth.currentUser && isAdmin(auth.currentUser.email)) {
-                // Já está logado como admin
                 document.getElementById('adminPanel').classList.add('active');
             } else {
-                // Mostrar modal de login
                 document.getElementById('loginModal').classList.add('active');
             }
         }
@@ -1498,10 +1570,8 @@
             }
 
             try {
-                // Fazer login no Firebase Authentication
                 await signInWithEmailAndPassword(auth, email, password);
                 
-                // Verificar se o email é o do admin
                 if (!isAdmin(email)) {
                     await signOut(auth);
                     errorDiv.textContent = 'Acesso não autorizado! Apenas o administrador pode acessar.';
@@ -1546,33 +1616,23 @@
         function toggleKeyForm() {
             const form = document.getElementById('keyForm');
             form.classList.toggle('active');
-            
-            // Ocultar outras seções
             document.getElementById('shopManager').classList.remove('active');
             document.getElementById('usersListSection').style.display = 'none';
             
-            // Rolagem suave para o formulário
             if (form.classList.contains('active')) {
                 form.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // ABRIR GERENCIADOR DO SHOP
         function openShopManager() {
             const shopManager = document.getElementById('shopManager');
             shopManager.classList.toggle('active');
-            
-            // Ocultar outras seções
             document.getElementById('keyForm').classList.remove('active');
             document.getElementById('usersListSection').style.display = 'none';
             
-            // Rolagem suave
             if (shopManager.classList.contains('active')) {
                 shopManager.scrollIntoView({ behavior: 'smooth' });
             }
-            
-            // Carregar planos do shop
-            loadShopPlans();
         }
 
         function generateRandomKey() {
@@ -1587,7 +1647,6 @@
             return key;
         }
 
-        // FUNÇÃO generateKey CORRIGIDA - SALVA NA PASTA ESCOLHIDA
         async function generateKey() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -1604,10 +1663,9 @@
                 return;
             }
 
-            // Calcular duração em milissegundos
             let durationInMs = 0;
             if (timeUnit === 'lifetime') {
-                durationInMs = 9999999999999; // Praticamente vitalícia
+                durationInMs = 9999999999999;
             } else {
                 const multipliers = {
                     'seconds': 1000,
@@ -1625,7 +1683,6 @@
             const now = Date.now();
             const expiresAt = timeUnit === 'lifetime' ? null : now + durationInMs;
 
-            // Buscar nome da pasta se selecionada
             let folderName = '';
             if (folderSelect) {
                 try {
@@ -1654,20 +1711,16 @@
             };
 
             try {
-                // DECISÃO: ONDE SALVAR A KEY?
                 if (folderSelect && folderSelect !== '') {
-                    // SALVAR NA PASTA PERSONALIZADA (nova estrutura)
                     const keyId = 'key_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     const keyRef = ref(database, `folders/${folderSelect}/keys/${keyId}`);
                     await set(keyRef, keyData);
                 } else {
-                    // SALVAR NO LOCAL PADRÃO (compatibilidade)
                     const firebaseKey = 'key_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     const keyRef = ref(database, 'keys/' + firebaseKey);
                     await set(keyRef, keyData);
                 }
                 
-                // Atualizar contador na pasta se tiver pasta
                 if (folderSelect && folderName) {
                     const folderRef = ref(database, 'folders/' + folderSelect);
                     const folderSnapshot = await get(folderRef);
@@ -1683,17 +1736,14 @@
                     }
                 }
                 
-                // Mostrar mensagem de sucesso
                 const durationText = timeUnit === 'lifetime' ? 'Vitalícia' : `${durationValue} ${timeUnit}`;
                 const folderText = folderName ? `\nPasta: ${folderName}` : '';
                 
                 alert(`Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}${folderText}`);
                 
-                // Limpar formulário
                 document.getElementById('clientName').value = '';
                 document.getElementById('durationValue').value = '30';
                 
-                // Atualizar listas
                 loadAllKeys();
                 loadPublicKeys();
                 loadStats();
@@ -1704,12 +1754,10 @@
             }
         }
 
-        // FUNÇÃO PARA SELECIONAR UMA PASTA (clicando na tag)
         function selectFolder(folderId) {
             const folderSelect = document.getElementById('folderSelect');
             folderSelect.value = folderId;
             
-            // Destacar a tag selecionada
             const folderTags = document.querySelectorAll('.folder-tag');
             folderTags.forEach(tag => {
                 if (tag.getAttribute('data-folder-id') === folderId) {
@@ -1719,7 +1767,6 @@
                 }
             });
             
-            // Scroll para o formulário
             document.getElementById('keyForm').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -1737,10 +1784,7 @@
             try {
                 let keyFound = false;
                 let keyData = null;
-                let keySource = null;
-                let keyId = null;
 
-                // 1. Buscar nas pastas personalizadas
                 const foldersRef = ref(database, 'folders');
                 const foldersSnapshot = await get(foldersRef);
                 
@@ -1754,8 +1798,6 @@
                                 if (childData.key === keyInput) {
                                     keyFound = true;
                                     keyData = childData;
-                                    keySource = 'folder';
-                                    keyId = childKey;
                                     keyData.folderName = folderData.name;
                                     break;
                                 }
@@ -1765,7 +1807,6 @@
                     }
                 }
 
-                // 2. Se não encontrou nas pastas, buscar no local padrão
                 if (!keyFound) {
                     const defaultKeysRef = ref(database, 'keys');
                     const defaultSnapshot = await get(defaultKeysRef);
@@ -1775,8 +1816,6 @@
                             if (childData.key === keyInput) {
                                 keyFound = true;
                                 keyData = childData;
-                                keySource = 'default';
-                                keyId = childKey;
                                 break;
                             }
                         }
@@ -1836,7 +1875,6 @@
             }
         }
 
-        // FUNÇÃO PARA CARREGAR KEYS PÚBLICAS (visível para todos)
         function loadPublicKeys() {
             const container = document.getElementById('publicKeys');
             container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 40px;"><div class="loading"></div><p style="margin-top: 10px;">Carregando keys...</p></div>';
@@ -1846,7 +1884,6 @@
                 const now = Date.now();
 
                 try {
-                    // 1. Buscar keys das pastas personalizadas
                     const foldersRef = ref(database, 'folders');
                     const foldersSnapshot = await get(foldersRef);
                     
@@ -1868,7 +1905,6 @@
                         }
                     }
 
-                    // 2. Buscar keys do local padrão
                     const defaultKeysRef = ref(database, 'keys');
                     const defaultSnapshot = await get(defaultKeysRef);
                     
@@ -1880,10 +1916,7 @@
                         }
                     }
 
-                    // Ordenar por data de criação (mais novas primeiro)
                     allKeys.sort((a, b) => b.createdAt - a.createdAt);
-
-                    // Exibir as keys
                     displayPublicKeys(allKeys);
 
                 } catch (error) {
@@ -1895,7 +1928,6 @@
             fetchAllPublicKeys();
         }
 
-        // FUNÇÃO PARA EXIBIR KEYS PÚBLICAS
         function displayPublicKeys(keys) {
             const container = document.getElementById('publicKeys');
             container.innerHTML = '';
@@ -1908,7 +1940,6 @@
             keys.forEach((data) => {
                 const now = Date.now();
                 
-                // Calcular tempo restante
                 let timeLeftText = '';
                 if (data.timeUnit === 'lifetime') {
                     timeLeftText = 'Vitalícia';
@@ -1925,7 +1956,6 @@
                 const statusClass = data.timeUnit === 'lifetime' ? 'status-active' : 
                                  (data.expiresAt - now < 24 * 60 * 60 * 1000) ? 'status-expiring' : 'status-active';
                 
-                // Adicionar badge da pasta se existir
                 const folderBadge = data.folderName ? 
                     `<span class="folder-badge">${data.folderName}</span>` : '';
 
@@ -1945,7 +1975,6 @@
             });
         }
 
-        // FUNÇÃO PARA CARREGAR TODAS AS KEYS (admin)
         async function loadAllKeys() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 return;
@@ -1957,7 +1986,6 @@
 
                 let allKeys = [];
 
-                // 1. Buscar keys do local padrão (sem pasta)
                 const defaultKeysRef = ref(database, 'keys');
                 const defaultSnapshot = await get(defaultKeysRef);
                 
@@ -1973,7 +2001,6 @@
                     }
                 }
 
-                // 2. Buscar keys das pastas personalizadas
                 const foldersRef = ref(database, 'folders');
                 const foldersSnapshot = await get(foldersRef);
                 
@@ -1996,7 +2023,6 @@
                     }
                 }
 
-                // Exibir todas as keys
                 displayAllKeys(allKeys);
 
             } catch (error) {
@@ -2006,7 +2032,6 @@
             }
         }
 
-        // FUNÇÃO PARA EXIBIR TODAS AS KEYS (admin)
         function displayAllKeys(keys) {
             const container = document.getElementById('adminKeysList');
             container.innerHTML = '';
@@ -2016,7 +2041,6 @@
                 return;
             }
 
-            // Ordenar por data de criação (mais novas primeiro)
             keys.sort((a, b) => b.createdAt - a.createdAt);
 
             keys.forEach((data) => {
@@ -2039,12 +2063,10 @@
                 const timeUnitText = data.timeUnit === 'lifetime' ? 'Vitalícia' : 
                                    `${data.duration} ${data.timeUnit}`;
                 
-                // Informações da pasta
                 const folderInfo = data.folderName ? 
                     `<small>Pasta: ${data.folderName}</small>` : 
                     '<small>Local: Global (sem pasta)</small>';
                 
-                // Botão de deletar específico para cada origem
                 const deleteButton = data.source === 'folder' ?
                     `<button class="btn btn-danger" onclick="deleteKeyFromFolder('${data.folderId}', '${data.firebaseKey}', '${data.key}')">Deletar</button>` :
                     `<button class="btn btn-danger" onclick="deleteKey('${data.firebaseKey}', '${data.key}')">Deletar</button>`;
@@ -2070,7 +2092,6 @@
             });
         }
 
-        // FUNÇÃO PARA DELETAR KEY DO LOCAL PADRÃO
         async function deleteKey(firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -2096,7 +2117,6 @@
             }
         }
 
-        // FUNÇÃO PARA DELETAR KEY DE UMA PASTA
         async function deleteKeyFromFolder(folderId, firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -2108,11 +2128,9 @@
             }
 
             try {
-                // Deletar da pasta
                 const keyRef = ref(database, `folders/${folderId}/keys/${firebaseKey}`);
                 await remove(keyRef);
                 
-                // Atualizar contador da pasta
                 const folderRef = ref(database, 'folders/' + folderId);
                 const folderSnapshot = await get(folderRef);
                 
@@ -2153,7 +2171,6 @@
                 let deletedCount = 0;
                 const now = Date.now();
 
-                // 1. Limpar keys do local padrão
                 const defaultKeysRef = ref(database, 'keys');
                 const defaultSnapshot = await get(defaultKeysRef);
                 
@@ -2174,7 +2191,6 @@
                     }
                 }
 
-                // 2. Limpar keys das pastas
                 const foldersRef = ref(database, 'folders');
                 const foldersSnapshot = await get(foldersRef);
                 
@@ -2201,7 +2217,6 @@
                             if (folderDeletePromises.length > 0) {
                                 await Promise.all(folderDeletePromises);
                                 
-                                // Atualizar contador da pasta
                                 const currentCount = folderData.keyCount || 0;
                                 const newCount = Math.max(0, currentCount - folderDeletedCount);
                                 
@@ -2216,7 +2231,6 @@
 
                 alert(`${deletedCount} key(s) removida(s) com sucesso!`);
                 
-                // Atualizar listas
                 loadAllKeys();
                 loadPublicKeys();
                 loadStats();
@@ -2227,7 +2241,6 @@
             }
         }
 
-        // FUNÇÕES PARA ENVIAR SALDO
         function openSendBalanceModal() {
             document.getElementById('sendBalanceModal').classList.add('active');
             document.getElementById('sendUserEmail').value = '';
@@ -2260,7 +2273,6 @@
             try {
                 console.log('Procurando carteira para:', userEmail);
                 
-                // Buscar carteira do usuário
                 const walletsRef = ref(database, 'wallets');
                 const snapshot = await get(walletsRef);
                 
@@ -2279,7 +2291,6 @@
                 }
 
                 if (!walletFound) {
-                    // Se não encontrar carteira, criar uma nova
                     walletId = 'wallet_' + Date.now();
                     walletFound = {
                         balance: 0,
@@ -2293,12 +2304,10 @@
                     console.log('Nova carteira criada:', walletId);
                 }
 
-                // Atualizar o saldo do usuário
                 const oldBalance = walletFound.balance || 0;
                 const newBalance = oldBalance + amount;
                 const newTotal = (walletFound.totalReceived || 0) + amount;
                 
-                // Atualizar histórico
                 const newHistory = walletFound.history || [];
                 newHistory.push({
                     amount: amount,
@@ -2310,7 +2319,6 @@
                     newBalance: newBalance
                 });
 
-                // Atualizar carteira no Firebase
                 await update(ref(database, 'wallets/' + walletId), {
                     balance: newBalance,
                     totalReceived: newTotal,
@@ -2318,7 +2326,6 @@
                     lastUpdated: Date.now()
                 });
 
-                // Também salvar em transactions para registro
                 const transactionId = 'trans_' + Date.now();
                 const transactionData = {
                     walletId: walletId,
@@ -2334,13 +2341,9 @@
 
                 await set(ref(database, 'transactions/' + transactionId), transactionData);
 
-                // Mostrar sucesso
                 alert(`Saldo enviado com sucesso!\n\nUsuário: ${userEmail}\nValor: R$ ${amount.toFixed(2)}\nSaldo Anterior: R$ ${oldBalance.toFixed(2)}\nNovo Saldo: R$ ${newBalance.toFixed(2)}`);
                 
-                // Fechar modal
                 closeSendBalanceModal();
-                
-                // Atualizar estatísticas
                 loadStats();
                 
             } catch (error) {
@@ -2350,19 +2353,16 @@
             }
         }
 
-        // FUNÇÕES PARA GERENCIAR USUÁRIOS
         async function loadAllUsers() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
                 return;
             }
 
-            // Mostrar seção de usuários
             document.getElementById('usersListSection').style.display = 'block';
             document.getElementById('keyForm').classList.remove('active');
             document.getElementById('shopManager').classList.remove('active');
             
-            // Rolagem suave
             document.getElementById('usersListSection').scrollIntoView({ behavior: 'smooth' });
 
             try {
@@ -2386,15 +2386,12 @@
                     });
                 });
 
-                // Ordenar por data de criação
                 users.sort((a, b) => b.createdAt - a.createdAt);
 
-                // Para cada usuário, buscar também a carteira
                 for (const user of users) {
                     let balance = 0;
                     let walletId = null;
                     
-                    // Buscar carteira deste usuário
                     const walletsRef = ref(database, 'wallets');
                     const walletsSnapshot = await get(walletsRef);
                     
@@ -2464,7 +2461,6 @@
                 const user = snapshot.val();
                 let balance = 0;
                 
-                // Buscar saldo da carteira
                 const walletsRef = ref(database, 'wallets');
                 const walletsSnapshot = await get(walletsRef);
                 
@@ -2521,13 +2517,11 @@
             }
 
             try {
-                // Atualizar status do usuário
                 await update(ref(database, 'users/' + currentManagingUserId), {
                     status: newStatus,
                     lastUpdated: Date.now()
                 });
 
-                // Buscar e atualizar carteira
                 const walletsRef = ref(database, 'wallets');
                 const walletsSnapshot = await get(walletsRef);
                 
@@ -2543,14 +2537,12 @@
                 }
                 
                 if (walletId) {
-                    // Atualizar saldo na carteira
                     await update(ref(database, 'wallets/' + walletId), {
                         balance: newBalance,
                         lastUpdated: Date.now()
                     });
                 }
 
-                // Registrar a alteração
                 const logId = 'log_' + Date.now();
                 await set(ref(database, 'logs/' + logId), {
                     action: 'update_user',
@@ -2584,10 +2576,8 @@
             }
 
             try {
-                // Remover usuário
                 await remove(ref(database, 'users/' + currentManagingUserId));
 
-                // Remover carteira se existir
                 const walletsRef = ref(database, 'wallets');
                 const walletsSnapshot = await get(walletsRef);
                 
@@ -2600,7 +2590,6 @@
                     });
                 }
 
-                // Registrar a exclusão
                 const logId = 'log_' + Date.now();
                 await set(ref(database, 'logs/' + logId), {
                     action: 'delete_user',
@@ -2621,7 +2610,6 @@
             }
         }
 
-        // FUNÇÃO PARA CARREGAR ESTATÍSTICAS
         async function loadStats() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 return;
@@ -2632,7 +2620,6 @@
                 let activeKeys = 0;
                 const now = Date.now();
 
-                // 1. Contar keys do local padrão
                 const defaultKeysRef = ref(database, 'keys');
                 const defaultSnapshot = await get(defaultKeysRef);
                 
@@ -2645,7 +2632,6 @@
                     }
                 }
 
-                // 2. Contar keys das pastas
                 const foldersRef = ref(database, 'folders');
                 const foldersSnapshot = await get(foldersRef);
                 
@@ -2665,7 +2651,6 @@
                     }
                 }
 
-                // Carregar usuários
                 const usersRef = ref(database, 'users');
                 const usersSnapshot = await get(usersRef);
                 
@@ -2674,7 +2659,6 @@
                     totalUsers = Object.keys(usersSnapshot.val()).length;
                 }
 
-                // Carregar total de saldo
                 const walletsRef = ref(database, 'wallets');
                 const walletsSnapshot = await get(walletsRef);
                 
@@ -2686,7 +2670,6 @@
                     });
                 }
 
-                // Atualizar interface
                 document.getElementById('totalKeys').textContent = totalKeys;
                 document.getElementById('activeKeys').textContent = activeKeys;
                 document.getElementById('totalUsers').textContent = totalUsers;
@@ -2697,14 +2680,12 @@
             }
         }
 
-        // FUNÇÃO PARA EXPORTAR DADOS
         async function exportData() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 return;
             }
 
             try {
-                // Coletar todos os dados
                 const [keysSnapshot, foldersSnapshot, usersSnapshot, walletsSnapshot, transactionsSnapshot, shopPlansSnapshot] = await Promise.all([
                     get(ref(database, 'keys')),
                     get(ref(database, 'folders')),
@@ -2757,7 +2738,6 @@
                     exportData.shopPlans = shopPlansSnapshot.val();
                 }
 
-                // Criar arquivo JSON
                 const dataStr = JSON.stringify(exportData, null, 2);
                 const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
                 
@@ -2775,10 +2755,6 @@
                 alert('Erro ao exportar dados: ' + error.message);
             }
         }
-
-        // ===========================================
-        // FUNÇÕES PARA CRIAR E GERENCIAR PASTAS
-        // ===========================================
 
         function openCreateFolderModal() {
             document.getElementById('createFolderModal').classList.add('active');
@@ -2806,7 +2782,6 @@
             }
 
             try {
-                // Criar ID único para a pasta
                 const folderId = 'folder_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 
                 const folderData = {
@@ -2815,10 +2790,9 @@
                     createdAt: Date.now(),
                     createdBy: auth.currentUser.email,
                     keyCount: 0,
-                    keys: {} // Estrutura vazia para as keys
+                    keys: {}
                 };
 
-                // Salvar no Firebase na pasta 'folders'
                 await set(ref(database, 'folders/' + folderId), folderData);
                 
                 alert(`Pasta criada com sucesso!\n\nNome: ${folderName}\n\nAgora quando você gerar uma key, pode selecionar esta pasta no dropdown.`);
@@ -2833,7 +2807,61 @@
             }
         }
 
-        // FUNÇÃO PARA CARREGAR PASTAS DO FIREBASE
+        function openCleanFoldersModal() {
+            document.getElementById('cleanFoldersModal').classList.add('active');
+            document.getElementById('cleanFoldersError').style.display = 'none';
+        }
+
+        function closeCleanFoldersModal() {
+            document.getElementById('cleanFoldersModal').classList.remove('active');
+        }
+
+        async function cleanAllFolders() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+
+            try {
+                const foldersRef = ref(database, 'folders');
+                const snapshot = await get(foldersRef);
+                
+                if (!snapshot.exists()) {
+                    alert('Não há pastas para limpar!');
+                    closeCleanFoldersModal();
+                    return;
+                }
+
+                let folderCount = 0;
+                let keyCount = 0;
+
+                snapshot.forEach((child) => {
+                    folderCount++;
+                    const folderData = child.val();
+                    keyCount += folderData.keyCount || 0;
+                });
+
+                if (!confirm(`ATENÇÃO FINAL!\n\nVocê irá remover:\n- ${folderCount} pastas\n- ${keyCount} keys dentro das pastas\n\nEsta ação é IRREVERSÍVEL!`)) {
+                    return;
+                }
+
+                await remove(foldersRef);
+                
+                alert(`Todas as pastas foram removidas com sucesso!\n\n${folderCount} pastas e ${keyCount} keys foram deletadas.`);
+                
+                closeCleanFoldersModal();
+                loadFolders();
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
+                
+            } catch (error) {
+                console.error('Error cleaning folders:', error);
+                document.getElementById('cleanFoldersError').textContent = 'Erro ao limpar pastas: ' + error.message;
+                document.getElementById('cleanFoldersError').style.display = 'block';
+            }
+        }
+
         async function loadFolders() {
             try {
                 const foldersRef = ref(database, 'folders');
@@ -2843,7 +2871,6 @@
                 const folderSelect = document.getElementById('folderSelect');
                 const shopPlanFolderSelect = document.getElementById('shopPlanFolderSelect');
                 
-                // Limpar containers
                 foldersContainer.innerHTML = '';
                 folderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
                 shopPlanFolderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
@@ -2853,7 +2880,6 @@
                     return;
                 }
                 
-                // Mostrar seção de pastas
                 document.getElementById('foldersList').style.display = 'block';
                 
                 const folders = [];
@@ -2865,11 +2891,9 @@
                     });
                 });
                 
-                // Ordenar por data de criação
                 folders.sort((a, b) => b.createdAt - a.createdAt);
                 
                 folders.forEach((folder) => {
-                    // Adicionar ao container visual (tags clicáveis)
                     const folderTag = document.createElement('div');
                     folderTag.className = 'folder-tag';
                     folderTag.setAttribute('data-folder-id', folder.id);
@@ -2880,13 +2904,11 @@
                     folderTag.onclick = () => selectFolder(folder.id);
                     foldersContainer.appendChild(folderTag);
                     
-                    // Adicionar ao dropdown do gerador de keys
                     const option = document.createElement('option');
                     option.value = folder.id;
                     option.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
                     folderSelect.appendChild(option);
                     
-                    // Adicionar ao dropdown do shop
                     const shopOption = document.createElement('option');
                     shopOption.value = folder.id;
                     shopOption.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
@@ -2899,16 +2921,10 @@
             }
         }
 
-        // ===========================================
-        // NOVAS FUNÇÕES PARA GERENCIAR O SHOP
-        // ===========================================
-
-        // ABRIR MODAL PARA NOVO PLANO
         function openNewShopPlanModal() {
             currentShopPlanId = null;
             shopFeatures = [];
             
-            // Limpar campos
             document.getElementById('shopPlanName').value = '';
             document.getElementById('shopPlanDescription').value = '';
             document.getElementById('shopPlanPrice').value = '';
@@ -2919,21 +2935,17 @@
             document.getElementById('newFeature').value = '';
             document.getElementById('shopPlanError').style.display = 'none';
             
-            // Carregar pastas no select
             loadShopFolders();
             
-            // Abrir modal
             document.getElementById('manageShopPlanModal').classList.add('active');
         }
 
-        // FECHAR MODAL DO SHOP
         function closeManageShopPlanModal() {
             document.getElementById('manageShopPlanModal').classList.remove('active');
             currentShopPlanId = null;
             shopFeatures = [];
         }
 
-        // CARREGAR PASTAS PARA O SELECT DO SHOP
         async function loadShopFolders() {
             try {
                 const foldersRef = ref(database, 'folders');
@@ -2953,7 +2965,6 @@
                     });
                 });
                 
-                // Ordenar por data de criação
                 folders.sort((a, b) => b.createdAt - a.createdAt);
                 
                 folders.forEach((folder) => {
@@ -2968,7 +2979,6 @@
             }
         }
 
-        // ADICIONAR FEATURE AO PLANO
         function addShopFeature() {
             const featureInput = document.getElementById('newFeature');
             const featureText = featureInput.value.trim();
@@ -2983,13 +2993,11 @@
             featureInput.value = '';
         }
 
-        // REMOVER FEATURE
         function removeShopFeature(index) {
             shopFeatures.splice(index, 1);
             updateShopFeaturesDisplay();
         }
 
-        // ATUALIZAR DISPLAY DAS FEATURES
         function updateShopFeaturesDisplay() {
             const container = document.getElementById('shopFeaturesContainer');
             container.innerHTML = '';
@@ -3006,7 +3014,6 @@
             });
         }
 
-        // SALVAR PLANO DO SHOP - CORRIGIDO PARA MOSTRAR DIAS CORRETAMENTE
         async function saveShopPlan() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -3018,11 +3025,8 @@
             const planPrice = parseFloat(document.getElementById('shopPlanPrice').value);
             const keyDays = parseInt(document.getElementById('shopPlanKeyDays').value);
             const folderId = document.getElementById('shopPlanFolderSelect').value;
-            const icon = document.getElementById('shopPlanIcon').value.trim();
-            const isPopular = document.getElementById('shopPlanPopular').checked;
             const errorDiv = document.getElementById('shopPlanError');
 
-            // Validações
             if (!planName || !planDescription || isNaN(planPrice) || planPrice <= 0 || isNaN(keyDays) || keyDays <= 0) {
                 errorDiv.textContent = 'Preencha todos os campos obrigatórios corretamente!';
                 errorDiv.style.display = 'block';
@@ -3036,22 +3040,18 @@
             }
 
             try {
-                // Preparar dados do plano
                 const planData = {
                     name: planName,
                     description: planDescription,
                     price: planPrice,
                     keyDays: keyDays,
                     folderId: folderId || null,
-                    icon: icon || '',
-                    isPopular: isPopular,
                     features: shopFeatures,
                     createdAt: Date.now(),
                     createdBy: auth.currentUser.email,
                     updatedAt: Date.now()
                 };
 
-                // Obter nome da pasta se selecionada
                 if (folderId) {
                     try {
                         const folderRef = ref(database, 'folders/' + folderId);
@@ -3064,23 +3064,18 @@
                     }
                 }
 
-                // Salvar no Firebase
                 let planId = currentShopPlanId;
                 if (!planId) {
-                    // Criar novo plano
                     planId = 'plan_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     planData.id = planId;
                 } else {
-                    // Atualizar plano existente
                     planData.updatedAt = Date.now();
                 }
 
                 await set(ref(database, 'shopPlans/' + planId), planData);
 
-                // Mensagem de sucesso
                 alert(`Plano ${currentShopPlanId ? 'atualizado' : 'criado'} com sucesso!\n\nNome: ${planName}\nPreço: R$ ${planPrice.toFixed(2)}\nDuração da Key: ${keyDays} dias\nPasta: ${planData.folderName || 'Global'}`);
                 
-                // Fechar modal e atualizar lista
                 closeManageShopPlanModal();
                 loadShopPlans();
                 
@@ -3091,7 +3086,6 @@
             }
         }
 
-        // CARREGAR PLANOS DO SHOP - CORRIGIDO PARA MOSTRAR DIAS
         async function loadShopPlans() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 return;
@@ -3118,13 +3112,10 @@
                     });
                 });
 
-                // Ordenar por data de criação (mais novos primeiro)
                 plans.sort((a, b) => b.createdAt - a.createdAt);
 
-                // Verificar se há algum plano marcado como popular
                 const popularPlans = plans.filter(plan => plan.isPopular);
                 if (popularPlans.length > 1) {
-                    // Se houver mais de um popular, manter apenas o primeiro como popular
                     let firstPopular = true;
                     for (const plan of plans) {
                         if (plan.isPopular) {
@@ -3132,14 +3123,12 @@
                                 firstPopular = false;
                             } else {
                                 plan.isPopular = false;
-                                // Atualizar no Firebase
                                 update(ref(database, 'shopPlans/' + plan.id), { isPopular: false });
                             }
                         }
                     }
                 }
 
-                // Exibir planos
                 container.innerHTML = '<div class="shop-plans-manager">';
                 
                 plans.forEach((plan) => {
@@ -3162,15 +3151,13 @@
                         });
                     }
                     
-                    // Mostrar dias corretamente (não "undefined Dias de Acesso")
-                    const durationText = plan.keyDays === 9999 ? 'Acesso Vitalício' : `${plan.keyDays} Dias de Acesso`;
-                    
                     planCard.innerHTML = `
                         ${popularBadge}
-                        <div class="shop-plan-title">${plan.icon || ''} ${plan.name}</div>
+                        <div class="shop-plan-title">${plan.name}</div>
                         <div class="shop-plan-price">${plan.price.toFixed(2)}</div>
-                        <div class="shop-plan-duration">${durationText}</div>
+                        <div class="shop-plan-duration">${plan.description}</div>
                         ${folderInfo}
+                        <small style="color: #4caf50;">Key: ${plan.keyDays} dias</small>
                         <ul class="shop-plan-features">
                             ${featuresHtml}
                         </ul>
@@ -3195,7 +3182,6 @@
             }
         }
 
-        // EDITAR PLANO EXISTENTE
         async function editShopPlan(planId) {
             try {
                 const planRef = ref(database, 'shopPlans/' + planId);
@@ -3210,7 +3196,6 @@
                 currentShopPlanId = planId;
                 shopFeatures = plan.features || [];
                 
-                // Preencher campos do modal
                 document.getElementById('shopPlanName').value = plan.name || '';
                 document.getElementById('shopPlanDescription').value = plan.description || '';
                 document.getElementById('shopPlanPrice').value = plan.price || '';
@@ -3219,16 +3204,12 @@
                 document.getElementById('shopPlanPopular').checked = plan.isPopular || false;
                 document.getElementById('shopPlanError').style.display = 'none';
                 
-                // Carregar pastas e selecionar a correta
                 await loadShopFolders();
                 if (plan.folderId) {
                     document.getElementById('shopPlanFolderSelect').value = plan.folderId;
                 }
                 
-                // Atualizar display das features
                 updateShopFeaturesDisplay();
-                
-                // Abrir modal
                 document.getElementById('manageShopPlanModal').classList.add('active');
                 
             } catch (error) {
@@ -3237,7 +3218,6 @@
             }
         }
 
-        // DELETAR PLANO DO SHOP
         async function deleteShopPlan(planId, planName) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -3258,7 +3238,6 @@
             }
         }
 
-        // ALTERNAR STATUS "POPULAR" DO PLANO
         async function toggleShopPlanPopular(planId, makePopular) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -3266,7 +3245,6 @@
             }
 
             try {
-                // Se está marcando como popular, primeiro remover o status de todos os outros
                 if (makePopular) {
                     const shopPlansRef = ref(database, 'shopPlans');
                     const snapshot = await get(shopPlansRef);
@@ -3288,7 +3266,6 @@
                     }
                 }
                 
-                // Atualizar o plano selecionado
                 await update(ref(database, 'shopPlans/' + planId), { 
                     isPopular: makePopular,
                     updatedAt: Date.now()
@@ -3303,30 +3280,25 @@
             }
         }
 
-        // Inicializar sistema
         function initializeSystem() {
             loadPublicKeys();
-            console.log('Sistema LIPHYR HUB ADMIN inicializado - COM SHOP FUNCIONANDO!');
+            console.log('Sistema LIPHYR HUB ADMIN inicializado');
         }
 
-        // Iniciar quando a página carregar
         window.addEventListener('DOMContentLoaded', initializeSystem);
 
-        // Permitir pressionar Enter para verificar key
         document.getElementById('keyInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 verifyKey();
             }
         });
 
-        // Permitir pressionar Enter para fazer login
         document.getElementById('adminPassword').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 login();
             }
         });
 
-        // Permitir pressionar Enter para adicionar feature
         document.getElementById('newFeature').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 addShopFeature();
