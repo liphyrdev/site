@@ -715,6 +715,161 @@
         .form-group select {
             width: 100%;
         }
+
+        /* NOVOS ESTILOS PARA GERENCIAMENTO DO SHOP */
+        .shop-manager {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333333;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .shop-manager.active {
+            display: block;
+        }
+
+        .shop-plans-manager {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .shop-plan-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333333;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .shop-plan-card:hover {
+            border-color: #8a2be2;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.3);
+        }
+
+        .shop-plan-card.popular {
+            border: 2px solid #8a2be2;
+            background: rgba(138, 43, 226, 0.1);
+        }
+
+        .plan-badge-manager {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #8a2be2;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .shop-plan-title {
+            color: #8a2be2;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .shop-plan-price {
+            font-size: 28px;
+            color: #4caf50;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .shop-plan-price::before {
+            content: "R$ ";
+            font-size: 18px;
+        }
+
+        .shop-plan-duration {
+            color: #cccccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .shop-plan-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+            color: #cccccc;
+            font-size: 13px;
+        }
+
+        .shop-plan-features li {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .shop-plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .shop-plan-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .plan-days-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .plan-days-input input {
+            width: 80px;
+            text-align: center;
+        }
+
+        .plan-days-input span {
+            color: #cccccc;
+            font-size: 14px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .feature-item input {
+            flex: 1;
+        }
+
+        .feature-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .features-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        .shop-form {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            border: 1px solid #333333;
+        }
+
+        .shop-form.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -784,7 +939,7 @@
         </div>
     </div>
 
-    <!-- MODAL NOVO: Criar Pasta Personalizada -->
+    <!-- MODAL: Criar Pasta Personalizada -->
     <div class="modal" id="createFolderModal">
         <div class="modal-box">
             <span class="close-modal" onclick="closeCreateFolderModal()">×</span>
@@ -795,6 +950,70 @@
             </div>
             <button class="btn btn-info" onclick="createNewFolder()" style="width: 100%; margin-top: 20px;">Criar Pasta</button>
             <div id="createFolderError" class="error-message" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- MODAL NOVO: Gerenciar Plano do Shop -->
+    <div class="modal" id="manageShopPlanModal">
+        <div class="modal-box" style="max-width: 600px;">
+            <span class="close-modal" onclick="closeManageShopPlanModal()">×</span>
+            <h2>Gerenciar Plano do Shop</h2>
+            
+            <div class="form-group">
+                <label>Nome do Plano:</label>
+                <input type="text" id="shopPlanName" placeholder="Ex: Plano Básico, Plano Premium">
+            </div>
+            
+            <div class="form-group">
+                <label>Descrição:</label>
+                <input type="text" id="shopPlanDescription" placeholder="Ex: 7 Dias de Acesso">
+            </div>
+            
+            <div class="form-group">
+                <label>Preço (R$):</label>
+                <input type="number" id="shopPlanPrice" placeholder="50.00" step="0.01" min="0">
+            </div>
+            
+            <div class="form-group">
+                <label>Duração da Key (em dias):</label>
+                <input type="number" id="shopPlanKeyDays" placeholder="7" min="1">
+            </div>
+            
+            <div class="form-group">
+                <label>Pasta para salvar a key:</label>
+                <select id="shopPlanFolderSelect">
+                    <option value="">Sem pasta (Global)</option>
+                    <!-- As pastas serão carregadas aqui -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Ícone/Emoji:</label>
+                <input type="text" id="shopPlanIcon" placeholder="🔥, ⚡, 👑">
+            </div>
+            
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="shopPlanPopular">
+                    Marcar como "POPULAR"
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>Recursos/Features (um por linha):</label>
+                <div class="features-container" id="shopFeaturesContainer">
+                    <!-- Features serão adicionadas aqui -->
+                </div>
+                <div class="feature-item">
+                    <input type="text" id="newFeature" placeholder="Digite um recurso...">
+                    <div class="feature-actions">
+                        <button class="btn btn-success" onclick="addShopFeature()" style="padding: 8px 12px;">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-success" onclick="saveShopPlan()" style="width: 100%; margin-top: 20px;">Salvar Plano</button>
+            <div id="shopPlanError" class="error-message" style="display: none; margin-top: 15px;"></div>
         </div>
     </div>
 
@@ -869,35 +1088,62 @@
             </div>
 
             <div class="admin-actions">
+                <!-- BOTÃO NOVO: Gerenciar Shop -->
+                <div class="action-card" onclick="openShopManager()">
+                    <h3>🛍️ Gerenciar Shop</h3>
+                    <p>Editar planos e preços</p>
+                </div>
+                
                 <!-- BOTÃO NOVO: Criar Pasta -->
                 <div class="action-card" onclick="openCreateFolderModal()">
-                    <h3>Nova Pasta/Cliente</h3>
+                    <h3>📁 Nova Pasta/Cliente</h3>
                     <p>Criar pasta personalizada</p>
                 </div>
                 
                 <div class="action-card" onclick="toggleKeyForm()">
-                    <h3>Gerar Nova Key</h3>
+                    <h3>🔑 Gerar Nova Key</h3>
                     <p>Criar nova licença</p>
                 </div>
                 <div class="action-card" onclick="loadAllKeys()">
-                    <h3>Atualizar Lista</h3>
+                    <h3>🔄 Atualizar Lista</h3>
                     <p>Recarregar todas as keys</p>
                 </div>
                 <div class="action-card" onclick="openSendBalanceModal()">
-                    <h3>Enviar Saldo</h3>
+                    <h3>💰 Enviar Saldo</h3>
                     <p>Transferir para usuário</p>
                 </div>
                 <div class="action-card" onclick="loadAllUsers()">
-                    <h3>Gerenciar Usuários</h3>
+                    <h3>👥 Gerenciar Usuários</h3>
                     <p>Ver e editar contas</p>
                 </div>
                 <div class="action-card" onclick="cleanExpiredKeys()">
-                    <h3>Limpar Expiradas</h3>
+                    <h3>🗑️ Limpar Expiradas</h3>
                     <p>Remover keys antigas</p>
                 </div>
                 <div class="action-card" onclick="exportData()">
-                    <h3>Exportar Dados</h3>
+                    <h3>📤 Exportar Dados</h3>
                     <p>Backup do sistema</p>
+                </div>
+            </div>
+
+            <!-- SEÇÃO PARA GERENCIAMENTO DO SHOP -->
+            <div class="shop-manager" id="shopManager">
+                <h3 style="color: #8a2be2; margin-bottom: 20px;">🛍️ Gerenciador do Shop</h3>
+                
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <button class="btn btn-success" onclick="openNewShopPlanModal()">
+                        ➕ Adicionar Novo Plano
+                    </button>
+                    <button class="btn btn-info" onclick="loadShopPlans()">
+                        🔄 Atualizar Lista
+                    </button>
+                </div>
+                
+                <div id="shopPlansList" style="margin-top: 20px;">
+                    <div style="text-align: center; color: #8a2be2; padding: 20px;">
+                        <div class="loading"></div>
+                        <p>Carregando planos do shop...</p>
+                    </div>
                 </div>
             </div>
 
@@ -1017,6 +1263,10 @@
         // Email do admin
         const ADMIN_EMAIL = 'liphyrdev@gmail.com';
 
+        // Variáveis globais
+        let currentShopPlanId = null;
+        let shopFeatures = [];
+
         // Expor funções globalmente
         window.openAdminPanel = openAdminPanel;
         window.closeLoginModal = closeLoginModal;
@@ -1040,10 +1290,22 @@
         window.exportData = exportData;
         window.selectFolder = selectFolder;
         
-        // NOVAS FUNÇÕES PARA PASTAS
+        // FUNÇÕES PARA PASTAS
         window.openCreateFolderModal = openCreateFolderModal;
         window.closeCreateFolderModal = closeCreateFolderModal;
         window.createNewFolder = createNewFolder;
+        
+        // NOVAS FUNÇÕES PARA SHOP
+        window.openShopManager = openShopManager;
+        window.openNewShopPlanModal = openNewShopPlanModal;
+        window.closeManageShopPlanModal = closeManageShopPlanModal;
+        window.addShopFeature = addShopFeature;
+        window.removeShopFeature = removeShopFeature;
+        window.saveShopPlan = saveShopPlan;
+        window.loadShopPlans = loadShopPlans;
+        window.editShopPlan = editShopPlan;
+        window.deleteShopPlan = deleteShopPlan;
+        window.toggleShopPlanPopular = toggleShopPlanPopular;
 
         // Criar partículas
         function createParticles() {
@@ -1095,7 +1357,8 @@
                 loadAllKeys();
                 loadPublicKeys();
                 loadStats();
-                loadFolders(); // Carregar pastas quando admin logar
+                loadFolders();
+                loadShopPlans(); // Carregar planos do shop
             } else {
                 // Não é admin ou não está logado
                 document.getElementById('adminPanel').classList.remove('active');
@@ -1169,6 +1432,7 @@
                 await signOut(auth);
                 document.getElementById('adminPanel').classList.remove('active');
                 document.getElementById('keyForm').classList.remove('active');
+                document.getElementById('shopManager').classList.remove('active');
                 document.getElementById('usersListSection').style.display = 'none';
                 document.getElementById('userInfo').style.display = 'none';
                 document.getElementById('adminNav').style.display = 'inline';
@@ -1181,12 +1445,28 @@
             const form = document.getElementById('keyForm');
             form.classList.toggle('active');
             
-            // Ocultar lista de usuários
+            // Ocultar outras seções
+            document.getElementById('shopManager').classList.remove('active');
             document.getElementById('usersListSection').style.display = 'none';
             
             // Rolagem suave para o formulário
             if (form.classList.contains('active')) {
                 form.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ABRIR GERENCIADOR DO SHOP
+        function openShopManager() {
+            const shopManager = document.getElementById('shopManager');
+            shopManager.classList.toggle('active');
+            
+            // Ocultar outras seções
+            document.getElementById('keyForm').classList.remove('active');
+            document.getElementById('usersListSection').style.display = 'none';
+            
+            // Rolagem suave
+            if (shopManager.classList.contains('active')) {
+                shopManager.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
@@ -1272,18 +1552,14 @@
                 // DECISÃO: ONDE SALVAR A KEY?
                 if (folderSelect && folderSelect !== '') {
                     // SALVAR NA PASTA PERSONALIZADA (nova estrutura)
-                    // Caminho: folders/[folderId]/keys/[keyId]
                     const keyId = 'key_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     const keyRef = ref(database, `folders/${folderSelect}/keys/${keyId}`);
                     await set(keyRef, keyData);
-                    console.log(`✅ Key salva na pasta personalizada: ${folderName}`);
                 } else {
                     // SALVAR NO LOCAL PADRÃO (compatibilidade)
-                    // Caminho: keys/[keyId]
                     const firebaseKey = 'key_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     const keyRef = ref(database, 'keys/' + firebaseKey);
                     await set(keyRef, keyData);
-                    console.log('✅ Key salva no local padrão (sem pasta)');
                 }
                 
                 // Atualizar contador na pasta se tiver pasta
@@ -1299,7 +1575,6 @@
                             keyCount: currentCount + 1,
                             lastUpdated: now
                         });
-                        console.log(`✅ Contador da pasta atualizado: ${currentCount + 1} keys`);
                     }
                 }
                 
@@ -1317,7 +1592,7 @@
                 loadAllKeys();
                 loadPublicKeys();
                 loadStats();
-                loadFolders(); // Atualizar lista de pastas
+                loadFolders();
             } catch (error) {
                 console.error('Error generating key:', error);
                 alert('❌ Erro ao gerar key: ' + error.message);
@@ -1461,7 +1736,6 @@
             const container = document.getElementById('publicKeys');
             container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 40px;"><div class="loading"></div><p style="margin-top: 10px;">Carregando keys...</p></div>';
 
-            // Buscar de todas as fontes
             async function fetchAllPublicKeys() {
                 const allKeys = [];
                 const now = Date.now();
@@ -1981,6 +2255,7 @@
             // Mostrar seção de usuários
             document.getElementById('usersListSection').style.display = 'block';
             document.getElementById('keyForm').classList.remove('active');
+            document.getElementById('shopManager').classList.remove('active');
             
             // Rolagem suave
             document.getElementById('usersListSection').scrollIntoView({ behavior: 'smooth' });
@@ -2325,12 +2600,13 @@
 
             try {
                 // Coletar todos os dados
-                const [keysSnapshot, foldersSnapshot, usersSnapshot, walletsSnapshot, transactionsSnapshot] = await Promise.all([
+                const [keysSnapshot, foldersSnapshot, usersSnapshot, walletsSnapshot, transactionsSnapshot, shopPlansSnapshot] = await Promise.all([
                     get(ref(database, 'keys')),
                     get(ref(database, 'folders')),
                     get(ref(database, 'users')),
                     get(ref(database, 'wallets')),
-                    get(ref(database, 'transactions'))
+                    get(ref(database, 'transactions')),
+                    get(ref(database, 'shopPlans'))
                 ]);
 
                 const exportData = {
@@ -2340,7 +2616,8 @@
                     folders: {},
                     users: {},
                     wallets: {},
-                    transactions: {}
+                    transactions: {},
+                    shopPlans: {}
                 };
 
                 if (keysSnapshot.exists()) {
@@ -2369,6 +2646,10 @@
                     transactionsSnapshot.forEach((child) => {
                         exportData.transactions[child.key] = child.val();
                     });
+                }
+
+                if (shopPlansSnapshot.exists()) {
+                    exportData.shopPlans = shopPlansSnapshot.val();
                 }
 
                 // Criar arquivo JSON
@@ -2438,7 +2719,7 @@
                 alert(`✅ Pasta criada com sucesso!\n\nNome: ${folderName}\n\nAgora quando você gerar uma key, pode selecionar esta pasta no dropdown.`);
                 
                 closeCreateFolderModal();
-                loadFolders(); // Atualizar a lista de pastas
+                loadFolders();
                 
             } catch (error) {
                 console.error('Error creating folder:', error);
@@ -2455,10 +2736,12 @@
                 
                 const foldersContainer = document.getElementById('foldersContainer');
                 const folderSelect = document.getElementById('folderSelect');
+                const shopPlanFolderSelect = document.getElementById('shopPlanFolderSelect');
                 
                 // Limpar containers
                 foldersContainer.innerHTML = '';
                 folderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
+                shopPlanFolderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
                 
                 if (!snapshot.exists()) {
                     document.getElementById('foldersList').style.display = 'none';
@@ -2492,11 +2775,17 @@
                     folderTag.onclick = () => selectFolder(folder.id);
                     foldersContainer.appendChild(folderTag);
                     
-                    // Adicionar ao dropdown
+                    // Adicionar ao dropdown do gerador de keys
                     const option = document.createElement('option');
                     option.value = folder.id;
                     option.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
                     folderSelect.appendChild(option);
+                    
+                    // Adicionar ao dropdown do shop
+                    const shopOption = document.createElement('option');
+                    shopOption.value = folder.id;
+                    shopOption.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
+                    shopPlanFolderSelect.appendChild(shopOption);
                 });
                 
             } catch (error) {
@@ -2505,10 +2794,412 @@
             }
         }
 
+        // ===========================================
+        // NOVAS FUNÇÕES PARA GERENCIAR O SHOP
+        // ===========================================
+
+        // ABRIR MODAL PARA NOVO PLANO
+        function openNewShopPlanModal() {
+            currentShopPlanId = null;
+            shopFeatures = [];
+            
+            // Limpar campos
+            document.getElementById('shopPlanName').value = '';
+            document.getElementById('shopPlanDescription').value = '';
+            document.getElementById('shopPlanPrice').value = '';
+            document.getElementById('shopPlanKeyDays').value = '7';
+            document.getElementById('shopPlanIcon').value = '🔥';
+            document.getElementById('shopPlanPopular').checked = false;
+            document.getElementById('shopFeaturesContainer').innerHTML = '';
+            document.getElementById('newFeature').value = '';
+            document.getElementById('shopPlanError').style.display = 'none';
+            
+            // Carregar pastas no select
+            loadShopFolders();
+            
+            // Abrir modal
+            document.getElementById('manageShopPlanModal').classList.add('active');
+        }
+
+        // FECHAR MODAL DO SHOP
+        function closeManageShopPlanModal() {
+            document.getElementById('manageShopPlanModal').classList.remove('active');
+            currentShopPlanId = null;
+            shopFeatures = [];
+        }
+
+        // CARREGAR PASTAS PARA O SELECT DO SHOP
+        async function loadShopFolders() {
+            try {
+                const foldersRef = ref(database, 'folders');
+                const snapshot = await get(foldersRef);
+                
+                const shopPlanFolderSelect = document.getElementById('shopPlanFolderSelect');
+                shopPlanFolderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
+                
+                if (!snapshot.exists()) return;
+                
+                const folders = [];
+                snapshot.forEach((child) => {
+                    const folderData = child.val();
+                    folders.push({
+                        id: child.key,
+                        ...folderData
+                    });
+                });
+                
+                // Ordenar por data de criação
+                folders.sort((a, b) => b.createdAt - a.createdAt);
+                
+                folders.forEach((folder) => {
+                    const option = document.createElement('option');
+                    option.value = folder.id;
+                    option.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
+                    shopPlanFolderSelect.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading folders for shop:', error);
+            }
+        }
+
+        // ADICIONAR FEATURE AO PLANO
+        function addShopFeature() {
+            const featureInput = document.getElementById('newFeature');
+            const featureText = featureInput.value.trim();
+            
+            if (!featureText) {
+                alert('Digite um recurso!');
+                return;
+            }
+            
+            shopFeatures.push(featureText);
+            updateShopFeaturesDisplay();
+            featureInput.value = '';
+        }
+
+        // REMOVER FEATURE
+        function removeShopFeature(index) {
+            shopFeatures.splice(index, 1);
+            updateShopFeaturesDisplay();
+        }
+
+        // ATUALIZAR DISPLAY DAS FEATURES
+        function updateShopFeaturesDisplay() {
+            const container = document.getElementById('shopFeaturesContainer');
+            container.innerHTML = '';
+            
+            shopFeatures.forEach((feature, index) => {
+                const featureDiv = document.createElement('div');
+                featureDiv.className = 'feature-item';
+                featureDiv.style.marginBottom = '5px';
+                featureDiv.innerHTML = `
+                    <span style="flex: 1; color: #cccccc;">✓ ${feature}</span>
+                    <button class="btn btn-danger" onclick="removeShopFeature(${index})" style="padding: 4px 8px; font-size: 12px;">×</button>
+                `;
+                container.appendChild(featureDiv);
+            });
+        }
+
+        // SALVAR PLANO DO SHOP
+        async function saveShopPlan() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+
+            const planName = document.getElementById('shopPlanName').value.trim();
+            const planDescription = document.getElementById('shopPlanDescription').value.trim();
+            const planPrice = parseFloat(document.getElementById('shopPlanPrice').value);
+            const keyDays = parseInt(document.getElementById('shopPlanKeyDays').value);
+            const folderId = document.getElementById('shopPlanFolderSelect').value;
+            const icon = document.getElementById('shopPlanIcon').value.trim();
+            const isPopular = document.getElementById('shopPlanPopular').checked;
+            const errorDiv = document.getElementById('shopPlanError');
+
+            // Validações
+            if (!planName || !planDescription || isNaN(planPrice) || planPrice <= 0 || isNaN(keyDays) || keyDays <= 0) {
+                errorDiv.textContent = 'Preencha todos os campos obrigatórios corretamente!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (shopFeatures.length === 0) {
+                errorDiv.textContent = 'Adicione pelo menos um recurso/feature!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Preparar dados do plano
+                const planData = {
+                    name: planName,
+                    description: planDescription,
+                    price: planPrice,
+                    keyDays: keyDays,
+                    folderId: folderId || null,
+                    icon: icon || '🔥',
+                    isPopular: isPopular,
+                    features: shopFeatures,
+                    createdAt: Date.now(),
+                    createdBy: auth.currentUser.email,
+                    updatedAt: Date.now()
+                };
+
+                // Obter nome da pasta se selecionada
+                if (folderId) {
+                    try {
+                        const folderRef = ref(database, 'folders/' + folderId);
+                        const folderSnapshot = await get(folderRef);
+                        if (folderSnapshot.exists()) {
+                            planData.folderName = folderSnapshot.val().name;
+                        }
+                    } catch (error) {
+                        console.error('Error fetching folder name:', error);
+                    }
+                }
+
+                // Salvar no Firebase
+                let planId = currentShopPlanId;
+                if (!planId) {
+                    // Criar novo plano
+                    planId = 'plan_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    planData.id = planId;
+                } else {
+                    // Atualizar plano existente
+                    planData.updatedAt = Date.now();
+                }
+
+                await set(ref(database, 'shopPlans/' + planId), planData);
+
+                // Mensagem de sucesso
+                alert(`✅ Plano ${currentShopPlanId ? 'atualizado' : 'criado'} com sucesso!\n\nNome: ${planName}\nPreço: R$ ${planPrice.toFixed(2)}\nDuração da Key: ${keyDays} dias\nPasta: ${planData.folderName || 'Global'}`);
+                
+                // Fechar modal e atualizar lista
+                closeManageShopPlanModal();
+                loadShopPlans();
+                
+            } catch (error) {
+                console.error('Error saving shop plan:', error);
+                errorDiv.textContent = 'Erro ao salvar plano: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // CARREGAR PLANOS DO SHOP
+        async function loadShopPlans() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                return;
+            }
+
+            try {
+                const shopPlansRef = ref(database, 'shopPlans');
+                const snapshot = await get(shopPlansRef);
+                
+                const container = document.getElementById('shopPlansList');
+                container.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 40px;">Nenhum plano cadastrado no shop.</p>';
+                    return;
+                }
+
+                const plans = [];
+                snapshot.forEach((child) => {
+                    const planData = child.val();
+                    plans.push({
+                        id: child.key,
+                        ...planData
+                    });
+                });
+
+                // Ordenar por data de criação (mais novos primeiro)
+                plans.sort((a, b) => b.createdAt - a.createdAt);
+
+                // Verificar se há algum plano marcado como popular
+                const popularPlans = plans.filter(plan => plan.isPopular);
+                if (popularPlans.length > 1) {
+                    // Se houver mais de um popular, manter apenas o primeiro como popular
+                    let firstPopular = true;
+                    for (const plan of plans) {
+                        if (plan.isPopular) {
+                            if (firstPopular) {
+                                firstPopular = false;
+                            } else {
+                                plan.isPopular = false;
+                                // Atualizar no Firebase
+                                update(ref(database, 'shopPlans/' + plan.id), { isPopular: false });
+                            }
+                        }
+                    }
+                }
+
+                // Exibir planos
+                container.innerHTML = '<div class="shop-plans-manager">';
+                
+                plans.forEach((plan) => {
+                    const planCard = document.createElement('div');
+                    planCard.className = `shop-plan-card ${plan.isPopular ? 'popular' : ''}`;
+                    
+                    let popularBadge = '';
+                    if (plan.isPopular) {
+                        popularBadge = '<div class="plan-badge-manager">POPULAR</div>';
+                    }
+                    
+                    const folderInfo = plan.folderName ? 
+                        `<small style="color: #17a2b8;">Pasta: ${plan.folderName}</small>` : 
+                        '<small style="color: #cccccc;">Pasta: Global</small>';
+                    
+                    let featuresHtml = '';
+                    if (plan.features && Array.isArray(plan.features)) {
+                        plan.features.forEach(feature => {
+                            featuresHtml += `<li>${feature}</li>`;
+                        });
+                    }
+                    
+                    planCard.innerHTML = `
+                        ${popularBadge}
+                        <div class="shop-plan-title">${plan.icon || '🔥'} ${plan.name}</div>
+                        <div class="shop-plan-price">${plan.price.toFixed(2)}</div>
+                        <div class="shop-plan-duration">${plan.description}</div>
+                        ${folderInfo}
+                        <small style="color: #4caf50;">Key: ${plan.keyDays} dias</small>
+                        <ul class="shop-plan-features">
+                            ${featuresHtml}
+                        </ul>
+                        <div class="shop-plan-actions">
+                            <button class="btn btn-warning" onclick="editShopPlan('${plan.id}')">Editar</button>
+                            <button class="btn btn-danger" onclick="deleteShopPlan('${plan.id}', '${plan.name}')">Remover</button>
+                            <button class="btn ${plan.isPopular ? 'btn-secondary' : 'btn-info'}" onclick="toggleShopPlanPopular('${plan.id}', ${!plan.isPopular})">
+                                ${plan.isPopular ? 'Remover Popular' : 'Tornar Popular'}
+                            </button>
+                        </div>
+                    `;
+                    
+                    container.appendChild(planCard);
+                });
+                
+                container.innerHTML += '</div>';
+                
+            } catch (error) {
+                console.error('Error loading shop plans:', error);
+                document.getElementById('shopPlansList').innerHTML = 
+                    '<p style="text-align: center; color: #ff4444; padding: 40px;">Erro ao carregar planos do shop: ' + error.message + '</p>';
+            }
+        }
+
+        // EDITAR PLANO EXISTENTE
+        async function editShopPlan(planId) {
+            try {
+                const planRef = ref(database, 'shopPlans/' + planId);
+                const snapshot = await get(planRef);
+                
+                if (!snapshot.exists()) {
+                    alert('Plano não encontrado!');
+                    return;
+                }
+                
+                const plan = snapshot.val();
+                currentShopPlanId = planId;
+                shopFeatures = plan.features || [];
+                
+                // Preencher campos do modal
+                document.getElementById('shopPlanName').value = plan.name || '';
+                document.getElementById('shopPlanDescription').value = plan.description || '';
+                document.getElementById('shopPlanPrice').value = plan.price || '';
+                document.getElementById('shopPlanKeyDays').value = plan.keyDays || '7';
+                document.getElementById('shopPlanIcon').value = plan.icon || '🔥';
+                document.getElementById('shopPlanPopular').checked = plan.isPopular || false;
+                document.getElementById('shopPlanError').style.display = 'none';
+                
+                // Carregar pastas e selecionar a correta
+                await loadShopFolders();
+                if (plan.folderId) {
+                    document.getElementById('shopPlanFolderSelect').value = plan.folderId;
+                }
+                
+                // Atualizar display das features
+                updateShopFeaturesDisplay();
+                
+                // Abrir modal
+                document.getElementById('manageShopPlanModal').classList.add('active');
+                
+            } catch (error) {
+                console.error('Error editing shop plan:', error);
+                alert('Erro ao carregar plano: ' + error.message);
+            }
+        }
+
+        // DELETAR PLANO DO SHOP
+        async function deleteShopPlan(planId, planName) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+            
+            if (!confirm(`Tem certeza que deseja remover o plano:\n"${planName}"\n\nEsta ação não pode ser desfeita!`)) {
+                return;
+            }
+
+            try {
+                await remove(ref(database, 'shopPlans/' + planId));
+                alert('✅ Plano removido com sucesso!');
+                loadShopPlans();
+            } catch (error) {
+                console.error('Error deleting shop plan:', error);
+                alert('❌ Erro ao remover plano: ' + error.message);
+            }
+        }
+
+        // ALTERNAR STATUS "POPULAR" DO PLANO
+        async function toggleShopPlanPopular(planId, makePopular) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+
+            try {
+                // Se está marcando como popular, primeiro remover o status de todos os outros
+                if (makePopular) {
+                    const shopPlansRef = ref(database, 'shopPlans');
+                    const snapshot = await get(shopPlansRef);
+                    
+                    if (snapshot.exists()) {
+                        const updatePromises = [];
+                        snapshot.forEach((child) => {
+                            if (child.key !== planId && child.val().isPopular) {
+                                updatePromises.push(update(ref(database, 'shopPlans/' + child.key), { 
+                                    isPopular: false,
+                                    updatedAt: Date.now()
+                                }));
+                            }
+                        });
+                        
+                        if (updatePromises.length > 0) {
+                            await Promise.all(updatePromises);
+                        }
+                    }
+                }
+                
+                // Atualizar o plano selecionado
+                await update(ref(database, 'shopPlans/' + planId), { 
+                    isPopular: makePopular,
+                    updatedAt: Date.now()
+                });
+                
+                alert(`✅ Plano ${makePopular ? 'marcado como POPULAR' : 'removido do status POPULAR'}!`);
+                loadShopPlans();
+                
+            } catch (error) {
+                console.error('Error toggling shop plan popular status:', error);
+                alert('❌ Erro ao atualizar plano: ' + error.message);
+            }
+        }
+
         // Inicializar sistema
         function initializeSystem() {
             loadPublicKeys();
-            console.log('✅ Sistema LIPHYR HUB ADMIN inicializado - COM PASTAS FUNCIONANDO!');
+            console.log('✅ Sistema LIPHYR HUB ADMIN inicializado - COM SHOP FUNCIONANDO!');
         }
 
         // Iniciar quando a página carregar
@@ -2525,6 +3216,14 @@
         document.getElementById('adminPassword').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 login();
+            }
+        });
+
+        // Permitir pressionar Enter para adicionar feature
+        document.getElementById('newFeature').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addShopFeature();
+                e.preventDefault();
             }
         });
     </script>
