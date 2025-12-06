@@ -1133,7 +1133,7 @@
             <span class="close-modal" onclick="closeCleanFoldersModal()">×</span>
             <h2>Limpar Todas as Pastas</h2>
             <div style="color: #ff4444; margin-bottom: 20px; text-align: center;">
-                ⚠️ <strong>ATENÇÃO!</strong> ⚠️
+                <strong>ATENÇÃO!</strong>
             </div>
             <p style="color: #cccccc; margin-bottom: 15px;">
                 Esta ação irá <strong>REMOVER TODAS</strong> as pastas e as keys dentro delas.
@@ -1455,6 +1455,32 @@
         let currentShopPlanId = null;
         let shopFeatures = [];
 
+        // CORREÇÃO: Adicionar todos os event listeners primeiro
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSystem();
+            
+            // Event listeners para teclas
+            document.getElementById('keyInput')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    verifyKey();
+                }
+            });
+
+            document.getElementById('adminPassword')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+
+            document.getElementById('newFeature')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addShopFeature();
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Funções expostas globalmente
         window.openAdminPanel = openAdminPanel;
         window.closeLoginModal = closeLoginModal;
         window.login = login;
@@ -1495,6 +1521,7 @@
 
         function createParticles() {
             const container = document.getElementById('particles');
+            if (!container) return;
             for (let i = 0; i < 50; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
@@ -1504,7 +1531,6 @@
                 container.appendChild(particle);
             }
         }
-        createParticles();
 
         function isAdmin(email) {
             return email === ADMIN_EMAIL;
@@ -1515,21 +1541,22 @@
             const adminNav = document.getElementById('adminNav');
             
             if (user && isAdmin(user.email)) {
-                userInfo.style.display = 'flex';
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
-                adminNav.style.display = 'none';
-                document.getElementById('adminEmailDisplay').textContent = user.email;
-                document.getElementById('adminAvatar').textContent = user.email.charAt(0).toUpperCase();
+                if (userInfo) userInfo.style.display = 'flex';
+                if (document.getElementById('userEmail')) document.getElementById('userEmail').textContent = user.email;
+                if (document.getElementById('userAvatar')) document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+                if (adminNav) adminNav.style.display = 'none';
+                if (document.getElementById('adminEmailDisplay')) document.getElementById('adminEmailDisplay').textContent = user.email;
+                if (document.getElementById('adminAvatar')) document.getElementById('adminAvatar').textContent = user.email.charAt(0).toUpperCase();
             } else {
-                userInfo.style.display = 'none';
-                adminNav.style.display = 'inline';
+                if (userInfo) userInfo.style.display = 'none';
+                if (adminNav) adminNav.style.display = 'inline';
             }
         }
 
         onAuthStateChanged(auth, (user) => {
             if (user && isAdmin(user.email)) {
-                document.getElementById('adminPanel').classList.add('active');
+                const adminPanel = document.getElementById('adminPanel');
+                if (adminPanel) adminPanel.classList.add('active');
                 updateUserUI(user);
                 loadAllKeys();
                 loadPublicKeys();
@@ -1537,7 +1564,8 @@
                 loadFolders();
                 loadShopPlans();
             } else {
-                document.getElementById('adminPanel').classList.remove('active');
+                const adminPanel = document.getElementById('adminPanel');
+                if (adminPanel) adminPanel.classList.remove('active');
                 updateUserUI(user);
                 loadPublicKeys();
             }
@@ -1553,15 +1581,24 @@
 
         function closeLoginModal() {
             document.getElementById('loginModal').classList.remove('active');
-            document.getElementById('loginError').style.display = 'none';
-            document.getElementById('adminEmail').value = '';
-            document.getElementById('adminPassword').value = '';
+            const errorDiv = document.getElementById('loginError');
+            if (errorDiv) errorDiv.style.display = 'none';
+            if (document.getElementById('adminEmail')) document.getElementById('adminEmail').value = '';
+            if (document.getElementById('adminPassword')) document.getElementById('adminPassword').value = '';
         }
 
         async function login() {
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
+            const emailInput = document.getElementById('adminEmail');
+            const passwordInput = document.getElementById('adminPassword');
             const errorDiv = document.getElementById('loginError');
+            
+            if (!emailInput || !passwordInput || !errorDiv) {
+                alert('Elementos do formulário não encontrados!');
+                return;
+            }
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
 
             if (!email || !password) {
                 errorDiv.textContent = 'Preencha todos os campos!';
@@ -1580,7 +1617,8 @@
                 }
                 
                 closeLoginModal();
-                document.getElementById('adminPanel').classList.add('active');
+                const adminPanel = document.getElementById('adminPanel');
+                if (adminPanel) adminPanel.classList.add('active');
                 loadStats();
             } catch (error) {
                 console.error('Login error:', error);
@@ -1602,12 +1640,18 @@
         async function logout() {
             try {
                 await signOut(auth);
-                document.getElementById('adminPanel').classList.remove('active');
-                document.getElementById('keyForm').classList.remove('active');
-                document.getElementById('shopManager').classList.remove('active');
-                document.getElementById('usersListSection').style.display = 'none';
-                document.getElementById('userInfo').style.display = 'none';
-                document.getElementById('adminNav').style.display = 'inline';
+                const adminPanel = document.getElementById('adminPanel');
+                if (adminPanel) adminPanel.classList.remove('active');
+                const keyForm = document.getElementById('keyForm');
+                if (keyForm) keyForm.classList.remove('active');
+                const shopManager = document.getElementById('shopManager');
+                if (shopManager) shopManager.classList.remove('active');
+                const usersListSection = document.getElementById('usersListSection');
+                if (usersListSection) usersListSection.style.display = 'none';
+                const userInfo = document.getElementById('userInfo');
+                if (userInfo) userInfo.style.display = 'none';
+                const adminNav = document.getElementById('adminNav');
+                if (adminNav) adminNav.style.display = 'inline';
             } catch (error) {
                 console.error('Logout error:', error);
             }
@@ -1615,24 +1659,36 @@
 
         function toggleKeyForm() {
             const form = document.getElementById('keyForm');
+            if (!form) return;
             form.classList.toggle('active');
-            document.getElementById('shopManager').classList.remove('active');
-            document.getElementById('usersListSection').style.display = 'none';
+            const shopManager = document.getElementById('shopManager');
+            if (shopManager) shopManager.classList.remove('active');
+            const usersListSection = document.getElementById('usersListSection');
+            if (usersListSection) usersListSection.style.display = 'none';
             
             if (form.classList.contains('active')) {
                 form.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
+        // CORREÇÃO: Função openShopManager corrigida
         function openShopManager() {
             const shopManager = document.getElementById('shopManager');
-            shopManager.classList.toggle('active');
-            document.getElementById('keyForm').classList.remove('active');
-            document.getElementById('usersListSection').style.display = 'none';
-            
-            if (shopManager.classList.contains('active')) {
-                shopManager.scrollIntoView({ behavior: 'smooth' });
+            if (!shopManager) {
+                alert('Elemento shopManager não encontrado!');
+                return;
             }
+            
+            shopManager.classList.add('active');
+            const keyForm = document.getElementById('keyForm');
+            if (keyForm) keyForm.classList.remove('active');
+            const usersListSection = document.getElementById('usersListSection');
+            if (usersListSection) usersListSection.style.display = 'none';
+            
+            // Carregar planos quando abrir o manager
+            loadShopPlans();
+            
+            shopManager.scrollIntoView({ behavior: 'smooth' });
         }
 
         function generateRandomKey() {
@@ -1653,10 +1709,10 @@
                 return;
             }
 
-            const clientName = document.getElementById('clientName').value.trim();
-            const durationValue = parseInt(document.getElementById('durationValue').value);
-            const timeUnit = document.getElementById('timeUnit').value;
-            const folderSelect = document.getElementById('folderSelect').value;
+            const clientName = document.getElementById('clientName')?.value.trim();
+            const durationValue = parseInt(document.getElementById('durationValue')?.value);
+            const timeUnit = document.getElementById('timeUnit')?.value;
+            const folderSelect = document.getElementById('folderSelect')?.value;
 
             if (!clientName || !durationValue || durationValue <= 0) {
                 alert('Preencha todos os campos corretamente!');
@@ -1741,8 +1797,8 @@
                 
                 alert(`Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}${folderText}`);
                 
-                document.getElementById('clientName').value = '';
-                document.getElementById('durationValue').value = '30';
+                if (document.getElementById('clientName')) document.getElementById('clientName').value = '';
+                if (document.getElementById('durationValue')) document.getElementById('durationValue').value = '30';
                 
                 loadAllKeys();
                 loadPublicKeys();
@@ -1756,6 +1812,8 @@
 
         function selectFolder(folderId) {
             const folderSelect = document.getElementById('folderSelect');
+            if (!folderSelect) return;
+            
             folderSelect.value = folderId;
             
             const folderTags = document.querySelectorAll('.folder-tag');
@@ -1767,12 +1825,15 @@
                 }
             });
             
-            document.getElementById('keyForm').scrollIntoView({ behavior: 'smooth' });
+            const keyForm = document.getElementById('keyForm');
+            if (keyForm) keyForm.scrollIntoView({ behavior: 'smooth' });
         }
 
         async function verifyKey() {
-            const keyInput = document.getElementById('keyInput').value.trim().toUpperCase();
+            const keyInput = document.getElementById('keyInput')?.value.trim().toUpperCase();
             const resultDiv = document.getElementById('verifyResult');
+            
+            if (!resultDiv) return;
 
             if (!keyInput || keyInput.length !== 19) {
                 resultDiv.className = 'verify-result result-error';
@@ -1877,6 +1938,8 @@
 
         function loadPublicKeys() {
             const container = document.getElementById('publicKeys');
+            if (!container) return;
+            
             container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 40px;"><div class="loading"></div><p style="margin-top: 10px;">Carregando keys...</p></div>';
 
             async function fetchAllPublicKeys() {
@@ -1930,6 +1993,8 @@
 
         function displayPublicKeys(keys) {
             const container = document.getElementById('publicKeys');
+            if (!container) return;
+            
             container.innerHTML = '';
 
             if (keys.length === 0) {
@@ -1982,6 +2047,8 @@
 
             try {
                 const container = document.getElementById('adminKeysList');
+                if (!container) return;
+                
                 container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 20px;"><div class="loading"></div></div>';
 
                 let allKeys = [];
@@ -2027,13 +2094,17 @@
 
             } catch (error) {
                 console.error('Error loading all keys:', error);
-                document.getElementById('adminKeysList').innerHTML = 
-                    '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar lista de keys.</p>';
+                const container = document.getElementById('adminKeysList');
+                if (container) {
+                    container.innerHTML = '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar lista de keys.</p>';
+                }
             }
         }
 
         function displayAllKeys(keys) {
             const container = document.getElementById('adminKeysList');
+            if (!container) return;
+            
             container.innerHTML = '';
 
             if (keys.length === 0) {
@@ -2243,10 +2314,15 @@
 
         function openSendBalanceModal() {
             document.getElementById('sendBalanceModal').classList.add('active');
-            document.getElementById('sendUserEmail').value = '';
-            document.getElementById('sendAmount').value = '';
-            document.getElementById('sendMessage').value = '';
-            document.getElementById('sendBalanceError').style.display = 'none';
+            const sendUserEmail = document.getElementById('sendUserEmail');
+            const sendAmount = document.getElementById('sendAmount');
+            const sendMessage = document.getElementById('sendMessage');
+            const sendBalanceError = document.getElementById('sendBalanceError');
+            
+            if (sendUserEmail) sendUserEmail.value = '';
+            if (sendAmount) sendAmount.value = '';
+            if (sendMessage) sendMessage.value = '';
+            if (sendBalanceError) sendBalanceError.style.display = 'none';
         }
 
         function closeSendBalanceModal() {
@@ -2259,14 +2335,16 @@
                 return;
             }
 
-            const userEmail = document.getElementById('sendUserEmail').value.trim();
-            const amount = parseFloat(document.getElementById('sendAmount').value);
-            const message = document.getElementById('sendMessage').value.trim();
+            const userEmail = document.getElementById('sendUserEmail')?.value.trim();
+            const amount = parseFloat(document.getElementById('sendAmount')?.value);
+            const message = document.getElementById('sendMessage')?.value.trim();
             const errorDiv = document.getElementById('sendBalanceError');
 
             if (!userEmail || !amount || amount <= 0) {
-                errorDiv.textContent = 'Preencha todos os campos corretamente!';
-                errorDiv.style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Preencha todos os campos corretamente!';
+                    errorDiv.style.display = 'block';
+                }
                 return;
             }
 
@@ -2348,8 +2426,10 @@
                 
             } catch (error) {
                 console.error('Error sending balance:', error);
-                errorDiv.textContent = 'Erro ao enviar saldo: ' + error.message;
-                errorDiv.style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Erro ao enviar saldo: ' + error.message;
+                    errorDiv.style.display = 'block';
+                }
             }
         }
 
@@ -2359,17 +2439,22 @@
                 return;
             }
 
-            document.getElementById('usersListSection').style.display = 'block';
-            document.getElementById('keyForm').classList.remove('active');
-            document.getElementById('shopManager').classList.remove('active');
+            const usersListSection = document.getElementById('usersListSection');
+            if (usersListSection) usersListSection.style.display = 'block';
+            const keyForm = document.getElementById('keyForm');
+            if (keyForm) keyForm.classList.remove('active');
+            const shopManager = document.getElementById('shopManager');
+            if (shopManager) shopManager.classList.remove('active');
             
-            document.getElementById('usersListSection').scrollIntoView({ behavior: 'smooth' });
+            if (usersListSection) usersListSection.scrollIntoView({ behavior: 'smooth' });
 
             try {
                 const usersRef = ref(database, 'users');
                 const snapshot = await get(usersRef);
                 
                 const container = document.getElementById('usersList');
+                if (!container) return;
+                
                 container.innerHTML = '';
 
                 if (!snapshot.exists()) {
@@ -2433,8 +2518,10 @@
                 
             } catch (error) {
                 console.error('Error loading users:', error);
-                document.getElementById('usersList').innerHTML = 
-                    '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar usuários: ' + error.message + '</p>';
+                const container = document.getElementById('usersList');
+                if (container) {
+                    container.innerHTML = '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar usuários: ' + error.message + '</p>';
+                }
             }
         }
 
@@ -2475,20 +2562,26 @@
                 
                 const status = user.status || 'active';
 
-                document.getElementById('userManageInfo').innerHTML = `
-                    <div class="balance-info">
-                        <h4>Usuário: ${user.email}</h4>
-                        <p>ID: ${userId}</p>
-                        <p>Saldo Atual: R$ ${balance.toFixed(2)}</p>
-                        <p>Status: ${status === 'active' ? 'Ativo' : status === 'suspended' ? 'Suspenso' : 'Banido'}</p>
-                    </div>
-                `;
+                const userManageInfo = document.getElementById('userManageInfo');
+                if (userManageInfo) {
+                    userManageInfo.innerHTML = `
+                        <div class="balance-info">
+                            <h4>Usuário: ${user.email}</h4>
+                            <p>ID: ${userId}</p>
+                            <p>Saldo Atual: R$ ${balance.toFixed(2)}</p>
+                            <p>Status: ${status === 'active' ? 'Ativo' : status === 'suspended' ? 'Suspenso' : 'Banido'}</p>
+                        </div>
+                    `;
+                }
 
-                document.getElementById('newUserBalance').value = balance;
-                document.getElementById('userStatus').value = status;
+                const newUserBalance = document.getElementById('newUserBalance');
+                const userStatus = document.getElementById('userStatus');
+                if (newUserBalance) newUserBalance.value = balance;
+                if (userStatus) userStatus.value = status;
 
                 document.getElementById('manageUserModal').classList.add('active');
-                document.getElementById('manageUserError').style.display = 'none';
+                const manageUserError = document.getElementById('manageUserError');
+                if (manageUserError) manageUserError.style.display = 'none';
 
             } catch (error) {
                 console.error('Error loading user:', error);
@@ -2507,12 +2600,15 @@
                 return;
             }
 
-            const newBalance = parseFloat(document.getElementById('newUserBalance').value);
-            const newStatus = document.getElementById('userStatus').value;
+            const newBalance = parseFloat(document.getElementById('newUserBalance')?.value);
+            const newStatus = document.getElementById('userStatus')?.value;
+            const errorDiv = document.getElementById('manageUserError');
 
             if (isNaN(newBalance) || newBalance < 0) {
-                document.getElementById('manageUserError').textContent = 'Saldo inválido!';
-                document.getElementById('manageUserError').style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Saldo inválido!';
+                    errorDiv.style.display = 'block';
+                }
                 return;
             }
 
@@ -2561,8 +2657,10 @@
 
             } catch (error) {
                 console.error('Error updating user:', error);
-                document.getElementById('manageUserError').textContent = 'Erro ao atualizar usuário: ' + error.message;
-                document.getElementById('manageUserError').style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Erro ao atualizar usuário: ' + error.message;
+                    errorDiv.style.display = 'block';
+                }
             }
         }
 
@@ -2670,10 +2768,15 @@
                     });
                 }
 
-                document.getElementById('totalKeys').textContent = totalKeys;
-                document.getElementById('activeKeys').textContent = activeKeys;
-                document.getElementById('totalUsers').textContent = totalUsers;
-                document.getElementById('totalBalance').textContent = `R$ ${totalBalance.toFixed(2)}`;
+                const totalKeysEl = document.getElementById('totalKeys');
+                const activeKeysEl = document.getElementById('activeKeys');
+                const totalUsersEl = document.getElementById('totalUsers');
+                const totalBalanceEl = document.getElementById('totalBalance');
+                
+                if (totalKeysEl) totalKeysEl.textContent = totalKeys;
+                if (activeKeysEl) activeKeysEl.textContent = activeKeys;
+                if (totalUsersEl) totalUsersEl.textContent = totalUsers;
+                if (totalBalanceEl) totalBalanceEl.textContent = `R$ ${totalBalance.toFixed(2)}`;
 
             } catch (error) {
                 console.error('Error loading stats:', error);
@@ -2758,8 +2861,11 @@
 
         function openCreateFolderModal() {
             document.getElementById('createFolderModal').classList.add('active');
-            document.getElementById('folderName').value = '';
-            document.getElementById('createFolderError').style.display = 'none';
+            const folderName = document.getElementById('folderName');
+            const createFolderError = document.getElementById('createFolderError');
+            
+            if (folderName) folderName.value = '';
+            if (createFolderError) createFolderError.style.display = 'none';
         }
 
         function closeCreateFolderModal() {
@@ -2772,12 +2878,14 @@
                 return;
             }
 
-            const folderName = document.getElementById('folderName').value.trim();
+            const folderName = document.getElementById('folderName')?.value.trim();
             const errorDiv = document.getElementById('createFolderError');
 
             if (!folderName) {
-                errorDiv.textContent = 'Digite um nome para a pasta!';
-                errorDiv.style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Digite um nome para a pasta!';
+                    errorDiv.style.display = 'block';
+                }
                 return;
             }
 
@@ -2802,14 +2910,17 @@
                 
             } catch (error) {
                 console.error('Error creating folder:', error);
-                errorDiv.textContent = 'Erro ao criar pasta: ' + error.message;
-                errorDiv.style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Erro ao criar pasta: ' + error.message;
+                    errorDiv.style.display = 'block';
+                }
             }
         }
 
         function openCleanFoldersModal() {
             document.getElementById('cleanFoldersModal').classList.add('active');
-            document.getElementById('cleanFoldersError').style.display = 'none';
+            const cleanFoldersError = document.getElementById('cleanFoldersError');
+            if (cleanFoldersError) cleanFoldersError.style.display = 'none';
         }
 
         function closeCleanFoldersModal() {
@@ -2857,8 +2968,11 @@
                 
             } catch (error) {
                 console.error('Error cleaning folders:', error);
-                document.getElementById('cleanFoldersError').textContent = 'Erro ao limpar pastas: ' + error.message;
-                document.getElementById('cleanFoldersError').style.display = 'block';
+                const errorDiv = document.getElementById('cleanFoldersError');
+                if (errorDiv) {
+                    errorDiv.textContent = 'Erro ao limpar pastas: ' + error.message;
+                    errorDiv.style.display = 'block';
+                }
             }
         }
 
@@ -2871,16 +2985,18 @@
                 const folderSelect = document.getElementById('folderSelect');
                 const shopPlanFolderSelect = document.getElementById('shopPlanFolderSelect');
                 
-                foldersContainer.innerHTML = '';
-                folderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
-                shopPlanFolderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
+                if (foldersContainer) foldersContainer.innerHTML = '';
+                if (folderSelect) folderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
+                if (shopPlanFolderSelect) shopPlanFolderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
                 
                 if (!snapshot.exists()) {
-                    document.getElementById('foldersList').style.display = 'none';
+                    const foldersList = document.getElementById('foldersList');
+                    if (foldersList) foldersList.style.display = 'none';
                     return;
                 }
                 
-                document.getElementById('foldersList').style.display = 'block';
+                const foldersList = document.getElementById('foldersList');
+                if (foldersList) foldersList.style.display = 'block';
                 
                 const folders = [];
                 snapshot.forEach((child) => {
@@ -2894,54 +3010,79 @@
                 folders.sort((a, b) => b.createdAt - a.createdAt);
                 
                 folders.forEach((folder) => {
-                    const folderTag = document.createElement('div');
-                    folderTag.className = 'folder-tag';
-                    folderTag.setAttribute('data-folder-id', folder.id);
-                    folderTag.innerHTML = `
-                        ${folder.name}
-                        <span class="key-count">${folder.keyCount || 0}</span>
-                    `;
-                    folderTag.onclick = () => selectFolder(folder.id);
-                    foldersContainer.appendChild(folderTag);
+                    if (foldersContainer) {
+                        const folderTag = document.createElement('div');
+                        folderTag.className = 'folder-tag';
+                        folderTag.setAttribute('data-folder-id', folder.id);
+                        folderTag.innerHTML = `
+                            ${folder.name}
+                            <span class="key-count">${folder.keyCount || 0}</span>
+                        `;
+                        folderTag.onclick = () => selectFolder(folder.id);
+                        foldersContainer.appendChild(folderTag);
+                    }
                     
-                    const option = document.createElement('option');
-                    option.value = folder.id;
-                    option.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
-                    folderSelect.appendChild(option);
+                    if (folderSelect) {
+                        const option = document.createElement('option');
+                        option.value = folder.id;
+                        option.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
+                        folderSelect.appendChild(option);
+                    }
                     
-                    const shopOption = document.createElement('option');
-                    shopOption.value = folder.id;
-                    shopOption.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
-                    shopPlanFolderSelect.appendChild(shopOption);
+                    if (shopPlanFolderSelect) {
+                        const shopOption = document.createElement('option');
+                        shopOption.value = folder.id;
+                        shopOption.textContent = `${folder.name} (${folder.keyCount || 0} keys)`;
+                        shopPlanFolderSelect.appendChild(shopOption);
+                    }
                 });
                 
             } catch (error) {
                 console.error('Error loading folders:', error);
-                document.getElementById('foldersList').style.display = 'none';
+                const foldersList = document.getElementById('foldersList');
+                if (foldersList) foldersList.style.display = 'none';
             }
         }
 
+        // CORREÇÃO: Função openNewShopPlanModal corrigida
         function openNewShopPlanModal() {
+            console.log('Abrindo modal de novo plano...');
             currentShopPlanId = null;
             shopFeatures = [];
             
-            document.getElementById('shopPlanName').value = '';
-            document.getElementById('shopPlanDescription').value = '';
-            document.getElementById('shopPlanPrice').value = '';
-            document.getElementById('shopPlanKeyDays').value = '7';
-            document.getElementById('shopPlanIcon').value = '';
-            document.getElementById('shopPlanPopular').checked = false;
-            document.getElementById('shopFeaturesContainer').innerHTML = '';
-            document.getElementById('newFeature').value = '';
-            document.getElementById('shopPlanError').style.display = 'none';
+            const shopPlanName = document.getElementById('shopPlanName');
+            const shopPlanDescription = document.getElementById('shopPlanDescription');
+            const shopPlanPrice = document.getElementById('shopPlanPrice');
+            const shopPlanKeyDays = document.getElementById('shopPlanKeyDays');
+            const shopPlanPopular = document.getElementById('shopPlanPopular');
+            const shopFeaturesContainer = document.getElementById('shopFeaturesContainer');
+            const newFeature = document.getElementById('newFeature');
+            const shopPlanError = document.getElementById('shopPlanError');
+            
+            if (shopPlanName) shopPlanName.value = '';
+            if (shopPlanDescription) shopPlanDescription.value = '';
+            if (shopPlanPrice) shopPlanPrice.value = '';
+            if (shopPlanKeyDays) shopPlanKeyDays.value = '7';
+            if (shopPlanPopular) shopPlanPopular.checked = false;
+            if (shopFeaturesContainer) shopFeaturesContainer.innerHTML = '';
+            if (newFeature) newFeature.value = '';
+            if (shopPlanError) shopPlanError.style.display = 'none';
             
             loadShopFolders();
             
-            document.getElementById('manageShopPlanModal').classList.add('active');
+            const modal = document.getElementById('manageShopPlanModal');
+            if (modal) {
+                modal.classList.add('active');
+                console.log('Modal aberto com sucesso!');
+            } else {
+                console.error('Modal não encontrado!');
+                alert('Erro: Modal não encontrado. Recarregue a página.');
+            }
         }
 
         function closeManageShopPlanModal() {
-            document.getElementById('manageShopPlanModal').classList.remove('active');
+            const modal = document.getElementById('manageShopPlanModal');
+            if (modal) modal.classList.remove('active');
             currentShopPlanId = null;
             shopFeatures = [];
         }
@@ -2952,6 +3093,8 @@
                 const snapshot = await get(foldersRef);
                 
                 const shopPlanFolderSelect = document.getElementById('shopPlanFolderSelect');
+                if (!shopPlanFolderSelect) return;
+                
                 shopPlanFolderSelect.innerHTML = '<option value="">Sem pasta (Global)</option>';
                 
                 if (!snapshot.exists()) return;
@@ -2981,6 +3124,8 @@
 
         function addShopFeature() {
             const featureInput = document.getElementById('newFeature');
+            if (!featureInput) return;
+            
             const featureText = featureInput.value.trim();
             
             if (!featureText) {
@@ -3000,6 +3145,8 @@
 
         function updateShopFeaturesDisplay() {
             const container = document.getElementById('shopFeaturesContainer');
+            if (!container) return;
+            
             container.innerHTML = '';
             
             shopFeatures.forEach((feature, index) => {
@@ -3020,22 +3167,26 @@
                 return;
             }
 
-            const planName = document.getElementById('shopPlanName').value.trim();
-            const planDescription = document.getElementById('shopPlanDescription').value.trim();
-            const planPrice = parseFloat(document.getElementById('shopPlanPrice').value);
-            const keyDays = parseInt(document.getElementById('shopPlanKeyDays').value);
-            const folderId = document.getElementById('shopPlanFolderSelect').value;
+            const planName = document.getElementById('shopPlanName')?.value.trim();
+            const planDescription = document.getElementById('shopPlanDescription')?.value.trim();
+            const planPrice = parseFloat(document.getElementById('shopPlanPrice')?.value);
+            const keyDays = parseInt(document.getElementById('shopPlanKeyDays')?.value);
+            const folderId = document.getElementById('shopPlanFolderSelect')?.value;
             const errorDiv = document.getElementById('shopPlanError');
 
             if (!planName || !planDescription || isNaN(planPrice) || planPrice <= 0 || isNaN(keyDays) || keyDays <= 0) {
-                errorDiv.textContent = 'Preencha todos os campos obrigatórios corretamente!';
-                errorDiv.style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Preencha todos os campos obrigatórios corretamente!';
+                    errorDiv.style.display = 'block';
+                }
                 return;
             }
 
             if (shopFeatures.length === 0) {
-                errorDiv.textContent = 'Adicione pelo menos um recurso/feature!';
-                errorDiv.style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Adicione pelo menos um recurso/feature!';
+                    errorDiv.style.display = 'block';
+                }
                 return;
             }
 
@@ -3081,22 +3232,35 @@
                 
             } catch (error) {
                 console.error('Error saving shop plan:', error);
-                errorDiv.textContent = 'Erro ao salvar plano: ' + error.message;
-                errorDiv.style.display = 'block';
+                if (errorDiv) {
+                    errorDiv.textContent = 'Erro ao salvar plano: ' + error.message;
+                    errorDiv.style.display = 'block';
+                }
             }
         }
 
+        // CORREÇÃO: Função loadShopPlans corrigida
         async function loadShopPlans() {
+            console.log('Carregando planos do shop...');
+            
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                console.log('Usuário não é admin');
                 return;
             }
 
             try {
+                const container = document.getElementById('shopPlansList');
+                if (!container) {
+                    console.error('Container shopPlansList não encontrado!');
+                    return;
+                }
+
+                container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 40px;"><div class="loading"></div><p>Carregando planos do shop...</p></div>';
+
                 const shopPlansRef = ref(database, 'shopPlans');
                 const snapshot = await get(shopPlansRef);
                 
-                const container = document.getElementById('shopPlansList');
-                container.innerHTML = '';
+                console.log('Snapshot recebido:', snapshot.exists() ? 'tem dados' : 'vazio');
 
                 if (!snapshot.exists()) {
                     container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 40px;">Nenhum plano cadastrado no shop.</p>';
@@ -3112,9 +3276,14 @@
                     });
                 });
 
+                console.log(`${plans.length} planos encontrados`);
+
                 plans.sort((a, b) => b.createdAt - a.createdAt);
 
+                // Verificar se há algum plano marcado como popular
                 const popularPlans = plans.filter(plan => plan.isPopular);
+                console.log(`${popularPlans.length} planos populares encontrados`);
+
                 if (popularPlans.length > 1) {
                     let firstPopular = true;
                     for (const plan of plans) {
@@ -3123,15 +3292,18 @@
                                 firstPopular = false;
                             } else {
                                 plan.isPopular = false;
+                                // Atualizar no Firebase
                                 update(ref(database, 'shopPlans/' + plan.id), { isPopular: false });
                             }
                         }
                     }
                 }
 
+                // Exibir planos
                 container.innerHTML = '<div class="shop-plans-manager">';
                 
                 plans.forEach((plan) => {
+                    console.log('Criando card para plano:', plan.name);
                     const planCard = document.createElement('div');
                     planCard.className = `shop-plan-card ${plan.isPopular ? 'popular' : ''}`;
                     
@@ -3174,11 +3346,14 @@
                 });
                 
                 container.innerHTML += '</div>';
+                console.log('Planos carregados com sucesso!');
                 
             } catch (error) {
                 console.error('Error loading shop plans:', error);
-                document.getElementById('shopPlansList').innerHTML = 
-                    '<p style="text-align: center; color: #ff4444; padding: 40px;">Erro ao carregar planos do shop: ' + error.message + '</p>';
+                const container = document.getElementById('shopPlansList');
+                if (container) {
+                    container.innerHTML = '<p style="text-align: center; color: #ff4444; padding: 40px;">Erro ao carregar planos do shop: ' + error.message + '</p>';
+                }
             }
         }
 
@@ -3196,21 +3371,30 @@
                 currentShopPlanId = planId;
                 shopFeatures = plan.features || [];
                 
-                document.getElementById('shopPlanName').value = plan.name || '';
-                document.getElementById('shopPlanDescription').value = plan.description || '';
-                document.getElementById('shopPlanPrice').value = plan.price || '';
-                document.getElementById('shopPlanKeyDays').value = plan.keyDays || '7';
-                document.getElementById('shopPlanIcon').value = plan.icon || '';
-                document.getElementById('shopPlanPopular').checked = plan.isPopular || false;
-                document.getElementById('shopPlanError').style.display = 'none';
+                const shopPlanName = document.getElementById('shopPlanName');
+                const shopPlanDescription = document.getElementById('shopPlanDescription');
+                const shopPlanPrice = document.getElementById('shopPlanPrice');
+                const shopPlanKeyDays = document.getElementById('shopPlanKeyDays');
+                const shopPlanPopular = document.getElementById('shopPlanPopular');
+                const shopPlanError = document.getElementById('shopPlanError');
+                
+                if (shopPlanName) shopPlanName.value = plan.name || '';
+                if (shopPlanDescription) shopPlanDescription.value = plan.description || '';
+                if (shopPlanPrice) shopPlanPrice.value = plan.price || '';
+                if (shopPlanKeyDays) shopPlanKeyDays.value = plan.keyDays || '7';
+                if (shopPlanPopular) shopPlanPopular.checked = plan.isPopular || false;
+                if (shopPlanError) shopPlanError.style.display = 'none';
                 
                 await loadShopFolders();
                 if (plan.folderId) {
-                    document.getElementById('shopPlanFolderSelect').value = plan.folderId;
+                    const shopPlanFolderSelect = document.getElementById('shopPlanFolderSelect');
+                    if (shopPlanFolderSelect) shopPlanFolderSelect.value = plan.folderId;
                 }
                 
                 updateShopFeaturesDisplay();
-                document.getElementById('manageShopPlanModal').classList.add('active');
+                
+                const modal = document.getElementById('manageShopPlanModal');
+                if (modal) modal.classList.add('active');
                 
             } catch (error) {
                 console.error('Error editing shop plan:', error);
@@ -3281,30 +3465,11 @@
         }
 
         function initializeSystem() {
+            console.log('Inicializando sistema...');
+            createParticles();
             loadPublicKeys();
-            console.log('Sistema LIPHYR HUB ADMIN inicializado');
+            console.log('Sistema LIPHYR HUB ADMIN inicializado com sucesso!');
         }
-
-        window.addEventListener('DOMContentLoaded', initializeSystem);
-
-        document.getElementById('keyInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                verifyKey();
-            }
-        });
-
-        document.getElementById('adminPassword').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
-
-        document.getElementById('newFeature').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                addShopFeature();
-                e.preventDefault();
-            }
-        });
     </script>
 </body>
 </html>
