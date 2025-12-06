@@ -870,6 +870,113 @@
         .shop-form.active {
             display: block;
         }
+
+        /* ESTILOS RESPONSIVOS PARA CELULAR */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            nav {
+                width: 100%;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            nav a {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .verify-input {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                min-width: 100px;
+                font-size: 14px;
+            }
+
+            .admin-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-card {
+                padding: 15px;
+            }
+
+            .action-card h3 {
+                font-size: 14px;
+            }
+
+            .action-card p {
+                font-size: 11px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal-box {
+                padding: 20px;
+                width: 95%;
+            }
+
+            .shop-plan-actions {
+                flex-direction: column;
+            }
+
+            .user-actions {
+                flex-direction: column;
+                width: 100px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card .value {
+                font-size: 18px;
+            }
+
+            .keys-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shop-plans-manager {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -988,11 +1095,6 @@
             </div>
             
             <div class="form-group">
-                <label>Ícone/Emoji:</label>
-                <input type="text" id="shopPlanIcon" placeholder="🔥, ⚡, 👑">
-            </div>
-            
-            <div class="form-group">
                 <label style="display: flex; align-items: center; gap: 10px;">
                     <input type="checkbox" id="shopPlanPopular">
                     Marcar como "POPULAR"
@@ -1090,52 +1192,52 @@
             <div class="admin-actions">
                 <!-- BOTÃO NOVO: Gerenciar Shop -->
                 <div class="action-card" onclick="openShopManager()">
-                    <h3>🛍️ Gerenciar Shop</h3>
+                    <h3>Gerenciar Shop</h3>
                     <p>Editar planos e preços</p>
                 </div>
                 
                 <!-- BOTÃO NOVO: Criar Pasta -->
                 <div class="action-card" onclick="openCreateFolderModal()">
-                    <h3>📁 Nova Pasta/Cliente</h3>
+                    <h3>Nova Pasta/Cliente</h3>
                     <p>Criar pasta personalizada</p>
                 </div>
                 
                 <div class="action-card" onclick="toggleKeyForm()">
-                    <h3>🔑 Gerar Nova Key</h3>
+                    <h3>Gerar Nova Key</h3>
                     <p>Criar nova licença</p>
                 </div>
                 <div class="action-card" onclick="loadAllKeys()">
-                    <h3>🔄 Atualizar Lista</h3>
+                    <h3>Atualizar Lista</h3>
                     <p>Recarregar todas as keys</p>
                 </div>
                 <div class="action-card" onclick="openSendBalanceModal()">
-                    <h3>💰 Enviar Saldo</h3>
+                    <h3>Enviar Saldo</h3>
                     <p>Transferir para usuário</p>
                 </div>
                 <div class="action-card" onclick="loadAllUsers()">
-                    <h3>👥 Gerenciar Usuários</h3>
+                    <h3>Gerenciar Usuários</h3>
                     <p>Ver e editar contas</p>
                 </div>
                 <div class="action-card" onclick="cleanExpiredKeys()">
-                    <h3>🗑️ Limpar Expiradas</h3>
+                    <h3>Limpar Expiradas</h3>
                     <p>Remover keys antigas</p>
                 </div>
                 <div class="action-card" onclick="exportData()">
-                    <h3>📤 Exportar Dados</h3>
+                    <h3>Exportar Dados</h3>
                     <p>Backup do sistema</p>
                 </div>
             </div>
 
             <!-- SEÇÃO PARA GERENCIAMENTO DO SHOP -->
             <div class="shop-manager" id="shopManager">
-                <h3 style="color: #8a2be2; margin-bottom: 20px;">🛍️ Gerenciador do Shop</h3>
+                <h3 style="color: #8a2be2; margin-bottom: 20px;">Gerenciador do Shop</h3>
                 
                 <div style="display: flex; gap: 15px; margin-bottom: 20px;">
                     <button class="btn btn-success" onclick="openNewShopPlanModal()">
-                        ➕ Adicionar Novo Plano
+                        Adicionar Novo Plano
                     </button>
                     <button class="btn btn-info" onclick="loadShopPlans()">
-                        🔄 Atualizar Lista
+                        Atualizar Lista
                     </button>
                 </div>
                 
@@ -1582,7 +1684,7 @@
                 const durationText = timeUnit === 'lifetime' ? 'Vitalícia' : `${durationValue} ${timeUnit}`;
                 const folderText = folderName ? `\nPasta: ${folderName}` : '';
                 
-                alert(`✅ Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}${folderText}`);
+                alert(`Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}${folderText}`);
                 
                 // Limpar formulário
                 document.getElementById('clientName').value = '';
@@ -1595,7 +1697,7 @@
                 loadFolders();
             } catch (error) {
                 console.error('Error generating key:', error);
-                alert('❌ Erro ao gerar key: ' + error.message);
+                alert('Erro ao gerar key: ' + error.message);
             }
         }
 
@@ -1713,7 +1815,7 @@
                     
                     resultDiv.className = 'verify-result result-success';
                     resultDiv.innerHTML = `
-                        <h3>✅ Key válida!</h3>
+                        <h3>Key válida!</h3>
                         <p><strong>Cliente:</strong> ${keyData.client}</p>
                         ${folderInfo}
                         <p><strong>Status:</strong> Ativa</p>
@@ -1980,14 +2082,14 @@
                 const keyRef = ref(database, 'keys/' + firebaseKey);
                 await remove(keyRef);
                 
-                alert('✅ Key deletada com sucesso!');
+                alert('Key deletada com sucesso!');
                 loadAllKeys();
                 loadPublicKeys();
                 loadStats();
                 
             } catch (error) {
                 console.error('Error deleting key:', error);
-                alert('❌ Erro ao deletar key: ' + error.message);
+                alert('Erro ao deletar key: ' + error.message);
             }
         }
 
@@ -2022,7 +2124,7 @@
                     });
                 }
                 
-                alert('✅ Key deletada da pasta com sucesso!');
+                alert('Key deletada da pasta com sucesso!');
                 loadAllKeys();
                 loadPublicKeys();
                 loadStats();
@@ -2030,7 +2132,7 @@
                 
             } catch (error) {
                 console.error('Error deleting key from folder:', error);
-                alert('❌ Erro ao deletar key: ' + error.message);
+                alert('Erro ao deletar key: ' + error.message);
             }
         }
 
@@ -2109,7 +2211,7 @@
                     }
                 }
 
-                alert(`✅ ${deletedCount} key(s) removida(s) com sucesso!`);
+                alert(`${deletedCount} key(s) removida(s) com sucesso!`);
                 
                 // Atualizar listas
                 loadAllKeys();
@@ -2118,7 +2220,7 @@
                 loadFolders();
             } catch (error) {
                 console.error('Error cleaning expired keys:', error);
-                alert('❌ Erro ao limpar keys: ' + error.message);
+                alert('Erro ao limpar keys: ' + error.message);
             }
         }
 
@@ -2153,7 +2255,7 @@
             }
 
             try {
-                console.log('💰 Procurando carteira para:', userEmail);
+                console.log('Procurando carteira para:', userEmail);
                 
                 // Buscar carteira do usuário
                 const walletsRef = ref(database, 'wallets');
@@ -2168,7 +2270,7 @@
                         if (walletData.userEmail === userEmail) {
                             walletFound = walletData;
                             walletId = child.key;
-                            console.log('✅ Carteira encontrada:', walletId);
+                            console.log('Carteira encontrada:', walletId);
                         }
                     });
                 }
@@ -2185,7 +2287,7 @@
                     };
                     
                     await set(ref(database, 'wallets/' + walletId), walletFound);
-                    console.log('🆕 Nova carteira criada:', walletId);
+                    console.log('Nova carteira criada:', walletId);
                 }
 
                 // Atualizar o saldo do usuário
@@ -2230,7 +2332,7 @@
                 await set(ref(database, 'transactions/' + transactionId), transactionData);
 
                 // Mostrar sucesso
-                alert(`✅ Saldo enviado com sucesso!\n\nUsuário: ${userEmail}\nValor: R$ ${amount.toFixed(2)}\nSaldo Anterior: R$ ${oldBalance.toFixed(2)}\nNovo Saldo: R$ ${newBalance.toFixed(2)}`);
+                alert(`Saldo enviado com sucesso!\n\nUsuário: ${userEmail}\nValor: R$ ${amount.toFixed(2)}\nSaldo Anterior: R$ ${oldBalance.toFixed(2)}\nNovo Saldo: R$ ${newBalance.toFixed(2)}`);
                 
                 // Fechar modal
                 closeSendBalanceModal();
@@ -2457,7 +2559,7 @@
                     timestamp: Date.now()
                 });
 
-                alert('✅ Usuário atualizado com sucesso!');
+                alert('Usuário atualizado com sucesso!');
                 closeManageUserModal();
                 loadAllUsers();
                 loadStats();
@@ -2505,14 +2607,14 @@
                     timestamp: Date.now()
                 });
 
-                alert('✅ Conta excluída com sucesso!');
+                alert('Conta excluída com sucesso!');
                 closeManageUserModal();
                 loadAllUsers();
                 loadStats();
 
             } catch (error) {
                 console.error('Error deleting user:', error);
-                alert('❌ Erro ao excluir conta: ' + error.message);
+                alert('Erro ao excluir conta: ' + error.message);
             }
         }
 
@@ -2663,11 +2765,11 @@
                 linkElement.setAttribute('download', exportFileDefaultName);
                 linkElement.click();
 
-                alert('✅ Dados exportados com sucesso!');
+                alert('Dados exportados com sucesso!');
 
             } catch (error) {
                 console.error('Error exporting data:', error);
-                alert('❌ Erro ao exportar dados: ' + error.message);
+                alert('Erro ao exportar dados: ' + error.message);
             }
         }
 
@@ -2716,7 +2818,7 @@
                 // Salvar no Firebase na pasta 'folders'
                 await set(ref(database, 'folders/' + folderId), folderData);
                 
-                alert(`✅ Pasta criada com sucesso!\n\nNome: ${folderName}\n\nAgora quando você gerar uma key, pode selecionar esta pasta no dropdown.`);
+                alert(`Pasta criada com sucesso!\n\nNome: ${folderName}\n\nAgora quando você gerar uma key, pode selecionar esta pasta no dropdown.`);
                 
                 closeCreateFolderModal();
                 loadFolders();
@@ -2808,7 +2910,7 @@
             document.getElementById('shopPlanDescription').value = '';
             document.getElementById('shopPlanPrice').value = '';
             document.getElementById('shopPlanKeyDays').value = '7';
-            document.getElementById('shopPlanIcon').value = '🔥';
+            document.getElementById('shopPlanIcon').value = '';
             document.getElementById('shopPlanPopular').checked = false;
             document.getElementById('shopFeaturesContainer').innerHTML = '';
             document.getElementById('newFeature').value = '';
@@ -2894,14 +2996,14 @@
                 featureDiv.className = 'feature-item';
                 featureDiv.style.marginBottom = '5px';
                 featureDiv.innerHTML = `
-                    <span style="flex: 1; color: #cccccc;">✓ ${feature}</span>
+                    <span style="flex: 1; color: #cccccc;">${feature}</span>
                     <button class="btn btn-danger" onclick="removeShopFeature(${index})" style="padding: 4px 8px; font-size: 12px;">×</button>
                 `;
                 container.appendChild(featureDiv);
             });
         }
 
-        // SALVAR PLANO DO SHOP
+        // SALVAR PLANO DO SHOP - CORRIGIDO PARA MOSTRAR DIAS CORRETAMENTE
         async function saveShopPlan() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -2938,7 +3040,7 @@
                     price: planPrice,
                     keyDays: keyDays,
                     folderId: folderId || null,
-                    icon: icon || '🔥',
+                    icon: icon || '',
                     isPopular: isPopular,
                     features: shopFeatures,
                     createdAt: Date.now(),
@@ -2973,7 +3075,7 @@
                 await set(ref(database, 'shopPlans/' + planId), planData);
 
                 // Mensagem de sucesso
-                alert(`✅ Plano ${currentShopPlanId ? 'atualizado' : 'criado'} com sucesso!\n\nNome: ${planName}\nPreço: R$ ${planPrice.toFixed(2)}\nDuração da Key: ${keyDays} dias\nPasta: ${planData.folderName || 'Global'}`);
+                alert(`Plano ${currentShopPlanId ? 'atualizado' : 'criado'} com sucesso!\n\nNome: ${planName}\nPreço: R$ ${planPrice.toFixed(2)}\nDuração da Key: ${keyDays} dias\nPasta: ${planData.folderName || 'Global'}`);
                 
                 // Fechar modal e atualizar lista
                 closeManageShopPlanModal();
@@ -2986,7 +3088,7 @@
             }
         }
 
-        // CARREGAR PLANOS DO SHOP
+        // CARREGAR PLANOS DO SHOP - CORRIGIDO PARA MOSTRAR DIAS
         async function loadShopPlans() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 return;
@@ -3057,13 +3159,15 @@
                         });
                     }
                     
+                    // Mostrar dias corretamente (não "undefined Dias de Acesso")
+                    const durationText = plan.keyDays === 9999 ? 'Acesso Vitalício' : `${plan.keyDays} Dias de Acesso`;
+                    
                     planCard.innerHTML = `
                         ${popularBadge}
-                        <div class="shop-plan-title">${plan.icon || '🔥'} ${plan.name}</div>
+                        <div class="shop-plan-title">${plan.icon || ''} ${plan.name}</div>
                         <div class="shop-plan-price">${plan.price.toFixed(2)}</div>
-                        <div class="shop-plan-duration">${plan.description}</div>
+                        <div class="shop-plan-duration">${durationText}</div>
                         ${folderInfo}
-                        <small style="color: #4caf50;">Key: ${plan.keyDays} dias</small>
                         <ul class="shop-plan-features">
                             ${featuresHtml}
                         </ul>
@@ -3108,7 +3212,7 @@
                 document.getElementById('shopPlanDescription').value = plan.description || '';
                 document.getElementById('shopPlanPrice').value = plan.price || '';
                 document.getElementById('shopPlanKeyDays').value = plan.keyDays || '7';
-                document.getElementById('shopPlanIcon').value = plan.icon || '🔥';
+                document.getElementById('shopPlanIcon').value = plan.icon || '';
                 document.getElementById('shopPlanPopular').checked = plan.isPopular || false;
                 document.getElementById('shopPlanError').style.display = 'none';
                 
@@ -3143,11 +3247,11 @@
 
             try {
                 await remove(ref(database, 'shopPlans/' + planId));
-                alert('✅ Plano removido com sucesso!');
+                alert('Plano removido com sucesso!');
                 loadShopPlans();
             } catch (error) {
                 console.error('Error deleting shop plan:', error);
-                alert('❌ Erro ao remover plano: ' + error.message);
+                alert('Erro ao remover plano: ' + error.message);
             }
         }
 
@@ -3187,19 +3291,19 @@
                     updatedAt: Date.now()
                 });
                 
-                alert(`✅ Plano ${makePopular ? 'marcado como POPULAR' : 'removido do status POPULAR'}!`);
+                alert(`Plano ${makePopular ? 'marcado como POPULAR' : 'removido do status POPULAR'}!`);
                 loadShopPlans();
                 
             } catch (error) {
                 console.error('Error toggling shop plan popular status:', error);
-                alert('❌ Erro ao atualizar plano: ' + error.message);
+                alert('Erro ao atualizar plano: ' + error.message);
             }
         }
 
         // Inicializar sistema
         function initializeSystem() {
             loadPublicKeys();
-            console.log('✅ Sistema LIPHYR HUB ADMIN inicializado - COM SHOP FUNCIONANDO!');
+            console.log('Sistema LIPHYR HUB ADMIN inicializado - COM SHOP FUNCIONANDO!');
         }
 
         // Iniciar quando a página carregar
