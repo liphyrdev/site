@@ -1691,6 +1691,7 @@
             shopManager.scrollIntoView({ behavior: 'smooth' });
         }
 
+        // MODIFICAÇÃO AQUI: Função para gerar keys no formato compatível com o site dos clientes
         function generateRandomKey() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let key = '';
@@ -1735,6 +1736,7 @@
                 durationInMs = durationValue * multipliers[timeUnit];
             }
 
+            // MODIFICAÇÃO: Usar a função generateRandomKey que gera no formato XXXX-XXXX-XXXX-XXXX
             const newKeyValue = generateRandomKey();
             const now = Date.now();
             const expiresAt = timeUnit === 'lifetime' ? null : now + durationInMs;
@@ -1772,8 +1774,9 @@
                     const keyRef = ref(database, `folders/${folderSelect}/keys/${keyId}`);
                     await set(keyRef, keyData);
                 } else {
-                    const firebaseKey = 'key_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    const keyRef = ref(database, 'keys/' + firebaseKey);
+                    // MODIFICAÇÃO: Criar ID da key usando o próprio valor da key (sem caracteres especiais)
+                    const keyId = newKeyValue.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    const keyRef = ref(database, 'keys/' + keyId);
                     await set(keyRef, keyData);
                 }
                 
@@ -1869,17 +1872,14 @@
                 }
 
                 if (!keyFound) {
-                    const defaultKeysRef = ref(database, 'keys');
-                    const defaultSnapshot = await get(defaultKeysRef);
+                    // MODIFICAÇÃO: Buscar key usando o ID correto (sem caracteres especiais)
+                    const keyId = keyInput.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    const keyRef = ref(database, 'keys/' + keyId);
+                    const keySnapshot = await get(keyRef);
                     
-                    if (defaultSnapshot.exists()) {
-                        for (const [childKey, childData] of Object.entries(defaultSnapshot.val())) {
-                            if (childData.key === keyInput) {
-                                keyFound = true;
-                                keyData = childData;
-                                break;
-                            }
-                        }
+                    if (keySnapshot.exists()) {
+                        keyFound = true;
+                        keyData = keySnapshot.val();
                     }
                 }
 
@@ -1968,6 +1968,7 @@
                         }
                     }
 
+                    // MODIFICAÇÃO: Buscar todas as keys do caminho principal
                     const defaultKeysRef = ref(database, 'keys');
                     const defaultSnapshot = await get(defaultKeysRef);
                     
