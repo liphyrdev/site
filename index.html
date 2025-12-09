@@ -1886,22 +1886,22 @@
                 }
             }
 
-            // 🔴 **HWID AUTOMÁTICO AQUI** - sempre cria com null
-            const keyData = {
-                key: newKeyValue,
-                client: clientName,
-                days: durationDays,
-                createdAt: now,
-                expiresAt: expiresAt,
-                active: true,
-                hwid: null, // 🔴 **AUTO-CRIADO AUTOMATICAMENTE**
-                paused: false,
-                pausedAt: null,
-                pausedBy: null,
-                createdBy: auth.currentUser.email,
-                folderId: folderSelect || null,
-                folderName: folderName || null
-            };
+            // Na função generateKey() - linha ~415:
+const keyData = {
+    key: newKeyValue,
+    client: clientName,
+    days: durationDays,
+    createdAt: now,
+    expiresAt: expiresAt,
+    active: true,
+    hwid: "", // 🔴 MUDAR DE null PARA ""
+    paused: false,
+    pausedAt: null,
+    pausedBy: null,
+    createdBy: auth.currentUser.email,
+    folderId: folderSelect || null,
+    folderName: folderName || null
+};
 
             try {
                 // Criar ID da key usando o próprio valor
