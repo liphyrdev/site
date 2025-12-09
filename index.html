@@ -352,6 +352,10 @@
             color: #00ff00;
         }
 
+        .status-paused {
+            color: #ffa500;
+        }
+
         .status-expiring {
             color: #ffa500;
         }
@@ -1044,82 +1048,34 @@
         .clean-folders-btn:hover {
             background: #b71c1c;
         }
-
-        /* NOVOS ESTILOS PARA SISTEMA DE PAUSA/HWID */
-        .status-badge {
+        
+        /* NOVOS ESTILOS PARA USOS */
+        .usage-badge {
             display: inline-block;
-            padding: 3px 10px;
+            padding: 2px 8px;
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
             border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
             margin-left: 5px;
         }
         
-        .status-ativa {
-            background: rgba(0, 255, 0, 0.1);
-            color: #00ff00;
-            border: 1px solid #00ff00;
+        .btn-pause {
+            background: #ff9800;
+            color: #000;
         }
         
-        .status-pausada {
-            background: rgba(255, 165, 0, 0.1);
-            color: #ffa500;
-            border: 1px solid #ffa500;
+        .btn-pause:hover {
+            background: #f57c00;
         }
         
-        .status-expirada {
-            background: rgba(255, 68, 68, 0.1);
-            color: #ff4444;
-            border: 1px solid #ff4444;
+        .btn-resume {
+            background: #4caf50;
+            color: #fff;
         }
         
-        .status-inativa {
-            background: rgba(128, 128, 128, 0.1);
-            color: #cccccc;
-            border: 1px solid #cccccc;
-        }
-        
-        .status-naousada {
-            background: rgba(23, 162, 184, 0.1);
-            color: #17a2b8;
-            border: 1px solid #17a2b8;
-        }
-        
-        .hwid-info {
-            font-family: 'Courier New', monospace;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-top: 5px;
-            border: 1px solid #333333;
-        }
-        
-        .hwid-info.none {
-            color: #cccccc;
-            font-style: italic;
-        }
-        
-        .hwid-info.linked {
-            color: #8a2be2;
-        }
-        
-        .mass-actions {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .mass-actions .btn {
-            min-width: 150px;
-        }
-        
-        .action-btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-            min-width: 80px;
+        .btn-resume:hover {
+            background: #388e3c;
         }
     </style>
 </head>
@@ -1280,45 +1236,6 @@
         </div>
     </div>
 
-    <!-- MODAL: Confirmação de Ação -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-box">
-            <span class="close-modal" onclick="closeConfirmModal()">×</span>
-            <h2 id="confirmTitle">Confirmar Ação</h2>
-            <p id="confirmMessage" style="color: #cccccc; margin-bottom: 20px;"></p>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-danger" id="confirmActionBtn" style="flex: 1;">CONFIRMAR</button>
-                <button class="btn btn-secondary" onclick="closeConfirmModal()" style="flex: 1;">CANCELAR</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: Corrigir HWID Automaticamente -->
-    <div class="modal" id="fixHwidModal">
-        <div class="modal-box">
-            <span class="close-modal" onclick="closeFixHwidModal()">×</span>
-            <h2>Corrigir HWID Automaticamente</h2>
-            <div style="color: #ffa500; margin-bottom: 20px; text-align: center;">
-                <strong>⚠️ FUNÇÃO DE EMERGÊNCIA ⚠️</strong>
-            </div>
-            <p style="color: #cccccc; margin-bottom: 15px;">
-                Esta função irá adicionar automaticamente o campo <strong>"hwid"</strong> em <strong>TODAS</strong> as keys que não possuem.
-            </p>
-            <p style="color: #cccccc; margin-bottom: 20px;">
-                Execute apenas <strong>UMA VEZ</strong> para corrigir keys antigas.
-            </p>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-warning" onclick="autoFixAllHWID()" style="flex: 1;">
-                    CORRIGIR HWID AUTOMATICAMENTE
-                </button>
-                <button class="btn btn-secondary" onclick="closeFixHwidModal()" style="flex: 1;">
-                    CANCELAR
-                </button>
-            </div>
-            <div id="fixHwidStatus" style="margin-top: 15px;"></div>
-        </div>
-    </div>
-
     <header>
         <div class="logo">LIPHYR HUB</div>
         <nav>
@@ -1380,20 +1297,13 @@
                     <div class="value" id="activeKeys">0</div>
                 </div>
                 <div class="stat-card">
-                    <h4>Keys Pausadas</h4>
-                    <div class="value" id="pausedKeys">0</div>
-                </div>
-                <div class="stat-card">
                     <h4>Total de Usuários</h4>
                     <div class="value" id="totalUsers">0</div>
                 </div>
-            </div>
-
-            <!-- AÇÕES EM MASSA -->
-            <div class="mass-actions">
-                <button class="btn btn-warning" onclick="pauseAllKeys()">Pausar Todas as Keys</button>
-                <button class="btn btn-success" onclick="resumeAllKeys()">Retomar Todas as Keys</button>
-                <button class="btn btn-info" onclick="openFixHwidModal()">Corrigir HWID Automático</button>
+                <div class="stat-card">
+                    <h4>Saldo Total</h4>
+                    <div class="value" id="totalBalance">R$ 0,00</div>
+                </div>
             </div>
 
             <div class="admin-actions">
@@ -1441,6 +1351,17 @@
                     <h3>Exportar Dados</h3>
                     <p>Backup do sistema</p>
                 </div>
+                
+                <!-- NOVOS BOTÕES PARA PAUSAR/RETOMAR TODAS AS KEYS -->
+                <div class="action-card" onclick="pauseAllKeys()">
+                    <h3>⏸️ Pausar Todas</h3>
+                    <p>Pausar todas as keys</p>
+                </div>
+                
+                <div class="action-card" onclick="resumeAllKeys()">
+                    <h3>▶️ Retomar Todas</h3>
+                    <p>Retomar todas as keys</p>
+                </div>
             </div>
 
             <!-- SEÇÃO PARA GERENCIAMENTO DO SHOP -->
@@ -1485,15 +1406,34 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Duração em Dias:</label>
-                        <input type="number" id="durationDays" placeholder="Ex: 30" value="30" min="1">
+                        <label>Duração (número):</label>
+                        <input type="number" id="durationValue" placeholder="Ex: 30" value="30" min="1">
                     </div>
                     <div class="form-group">
-                        <label>Pasta:</label>
-                        <select id="folderSelect">
-                            <option value="">Sem pasta (Global)</option>
+                        <label>Unidade de tempo:</label>
+                        <select id="timeUnit">
+                            <option value="seconds">Segundos</option>
+                            <option value="minutes">Minutos</option>
+                            <option value="hours" selected>Horas</option>
+                            <option value="days">Dias</option>
+                            <option value="weeks">Semanas</option>
+                            <option value="months">Meses</option>
+                            <option value="years">Anos</option>
+                            <option value="lifetime">Vitalícia</option>
                         </select>
                     </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Número de usos (0 = ilimitado):</label>
+                        <input type="number" id="maxUses" placeholder="Ex: 1, 5, 10" value="1" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Salvar na pasta:</label>
+                    <select id="folderSelect">
+                        <option value="">Sem pasta (Global)</option>
+                    </select>
                 </div>
                 <button class="btn" onclick="generateKey()" style="width: 100%; margin-top: 20px;">Gerar Key</button>
             </div>
@@ -1530,7 +1470,8 @@
             getAuth, 
             signInWithEmailAndPassword, 
             signOut,
-            onAuthStateChanged
+            onAuthStateChanged,
+            createUserWithEmailAndPassword
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         
         import { 
@@ -1540,6 +1481,7 @@
             get, 
             remove, 
             onValue,
+            push,
             update
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
@@ -1562,7 +1504,6 @@
 
         let currentShopPlanId = null;
         let shopFeatures = [];
-        let allKeysListener = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             initializeSystem();
@@ -1597,6 +1538,7 @@
         window.verifyKey = verifyKey;
         window.loadAllKeys = loadAllKeys;
         window.deleteKey = deleteKey;
+        window.deleteKeyFromFolder = deleteKeyFromFolder;
         window.cleanExpiredKeys = cleanExpiredKeys;
         window.openSendBalanceModal = openSendBalanceModal;
         window.closeSendBalanceModal = closeSendBalanceModal;
@@ -1624,16 +1566,10 @@
         window.editShopPlan = editShopPlan;
         window.deleteShopPlan = deleteShopPlan;
         window.toggleShopPlanPopular = toggleShopPlanPopular;
-        window.pauseKey = pauseKey;
-        window.resumeKey = resumeKey;
-        window.clearHWID = clearHWID;
+        // NOVAS FUNÇÕES
         window.pauseAllKeys = pauseAllKeys;
         window.resumeAllKeys = resumeAllKeys;
-        window.closeConfirmModal = closeConfirmModal;
-        window.showConfirmDelete = showConfirmDelete;
-        window.openFixHwidModal = openFixHwidModal;
-        window.closeFixHwidModal = closeFixHwidModal;
-        window.autoFixAllHWID = autoFixAllHWID;
+        window.toggleKeyPause = toggleKeyPause;
 
         function createParticles() {
             const container = document.getElementById('particles');
@@ -1674,50 +1610,18 @@
                 const adminPanel = document.getElementById('adminPanel');
                 if (adminPanel) adminPanel.classList.add('active');
                 updateUserUI(user);
-                setupRealtimeListeners();
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
                 loadFolders();
                 loadShopPlans();
             } else {
                 const adminPanel = document.getElementById('adminPanel');
                 if (adminPanel) adminPanel.classList.remove('active');
                 updateUserUI(user);
-                removeRealtimeListeners();
                 loadPublicKeys();
             }
         });
-
-        function setupRealtimeListeners() {
-            // Remove listeners antigos se existirem
-            removeRealtimeListeners();
-            
-            // Listener para todas as keys (admin)
-            const allKeysRef = ref(database, 'keys');
-            allKeysListener = onValue(allKeysRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    const keys = snapshot.val();
-                    displayAllKeys(keys);
-                    updateStats(keys);
-                    displayPublicKeys(keys);
-                } else {
-                    document.getElementById('adminKeysList').innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 20px;">Nenhuma key cadastrada.</p>';
-                    document.getElementById('publicKeys').innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 40px;">Nenhuma key ativa no momento.</p>';
-                }
-            });
-            
-            // Auto-refresh a cada 30 segundos
-            setInterval(() => {
-                if (auth.currentUser && isAdmin(auth.currentUser.email)) {
-                    loadAllKeys();
-                }
-            }, 30000);
-        }
-
-        function removeRealtimeListeners() {
-            if (allKeysListener) {
-                allKeysListener();
-                allKeysListener = null;
-            }
-        }
 
         function openAdminPanel() {
             if (auth.currentUser && isAdmin(auth.currentUser.email)) {
@@ -1767,7 +1671,7 @@
                 closeLoginModal();
                 const adminPanel = document.getElementById('adminPanel');
                 if (adminPanel) adminPanel.classList.add('active');
-                
+                loadStats();
             } catch (error) {
                 console.error('Login error:', error);
                 let errorMessage = 'Email ou senha incorretos!';
@@ -1849,11 +1753,6 @@
             return key;
         }
 
-        function convertDaysToTimestamp(days) {
-            return Date.now() + (days * 24 * 60 * 60 * 1000);
-        }
-
-        // 🔴 **FUNÇÃO PRINCIPAL COM HWID AUTOMÁTICO**
         async function generateKey() {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
@@ -1861,17 +1760,35 @@
             }
 
             const clientName = document.getElementById('clientName')?.value.trim();
-            const durationDays = parseInt(document.getElementById('durationDays')?.value);
+            const durationValue = parseInt(document.getElementById('durationValue')?.value);
+            const timeUnit = document.getElementById('timeUnit')?.value;
             const folderSelect = document.getElementById('folderSelect')?.value;
+            const maxUses = parseInt(document.getElementById('maxUses')?.value) || 0;
 
-            if (!clientName || !durationDays || durationDays <= 0) {
+            if (!clientName || !durationValue || durationValue <= 0 || maxUses < 0) {
                 alert('Preencha todos os campos corretamente!');
                 return;
             }
 
+            let durationInMs = 0;
+            if (timeUnit === 'lifetime') {
+                durationInMs = 9999999999999;
+            } else {
+                const multipliers = {
+                    'seconds': 1000,
+                    'minutes': 1000 * 60,
+                    'hours': 1000 * 60 * 60,
+                    'days': 1000 * 60 * 60 * 24,
+                    'weeks': 1000 * 60 * 60 * 24 * 7,
+                    'months': 1000 * 60 * 60 * 24 * 30,
+                    'years': 1000 * 60 * 60 * 24 * 365
+                };
+                durationInMs = durationValue * multipliers[timeUnit];
+            }
+
             const newKeyValue = generateRandomKey();
             const now = Date.now();
-            const expiresAt = convertDaysToTimestamp(durationDays);
+            const expiresAt = timeUnit === 'lifetime' ? null : now + durationInMs;
 
             let folderName = '';
             if (folderSelect) {
@@ -1886,30 +1803,36 @@
                 }
             }
 
-            // Na função generateKey() - linha ~415:
-const keyData = {
-    key: newKeyValue,
-    client: clientName,
-    days: durationDays,
-    createdAt: now,
-    expiresAt: expiresAt,
-    active: true,
-    hwid: "", // 🔴 MUDAR DE null PARA ""
-    paused: false,
-    pausedAt: null,
-    pausedBy: null,
-    createdBy: auth.currentUser.email,
-    folderId: folderSelect || null,
-    folderName: folderName || null
-};
+            const keyData = {
+                key: newKeyValue,
+                client: clientName,
+                duration: durationValue,
+                timeUnit: timeUnit,
+                createdAt: now,
+                expiresAt: expiresAt,
+                active: true,
+                createdBy: auth.currentUser.email,
+                createdById: auth.currentUser.uid,
+                folderId: folderSelect || null,
+                folderName: folderName || null,
+                // NOVOS CAMPOS PARA USOS E PAUSA
+                maxUses: maxUses,
+                usedCount: 0,
+                isPaused: false,
+                pauseTime: null
+            };
 
             try {
-                // Criar ID da key usando o próprio valor
-                const keyId = newKeyValue.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-                const keyRef = ref(database, 'keys/' + keyId);
-                await set(keyRef, keyData);
+                if (folderSelect && folderSelect !== '') {
+                    const keyId = 'key_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    const keyRef = ref(database, `folders/${folderSelect}/keys/${keyId}`);
+                    await set(keyRef, keyData);
+                } else {
+                    const keyId = newKeyValue.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    const keyRef = ref(database, 'keys/' + keyId);
+                    await set(keyRef, keyData);
+                }
                 
-                // Atualizar contador da pasta se existir
                 if (folderSelect && folderName) {
                     const folderRef = ref(database, 'folders/' + folderSelect);
                     const folderSnapshot = await get(folderRef);
@@ -1925,13 +1848,19 @@ const keyData = {
                     }
                 }
                 
+                const durationText = timeUnit === 'lifetime' ? 'Vitalícia' : `${durationValue} ${timeUnit}`;
+                const usesText = maxUses === 0 ? 'Ilimitados' : `${maxUses} usos`;
                 const folderText = folderName ? `\nPasta: ${folderName}` : '';
                 
-                alert(`✅ Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationDays} dias${folderText}\n\n⚠️ HWID: NULL (pronto para vincular)`);
+                alert(`Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}\nUsos: ${usesText}${folderText}`);
                 
                 if (document.getElementById('clientName')) document.getElementById('clientName').value = '';
-                if (document.getElementById('durationDays')) document.getElementById('durationDays').value = '30';
+                if (document.getElementById('durationValue')) document.getElementById('durationValue').value = '30';
+                if (document.getElementById('maxUses')) document.getElementById('maxUses').value = '1';
                 
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
                 loadFolders();
             } catch (error) {
                 console.error('Error generating key:', error);
@@ -1972,65 +1901,91 @@ const keyData = {
             }
 
             try {
-                const keyId = keyInput.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-                const keyRef = ref(database, 'keys/' + keyId);
-                const keySnapshot = await get(keyRef);
+                let keyFound = false;
+                let keyData = null;
+
+                const foldersRef = ref(database, 'folders');
+                const foldersSnapshot = await get(foldersRef);
                 
-                if (!keySnapshot.exists()) {
+                if (foldersSnapshot.exists()) {
+                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
+                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
+                        const keysSnapshot = await get(folderKeysRef);
+                        
+                        if (keysSnapshot.exists()) {
+                            for (const [childKey, childData] of Object.entries(keysSnapshot.val())) {
+                                if (childData.key === keyInput) {
+                                    keyFound = true;
+                                    keyData = childData;
+                                    keyData.folderName = folderData.name;
+                                    break;
+                                }
+                            }
+                        }
+                        if (keyFound) break;
+                    }
+                }
+
+                if (!keyFound) {
+                    const keyId = keyInput.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    const keyRef = ref(database, 'keys/' + keyId);
+                    const keySnapshot = await get(keyRef);
+                    
+                    if (keySnapshot.exists()) {
+                        keyFound = true;
+                        keyData = keySnapshot.val();
+                    }
+                }
+
+                if (!keyFound) {
                     resultDiv.className = 'verify-result result-error';
                     resultDiv.innerHTML = '<h3>Key não encontrada!</h3><p>Esta key não existe no sistema.</p>';
                     resultDiv.style.display = 'block';
                     return;
                 }
 
-                const keyData = keySnapshot.val();
                 const now = Date.now();
                 
-                // 🔴 **CORREÇÃO: Verifica se HWID existe, se não, assume null**
-                const hwidValue = data.hwid !== undefined ? data.hwid : "";
-                const hasHwid = hwidValue !== ""; // Verifica se NÃO é string vazia
-                
-                // Verificar status
-                let status = '';
                 if (!keyData.active) {
-                    status = 'Inativa';
-                } else if (keyData.paused) {
-                    status = 'Pausada';
+                    resultDiv.className = 'verify-result result-error';
+                    resultDiv.innerHTML = '<h3>Key inativa!</h3><p>Esta key foi desativada pelo administrador.</p>';
+                } else if (keyData.isPaused) {
+                    resultDiv.className = 'verify-result result-error';
+                    resultDiv.innerHTML = '<h3>Key pausada!</h3><p>Esta key está temporariamente pausada.</p>';
                 } else if (keyData.expiresAt && now > keyData.expiresAt) {
-                    status = 'Expirada';
-                } else if (keyData.active && !keyData.paused) {
-                    status = 'Ativa';
-                }
-                
-                if (status === 'Inativa' || status === 'Expirada') {
                     resultDiv.className = 'verify-result result-error';
-                    resultDiv.innerHTML = `<h3>Key ${status.toLowerCase()}!</h3><p>Esta key não é válida para uso.</p>`;
-                } else if (status === 'Pausada') {
+                    resultDiv.innerHTML = '<h3>Key expirada!</h3><p>Esta key não é mais válida.</p>';
+                } else if (keyData.maxUses > 0 && keyData.usedCount >= keyData.maxUses) {
                     resultDiv.className = 'verify-result result-error';
-                    resultDiv.innerHTML = '<h3>Key pausada!</h3><p>Esta key está temporariamente suspensa.</p>';
+                    resultDiv.innerHTML = '<h3>Usos esgotados!</h3><p>Todos os usos desta key foram consumidos.</p>';
                 } else {
                     let timeLeftText = '';
-                    if (keyData.expiresAt) {
+                    if (keyData.timeUnit === 'lifetime') {
+                        timeLeftText = 'Vitalícia';
+                    } else if (keyData.expiresAt) {
                         const timeLeft = keyData.expiresAt - now;
                         const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
                         const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                         
                         if (days > 0) timeLeftText = `${days} dias, ${hours} horas`;
-                        else if (hours > 0) timeLeftText = `${hours} horas`;
-                        else timeLeftText = 'Menos de 1 hora';
+                        else if (hours > 0) timeLeftText = `${hours} horas, ${minutes} minutos`;
+                        else timeLeftText = `${minutes} minutos`;
                     }
                     
                     const createdDate = new Date(keyData.createdAt).toLocaleDateString('pt-BR');
-                    const hwidInfo = hwidValue ? 
-                        `<p><strong>HWID:</strong> ${hwidValue.substring(0, 8)}-XXXX</p>` : 
-                        '<p><strong>HWID:</strong> Nenhum (não vinculada)</p>';
+                    const folderInfo = keyData.folderName ? `<p><strong>Pasta:</strong> ${keyData.folderName}</p>` : '';
+                    const usesInfo = keyData.maxUses === 0 ? 
+                        '<p><strong>Usos:</strong> Ilimitados</p>' : 
+                        `<p><strong>Usos:</strong> ${keyData.usedCount || 0}/${keyData.maxUses}</p>`;
                     
                     resultDiv.className = 'verify-result result-success';
                     resultDiv.innerHTML = `
-                        <h3>✅ Key válida!</h3>
+                        <h3>Key válida!</h3>
                         <p><strong>Cliente:</strong> ${keyData.client}</p>
-                        ${hwidInfo}
-                        <p><strong>Status:</strong> ${status}</p>
+                        ${folderInfo}
+                        <p><strong>Status:</strong> Ativa</p>
+                        ${usesInfo}
                         <p><strong>Tempo restante:</strong> ${timeLeftText}</p>
                         <p><strong>Criada em:</strong> ${createdDate}</p>
                     `;
@@ -2045,191 +2000,490 @@ const keyData = {
             }
         }
 
+        function loadPublicKeys() {
+            const container = document.getElementById('publicKeys');
+            if (!container) return;
+            
+            container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 40px;"><div class="loading"></div><p style="margin-top: 10px;">Carregando keys...</p></div>';
+
+            async function fetchAllPublicKeys() {
+                const allKeys = [];
+                const now = Date.now();
+
+                try {
+                    const foldersRef = ref(database, 'folders');
+                    const foldersSnapshot = await get(foldersRef);
+                    
+                    if (foldersSnapshot.exists()) {
+                        for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
+                            const folderKeysRef = ref(database, `folders/${folderId}/keys`);
+                            const keysSnapshot = await get(folderKeysRef);
+                            
+                            if (keysSnapshot.exists()) {
+                                for (const [keyId, keyData] of Object.entries(keysSnapshot.val())) {
+                                    if (keyData.active && !keyData.isPaused && (!keyData.expiresAt || keyData.expiresAt > now)) {
+                                        allKeys.push({
+                                            ...keyData,
+                                            folderName: folderData.name
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    const defaultKeysRef = ref(database, 'keys');
+                    const defaultSnapshot = await get(defaultKeysRef);
+                    
+                    if (defaultSnapshot.exists()) {
+                        for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
+                            if (keyData.active && !keyData.isPaused && (!keyData.expiresAt || keyData.expiresAt > now)) {
+                                allKeys.push(keyData);
+                            }
+                        }
+                    }
+
+                    allKeys.sort((a, b) => b.createdAt - a.createdAt);
+                    displayPublicKeys(allKeys);
+
+                } catch (error) {
+                    console.error('Error loading public keys:', error);
+                    container.innerHTML = '<p style="text-align: center; color: #ff4444; padding: 40px;">Erro ao carregar keys. Verifique sua conexão.</p>';
+                }
+            }
+
+            fetchAllPublicKeys();
+        }
+
         function displayPublicKeys(keys) {
             const container = document.getElementById('publicKeys');
             if (!container) return;
             
-            const now = Date.now();
-            const activeKeys = [];
+            container.innerHTML = '';
 
-            // Filtrar apenas keys ativas, não pausadas e não expiradas
-            for (const [keyId, keyData] of Object.entries(keys)) {
-                if (keyData.active && !keyData.paused && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                    activeKeys.push({
-                        ...keyData,
-                        firebaseKey: keyId
-                    });
-                }
-            }
-
-            if (activeKeys.length === 0) {
+            if (keys.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 40px;">Nenhuma key ativa no momento.</p>';
                 return;
             }
 
-            // Ordenar por data de criação (mais recentes primeiro) e limitar a 6
-            activeKeys.sort((a, b) => b.createdAt - a.createdAt).slice(0, 6);
-
-            let html = '';
-            activeKeys.forEach((data) => {
+            keys.forEach((data) => {
                 const now = Date.now();
                 
                 let timeLeftText = '';
-                if (data.expiresAt) {
+                if (data.timeUnit === 'lifetime') {
+                    timeLeftText = 'Vitalícia';
+                } else if (data.expiresAt) {
                     const timeLeft = data.expiresAt - now;
                     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     
                     if (days > 0) timeLeftText = `${days} dias`;
-                    else timeLeftText = 'Menos de 1 dia';
+                    else if (hours > 0) timeLeftText = `${hours} horas`;
+                    else timeLeftText = 'Menos de 1 hora';
                 }
                 
-                const statusClass = data.paused ? 'status-expiring' : 
-                                 (data.expiresAt && data.expiresAt - now < 24 * 60 * 60 * 1000) ? 'status-expiring' : 'status-active';
+                let statusClass = 'status-active';
+                if (data.isPaused) {
+                    statusClass = 'status-paused';
+                } else if (data.timeUnit !== 'lifetime' && data.expiresAt - now < 24 * 60 * 60 * 1000) {
+                    statusClass = 'status-expiring';
+                }
                 
-                html += `
-                    <div class="key-card">
-                        <div class="key-info">
-                            <h3>${data.client}</h3>
-                            <div class="key-value">${data.key}</div>
-                            <div class="key-status">
-                                <span>Status: <span class="${statusClass}">${data.paused ? 'Pausada' : 'Ativa'}</span></span>
-                                <span>Expira: <strong>${timeLeftText}</strong></span>
-                            </div>
+                const folderBadge = data.folderName ? 
+                    `<span class="folder-badge">${data.folderName}</span>` : '';
+                
+                const usesBadge = data.maxUses > 0 ? 
+                    `<span class="usage-badge">${data.usedCount || 0}/${data.maxUses}</span>` : '';
+
+                const card = document.createElement('div');
+                card.className = 'key-card';
+                card.innerHTML = `
+                    <div class="key-info">
+                        <h3>${data.client} ${folderBadge} ${usesBadge}</h3>
+                        <div class="key-value">${data.key}</div>
+                        <div class="key-status">
+                            <span>Status: <span class="${statusClass}">${data.isPaused ? 'Pausada' : 'Ativa'}</span></span>
+                            <span>Expira: <strong>${timeLeftText}</strong></span>
                         </div>
                     </div>
                 `;
+                container.appendChild(card);
             });
+        }
+
+        async function loadAllKeys() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                return;
+            }
+
+            try {
+                const container = document.getElementById('adminKeysList');
+                if (!container) return;
+                
+                container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 20px;"><div class="loading"></div></div>';
+
+                let allKeys = [];
+
+                const defaultKeysRef = ref(database, 'keys');
+                const defaultSnapshot = await get(defaultKeysRef);
+                
+                if (defaultSnapshot.exists()) {
+                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
+                        allKeys.push({
+                            ...keyData,
+                            firebaseKey: keyId,
+                            source: 'default',
+                            folderId: null,
+                            folderName: null
+                        });
+                    }
+                }
+
+                const foldersRef = ref(database, 'folders');
+                const foldersSnapshot = await get(foldersRef);
+                
+                if (foldersSnapshot.exists()) {
+                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
+                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
+                        const folderKeysSnapshot = await get(folderKeysRef);
+                        
+                        if (folderKeysSnapshot.exists()) {
+                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
+                                allKeys.push({
+                                    ...keyData,
+                                    firebaseKey: keyId,
+                                    folderId: folderId,
+                                    folderName: folderData.name || 'Sem nome',
+                                    source: 'folder'
+                                });
+                            }
+                        }
+                    }
+                }
+
+                displayAllKeys(allKeys);
+
+            } catch (error) {
+                console.error('Error loading all keys:', error);
+                const container = document.getElementById('adminKeysList');
+                if (container) {
+                    container.innerHTML = '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar lista de keys.</p>';
+                }
+            }
+        }
+
+        function displayAllKeys(keys) {
+            const container = document.getElementById('adminKeysList');
+            if (!container) return;
             
-            container.innerHTML = html;
+            container.innerHTML = '';
+
+            if (keys.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 20px;">Nenhuma key cadastrada.</p>';
+                return;
+            }
+
+            keys.sort((a, b) => b.createdAt - a.createdAt);
+
+            keys.forEach((data) => {
+                const now = Date.now();
+                let status = 'Ativa';
+                let statusClass = 'status-active';
+                
+                if (data.isPaused) {
+                    status = 'Pausada';
+                    statusClass = 'status-paused';
+                } else if (!data.active) {
+                    status = 'Inativa';
+                    statusClass = 'status-expired';
+                } else if (data.expiresAt && now > data.expiresAt) {
+                    status = 'Expirada';
+                    statusClass = 'status-expired';
+                } else if (data.expiresAt && (data.expiresAt - now) < 24 * 60 * 60 * 1000) {
+                    status = 'Expirando';
+                    statusClass = 'status-expiring';
+                }
+                
+                const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
+                const timeUnitText = data.timeUnit === 'lifetime' ? 'Vitalícia' : 
+                                   `${data.duration} ${data.timeUnit}`;
+                
+                const folderInfo = data.folderName ? 
+                    `<small>Pasta: ${data.folderName}</small>` : 
+                    '<small>Local: Global (sem pasta)</small>';
+                
+                const usesInfo = data.maxUses === 0 ? 
+                    '<small>Usos: Ilimitados</small>' : 
+                    `<small>Usos: ${data.usedCount || 0}/${data.maxUses}</small>`;
+                
+                const deleteButton = data.source === 'folder' ?
+                    `<button class="btn btn-danger" onclick="deleteKeyFromFolder('${data.folderId}', '${data.firebaseKey}', '${data.key}')">Deletar</button>` :
+                    `<button class="btn btn-danger" onclick="deleteKey('${data.firebaseKey}', '${data.key}')">Deletar</button>`;
+                
+                // BOTÃO PARA PAUSAR/RETOMAR KEY INDIVIDUAL
+                const pauseButton = data.isPaused ?
+                    `<button class="btn btn-resume" onclick="toggleKeyPause('${data.source}', '${data.folderId || ''}', '${data.firebaseKey}', false)">Retomar</button>` :
+                    `<button class="btn btn-pause" onclick="toggleKeyPause('${data.source}', '${data.folderId || ''}', '${data.firebaseKey}', true)">Pausar</button>`;
+
+                const item = document.createElement('div');
+                item.className = 'admin-key-item';
+                item.innerHTML = `
+                    <div class="key-details">
+                        <strong>${data.key}</strong>
+                        <small>Cliente: ${data.client}</small>
+                        ${folderInfo}
+                        ${usesInfo}
+                        <small>Validade: ${timeUnitText}</small>
+                        <small>Criado em: ${createdDate}</small>
+                        <small>Criado por: ${data.createdBy || 'Admin'}</small>
+                        <small>Status: <span class="${statusClass}">${status}</span></small>
+                        <small>Origem: ${data.source === 'folder' ? 'Pasta personalizada' : 'Global'}</small>
+                    </div>
+                    <div class="key-actions">
+                        ${pauseButton}
+                        ${deleteButton}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
         }
 
-        // 🔴 **VERSÃO CORRETA - Sem duplicação**
-function displayAllKeys(keys) {
-    const container = document.getElementById('adminKeysList');
-    if (!container) return;
-    
-    if (!keys || Object.keys(keys).length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 20px;">Nenhuma key cadastrada.</p>';
-        return;
-    }
-
-    const keysArray = [];
-    for (const [keyId, keyData] of Object.entries(keys)) {
-        keysArray.push({
-            ...keyData,
-            firebaseKey: keyId
-        });
-    }
-
-    // Ordenar por data de criação (mais recentes primeiro)
-    keysArray.sort((a, b) => b.createdAt - a.createdAt);
-
-    let html = '';
-    keysArray.forEach((data) => {
-        const now = Date.now();
-        
-        // 🔴 **CORREÇÃO: Verifica se HWID existe**
-        const hwidValue = data.hwid !== undefined ? data.hwid : "";
-        const hasHwid = hwidValue !== "" && hwidValue !== null; // Verifica se tem valor
-        
-        // Determinar status
-        let status = '';
-        let statusClass = '';
-        
-        if (!data.active) {
-            status = 'Inativa';
-            statusClass = 'status-inativa';
-        } else if (data.paused) {
-            status = 'Pausada';
-            statusClass = 'status-pausada';
-        } else if (data.expiresAt && now > data.expiresAt) {
-            status = 'Expirada';
-            statusClass = 'status-expirada';
-        } else if (!hasHwid) {
-            status = 'Ativa (Não usada)';
-            statusClass = 'status-naousada';
-        } else {
-            status = 'Ativa';
-            statusClass = 'status-ativa';
-        }
-        
-        const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
-        const expiresDate = data.expiresAt ? new Date(data.expiresAt).toLocaleDateString('pt-BR') : 'Vitalícia';
-        
-        // Formatar HWID para display
-        let hwidDisplay = 'HWID: Nenhum';
-        let hwidClass = 'none';
-        if (hasHwid && hwidValue && hwidValue !== "") {
-            const shortHwid = hwidValue.substring(0, 8);
-            hwidDisplay = `HWID: ${shortHwid}-XXXX`;
-            hwidClass = 'linked';
-        } else if (hwidValue === "") {
-            hwidDisplay = 'HWID: Não vinculado';
-            hwidClass = 'none';
-        } else {
-            hwidDisplay = 'HWID: Campo ausente!';
-            hwidClass = 'none';
-        }
-        
-        const folderInfo = data.folderName ? 
-            `<small>Pasta: ${data.folderName}</small>` : 
-            '<small>Local: Global</small>';
-
-        // Botão dinâmico - Pausar/Retomar
-        const pauseResumeButton = data.paused ? 
-            `<button class="btn btn-success action-btn-small" onclick="resumeKey('${data.firebaseKey}')">Retomar</button>` : 
-            `<button class="btn btn-warning action-btn-small" onclick="pauseKey('${data.firebaseKey}')">Pausar</button>`;
-
-        // Botão Reset HWID (só mostra se tiver HWID)
-        const resetHWIDButton = hasHwid && hwidValue && hwidValue !== "" ? 
-            `<button class="btn btn-info action-btn-small" onclick="clearHWID('${data.firebaseKey}')">Reset HWID</button>` : 
-            '';
-
-        html += `
-            <div class="admin-key-item">
-                <div class="key-details">
-                    <strong>${data.key}</strong>
-                    <small>Cliente: ${data.client}</small>
-                    ${folderInfo}
-                    <small>Duração: ${data.days || 30} dias</small>
-                    <small>Criado em: ${createdDate}</small>
-                    <small>Expira em: ${expiresDate}</small>
-                    <small>Criado por: ${data.createdBy || 'Admin'}</small>
-                    <div class="hwid-info ${hwidClass}">${hwidDisplay}</div>
-                    <span class="status-badge ${statusClass}">${status}</span>
-                </div>
-                <div class="key-actions">
-                    ${pauseResumeButton}
-                    ${resetHWIDButton}
-                    <button class="btn btn-danger action-btn-small" onclick="showConfirmDelete('${data.firebaseKey}', '${data.key}')">Deletar</button>
-                </div>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
-
-        function showConfirmDelete(keyId, keyValue) {
-            document.getElementById('confirmTitle').textContent = 'Confirmar Exclusão';
-            document.getElementById('confirmMessage').textContent = `Tem certeza que deseja deletar a key:\n${keyValue}\n\nEsta ação não pode ser desfeita!`;
+        // NOVA FUNÇÃO: PAUSAR/RETOMAR KEY INDIVIDUAL
+        async function toggleKeyPause(source, folderId, firebaseKey, pause) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
             
-            const confirmBtn = document.getElementById('confirmActionBtn');
-            confirmBtn.onclick = () => deleteKey(keyId, keyValue);
-            confirmBtn.textContent = 'DELETAR';
-            confirmBtn.className = 'btn btn-danger';
+            const action = pause ? 'pausar' : 'retomar';
             
-            document.getElementById('confirmModal').classList.add('active');
+            if (!confirm(`Tem certeza que deseja ${action} esta key?`)) {
+                return;
+            }
+
+            try {
+                let keyRef;
+                
+                if (source === 'folder' && folderId) {
+                    keyRef = ref(database, `folders/${folderId}/keys/${firebaseKey}`);
+                } else {
+                    keyRef = ref(database, 'keys/' + firebaseKey);
+                }
+                
+                const keySnapshot = await get(keyRef);
+                
+                if (!keySnapshot.exists()) {
+                    alert('Key não encontrada!');
+                    return;
+                }
+                
+                const keyData = keySnapshot.val();
+                const updates = {
+                    isPaused: pause,
+                    lastUpdated: Date.now()
+                };
+                
+                if (pause && !keyData.isPaused) {
+                    updates.pauseTime = Date.now();
+                } else if (!pause && keyData.isPaused) {
+                    // Se está retomando e estava pausada, ajustar o tempo de expiração
+                    const pauseDuration = Date.now() - keyData.pauseTime;
+                    if (keyData.expiresAt) {
+                        updates.expiresAt = keyData.expiresAt + pauseDuration;
+                    }
+                }
+                
+                await update(keyRef, updates);
+                
+                alert(`Key ${pause ? 'pausada' : 'retomada'} com sucesso!`);
+                
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
+                
+            } catch (error) {
+                console.error('Error toggling key pause:', error);
+                alert('Erro ao ' + (pause ? 'pausar' : 'retomar') + ' key: ' + error.message);
+            }
         }
 
-        function closeConfirmModal() {
-            document.getElementById('confirmModal').classList.remove('active');
+        // NOVA FUNÇÃO: PAUSAR TODAS AS KEYS
+        async function pauseAllKeys() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+            
+            if (!confirm('ATENÇÃO!\n\nDeseja pausar TODAS as keys ativas?\n\nEsta ação irá pausar todas as keys, independente do status.')) {
+                return;
+            }
+
+            try {
+                const now = Date.now();
+                let pausedCount = 0;
+
+                // Pausar keys globais
+                const defaultKeysRef = ref(database, 'keys');
+                const defaultSnapshot = await get(defaultKeysRef);
+                
+                if (defaultSnapshot.exists()) {
+                    const updatePromises = [];
+                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
+                        if (keyData.active && !keyData.isPaused) {
+                            updatePromises.push(update(ref(database, 'keys/' + keyId), {
+                                isPaused: true,
+                                pauseTime: now,
+                                lastUpdated: now
+                            }));
+                            pausedCount++;
+                        }
+                    }
+                    
+                    if (updatePromises.length > 0) {
+                        await Promise.all(updatePromises);
+                    }
+                }
+
+                // Pausar keys em pastas
+                const foldersRef = ref(database, 'folders');
+                const foldersSnapshot = await get(foldersRef);
+                
+                if (foldersSnapshot.exists()) {
+                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
+                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
+                        const folderKeysSnapshot = await get(folderKeysRef);
+                        
+                        if (folderKeysSnapshot.exists()) {
+                            const folderUpdatePromises = [];
+                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
+                                if (keyData.active && !keyData.isPaused) {
+                                    folderUpdatePromises.push(update(ref(database, `folders/${folderId}/keys/${keyId}`), {
+                                        isPaused: true,
+                                        pauseTime: now,
+                                        lastUpdated: now
+                                    }));
+                                    pausedCount++;
+                                }
+                            }
+                            
+                            if (folderUpdatePromises.length > 0) {
+                                await Promise.all(folderUpdatePromises);
+                            }
+                        }
+                    }
+                }
+
+                alert(`${pausedCount} key(s) pausada(s) com sucesso!\n\nTodas as keys ativas foram pausadas.`);
+                
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
+                
+            } catch (error) {
+                console.error('Error pausing all keys:', error);
+                alert('Erro ao pausar keys: ' + error.message);
+            }
+        }
+
+        // NOVA FUNÇÃO: RETOMAR TODAS AS KEYS
+        async function resumeAllKeys() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+            
+            if (!confirm('Deseja retomar TODAS as keys pausadas?\n\nEsta ação irá retomar todas as keys que estão pausadas.')) {
+                return;
+            }
+
+            try {
+                const now = Date.now();
+                let resumedCount = 0;
+
+                // Retomar keys globais
+                const defaultKeysRef = ref(database, 'keys');
+                const defaultSnapshot = await get(defaultKeysRef);
+                
+                if (defaultSnapshot.exists()) {
+                    const updatePromises = [];
+                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
+                        if (keyData.active && keyData.isPaused) {
+                            let updates = {
+                                isPaused: false,
+                                lastUpdated: now
+                            };
+                            
+                            // Ajustar tempo de expiração
+                            if (keyData.pauseTime && keyData.expiresAt) {
+                                const pauseDuration = now - keyData.pauseTime;
+                                updates.expiresAt = keyData.expiresAt + pauseDuration;
+                            }
+                            
+                            updatePromises.push(update(ref(database, 'keys/' + keyId), updates));
+                            resumedCount++;
+                        }
+                    }
+                    
+                    if (updatePromises.length > 0) {
+                        await Promise.all(updatePromises);
+                    }
+                }
+
+                // Retomar keys em pastas
+                const foldersRef = ref(database, 'folders');
+                const foldersSnapshot = await get(foldersRef);
+                
+                if (foldersSnapshot.exists()) {
+                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
+                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
+                        const folderKeysSnapshot = await get(folderKeysRef);
+                        
+                        if (folderKeysSnapshot.exists()) {
+                            const folderUpdatePromises = [];
+                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
+                                if (keyData.active && keyData.isPaused) {
+                                    let updates = {
+                                        isPaused: false,
+                                        lastUpdated: now
+                                    };
+                                    
+                                    // Ajustar tempo de expiração
+                                    if (keyData.pauseTime && keyData.expiresAt) {
+                                        const pauseDuration = now - keyData.pauseTime;
+                                        updates.expiresAt = keyData.expiresAt + pauseDuration;
+                                    }
+                                    
+                                    folderUpdatePromises.push(update(ref(database, `folders/${folderId}/keys/${keyId}`), updates));
+                                    resumedCount++;
+                                }
+                            }
+                            
+                            if (folderUpdatePromises.length > 0) {
+                                await Promise.all(folderUpdatePromises);
+                            }
+                        }
+                    }
+                }
+
+                alert(`${resumedCount} key(s) retomada(s) com sucesso!\n\nTodas as keys pausadas foram retomadas.`);
+                
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
+                
+            } catch (error) {
+                console.error('Error resuming all keys:', error);
+                alert('Erro ao retomar keys: ' + error.message);
+            }
         }
 
         async function deleteKey(firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
-                closeConfirmModal();
+                return;
+            }
+            
+            if (!confirm(`Tem certeza que deseja deletar a key:\n${originalKey}\n\nEsta ação não pode ser desfeita!`)) {
                 return;
             }
 
@@ -2238,176 +2492,53 @@ function displayAllKeys(keys) {
                 await remove(keyRef);
                 
                 alert('Key deletada com sucesso!');
-                closeConfirmModal();
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
                 
             } catch (error) {
                 console.error('Error deleting key:', error);
                 alert('Erro ao deletar key: ' + error.message);
-                closeConfirmModal();
             }
         }
 
-        async function pauseKey(keyId) {
+        async function deleteKeyFromFolder(folderId, firebaseKey, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
                 return;
             }
-
-            try {
-                await update(ref(database, 'keys/' + keyId), {
-                    paused: true,
-                    pausedAt: Date.now(),
-                    pausedBy: auth.currentUser.email,
-                    active: false
-                });
-                
-                alert('Key pausada com sucesso!');
-            } catch (error) {
-                console.error('Error pausing key:', error);
-                alert('Erro ao pausar key: ' + error.message);
-            }
-        }
-
-        async function resumeKey(keyId) {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
-                alert('Você precisa estar logado como administrador!');
+            
+            if (!confirm(`Tem certeza que deseja deletar a key:\n${originalKey}\n\nEsta ação não pode ser desfeita!`)) {
                 return;
             }
 
             try {
-                await update(ref(database, 'keys/' + keyId), {
-                    paused: false,
-                    pausedAt: null,
-                    pausedBy: null,
-                    active: true
-                });
+                const keyRef = ref(database, `folders/${folderId}/keys/${firebaseKey}`);
+                await remove(keyRef);
                 
-                alert('Key retomada com sucesso!');
-            } catch (error) {
-                console.error('Error resuming key:', error);
-                alert('Erro ao retomar key: ' + error.message);
-            }
-        }
-
-        async function clearHWID(keyId) {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
-                alert('Você precisa estar logado como administrador!');
-                return;
-            }
-
-            if (!confirm('Tem certeza que deseja limpar o HWID desta key?\n\nIsso permitirá que a key seja usada em outro computador.')) {
-                return;
-            }
-
-            try {
-                await update(ref(database, 'keys/' + keyId), {
-                    hwid: null
-                });
+                const folderRef = ref(database, 'folders/' + folderId);
+                const folderSnapshot = await get(folderRef);
                 
-                alert('HWID limpo com sucesso!');
-            } catch (error) {
-                console.error('Error clearing HWID:', error);
-                alert('Erro ao limpar HWID: ' + error.message);
-            }
-        }
-
-        async function pauseAllKeys() {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
-                alert('Você precisa estar logado como administrador!');
-                return;
-            }
-
-            if (!confirm('Tem certeza que deseja pausar TODAS as keys ativas?\n\nIsso suspenderá temporariamente todas as licenças.')) {
-                return;
-            }
-
-            try {
-                const keysRef = ref(database, 'keys');
-                const snapshot = await get(keysRef);
-                
-                if (!snapshot.exists()) {
-                    alert('Não há keys para pausar!');
-                    return;
-                }
-
-                const updatePromises = [];
-                const now = Date.now();
-                
-                snapshot.forEach((child) => {
-                    const keyData = child.val();
-                    // Pausar apenas keys ativas, não pausadas e não expiradas
-                    if (keyData.active && !keyData.paused && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                        updatePromises.push(
-                            update(ref(database, 'keys/' + child.key), {
-                                paused: true,
-                                pausedAt: now,
-                                pausedBy: auth.currentUser.email,
-                                active: false
-                            })
-                        );
-                    }
-                });
-
-                if (updatePromises.length > 0) {
-                    await Promise.all(updatePromises);
-                    alert(`${updatePromises.length} key(s) pausada(s) com sucesso!`);
-                } else {
-                    alert('Nenhuma key ativa encontrada para pausar!');
+                if (folderSnapshot.exists()) {
+                    const folderData = folderSnapshot.val();
+                    const currentCount = folderData.keyCount || 0;
+                    const newCount = Math.max(0, currentCount - 1);
+                    
+                    await update(folderRef, {
+                        keyCount: newCount,
+                        lastUpdated: Date.now()
+                    });
                 }
                 
-            } catch (error) {
-                console.error('Error pausing all keys:', error);
-                alert('Erro ao pausar keys: ' + error.message);
-            }
-        }
-
-        async function resumeAllKeys() {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
-                alert('Você precisa estar logado como administrador!');
-                return;
-            }
-
-            if (!confirm('Tem certeza que deseja retomar TODAS as keys pausadas?\n\nIsso reativará todas as licenças suspensas.')) {
-                return;
-            }
-
-            try {
-                const keysRef = ref(database, 'keys');
-                const snapshot = await get(keysRef);
-                
-                if (!snapshot.exists()) {
-                    alert('Não há keys para retomar!');
-                    return;
-                }
-
-                const updatePromises = [];
-                const now = Date.now();
-                
-                snapshot.forEach((child) => {
-                    const keyData = child.val();
-                    // Retomar apenas keys pausadas e não expiradas
-                    if (keyData.paused && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                        updatePromises.push(
-                            update(ref(database, 'keys/' + child.key), {
-                                paused: false,
-                                pausedAt: null,
-                                pausedBy: null,
-                                active: true
-                            })
-                        );
-                    }
-                });
-
-                if (updatePromises.length > 0) {
-                    await Promise.all(updatePromises);
-                    alert(`${updatePromises.length} key(s) retomada(s) com sucesso!`);
-                } else {
-                    alert('Nenhuma key pausada encontrada!');
-                }
+                alert('Key deletada da pasta com sucesso!');
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
+                loadFolders();
                 
             } catch (error) {
-                console.error('Error resuming all keys:', error);
-                alert('Erro ao retomar keys: ' + error.message);
+                console.error('Error deleting key from folder:', error);
+                alert('Erro ao deletar key: ' + error.message);
             }
         }
 
@@ -2417,7 +2548,7 @@ function displayAllKeys(keys) {
                 return;
             }
 
-            if (!confirm('Deseja remover todas as keys expiradas?\n\nEsta ação não pode ser desfeita.')) {
+            if (!confirm('Deseja remover todas as keys expiradas e inativas?\n\nEsta ação não pode ser desfeita.')) {
                 return;
             }
 
@@ -2425,87 +2556,73 @@ function displayAllKeys(keys) {
                 let deletedCount = 0;
                 const now = Date.now();
 
-                const keysRef = ref(database, 'keys');
-                const snapshot = await get(keysRef);
+                const defaultKeysRef = ref(database, 'keys');
+                const defaultSnapshot = await get(defaultKeysRef);
                 
-                if (snapshot.exists()) {
+                if (defaultSnapshot.exists()) {
                     const deletePromises = [];
-                    snapshot.forEach((child) => {
-                        const keyData = child.val();
+                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
                         const isExpired = keyData.expiresAt && now > keyData.expiresAt;
+                        const isInactive = !keyData.active;
                         
-                        if (isExpired) {
-                            deletePromises.push(remove(ref(database, 'keys/' + child.key)));
+                        if (isExpired || isInactive) {
+                            deletePromises.push(remove(ref(database, 'keys/' + keyId)));
                             deletedCount++;
                         }
-                    });
+                    }
                     
                     if (deletePromises.length > 0) {
                         await Promise.all(deletePromises);
                     }
                 }
 
-                alert(`${deletedCount} key(s) expirada(s) removida(s) com sucesso!`);
+                const foldersRef = ref(database, 'folders');
+                const foldersSnapshot = await get(foldersRef);
                 
+                if (foldersSnapshot.exists()) {
+                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
+                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
+                        const folderKeysSnapshot = await get(folderKeysRef);
+                        
+                        if (folderKeysSnapshot.exists()) {
+                            const folderDeletePromises = [];
+                            let folderDeletedCount = 0;
+                            
+                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
+                                const isExpired = keyData.expiresAt && now > keyData.expiresAt;
+                                const isInactive = !keyData.active;
+                                
+                                if (isExpired || isInactive) {
+                                    folderDeletePromises.push(remove(ref(database, `folders/${folderId}/keys/${keyId}`)));
+                                    folderDeletedCount++;
+                                    deletedCount++;
+                                }
+                            }
+                            
+                            if (folderDeletePromises.length > 0) {
+                                await Promise.all(folderDeletePromises);
+                                
+                                const currentCount = folderData.keyCount || 0;
+                                const newCount = Math.max(0, currentCount - folderDeletedCount);
+                                
+                                await update(ref(database, 'folders/' + folderId), {
+                                    keyCount: newCount,
+                                    lastUpdated: Date.now()
+                                });
+                            }
+                        }
+                    }
+                }
+
+                alert(`${deletedCount} key(s) removida(s) com sucesso!`);
+                
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
+                loadFolders();
             } catch (error) {
                 console.error('Error cleaning expired keys:', error);
                 alert('Erro ao limpar keys: ' + error.message);
-            }
-        }
-
-        function updateStats(keys) {
-            if (!keys) return;
-            
-            const now = Date.now();
-            let totalKeys = 0;
-            let activeKeys = 0;
-            let pausedKeys = 0;
-            
-            for (const [keyId, keyData] of Object.entries(keys)) {
-                totalKeys++;
-                
-                if (keyData.active && !keyData.paused && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                    activeKeys++;
-                }
-                
-                if (keyData.paused) {
-                    pausedKeys++;
-                }
-            }
-            
-            const totalKeysEl = document.getElementById('totalKeys');
-            const activeKeysEl = document.getElementById('activeKeys');
-            const pausedKeysEl = document.getElementById('pausedKeys');
-            
-            if (totalKeysEl) totalKeysEl.textContent = totalKeys;
-            if (activeKeysEl) activeKeysEl.textContent = activeKeys;
-            if (pausedKeysEl) pausedKeysEl.textContent = pausedKeys;
-        }
-
-        async function loadAllKeys() {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
-                return;
-            }
-
-            try {
-                const keysRef = ref(database, 'keys');
-                const snapshot = await get(keysRef);
-                
-                if (snapshot.exists()) {
-                    displayAllKeys(snapshot.val());
-                    updateStats(snapshot.val());
-                } else {
-                    const container = document.getElementById('adminKeysList');
-                    if (container) {
-                        container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 20px;">Nenhuma key cadastrada.</p>';
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading all keys:', error);
-                const container = document.getElementById('adminKeysList');
-                if (container) {
-                    container.innerHTML = '<p style="text-align: center; color: #ff4444; padding: 20px;">Erro ao carregar lista de keys.</p>';
-                }
             }
         }
 
@@ -2546,6 +2663,8 @@ function displayAllKeys(keys) {
             }
 
             try {
+                console.log('Procurando carteira para:', userEmail);
+                
                 const walletsRef = ref(database, 'wallets');
                 const snapshot = await get(walletsRef);
                 
@@ -2558,6 +2677,7 @@ function displayAllKeys(keys) {
                         if (walletData.userEmail === userEmail) {
                             walletFound = walletData;
                             walletId = child.key;
+                            console.log('Carteira encontrada:', walletId);
                         }
                     });
                 }
@@ -2573,6 +2693,7 @@ function displayAllKeys(keys) {
                     };
                     
                     await set(ref(database, 'wallets/' + walletId), walletFound);
+                    console.log('Nova carteira criada:', walletId);
                 }
 
                 const oldBalance = walletFound.balance || 0;
@@ -2615,6 +2736,7 @@ function displayAllKeys(keys) {
                 alert(`Saldo enviado com sucesso!\n\nUsuário: ${userEmail}\nValor: R$ ${amount.toFixed(2)}\nSaldo Anterior: R$ ${oldBalance.toFixed(2)}\nNovo Saldo: R$ ${newBalance.toFixed(2)}`);
                 
                 closeSendBalanceModal();
+                loadStats();
                 
             } catch (error) {
                 console.error('Error sending balance:', error);
@@ -2845,6 +2967,7 @@ function displayAllKeys(keys) {
                 alert('Usuário atualizado com sucesso!');
                 closeManageUserModal();
                 loadAllUsers();
+                loadStats();
 
             } catch (error) {
                 console.error('Error updating user:', error);
@@ -2891,10 +3014,95 @@ function displayAllKeys(keys) {
                 alert('Conta excluída com sucesso!');
                 closeManageUserModal();
                 loadAllUsers();
+                loadStats();
 
             } catch (error) {
                 console.error('Error deleting user:', error);
                 alert('Erro ao excluir conta: ' + error.message);
+            }
+        }
+
+        async function loadStats() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                return;
+            }
+
+            try {
+                let totalKeys = 0;
+                let activeKeys = 0;
+                let pausedKeys = 0;
+                const now = Date.now();
+
+                const defaultKeysRef = ref(database, 'keys');
+                const defaultSnapshot = await get(defaultKeysRef);
+                
+                if (defaultSnapshot.exists()) {
+                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
+                        totalKeys++;
+                        if (keyData.active) {
+                            if (keyData.isPaused) {
+                                pausedKeys++;
+                            } else if (!keyData.expiresAt || keyData.expiresAt > now) {
+                                activeKeys++;
+                            }
+                        }
+                    }
+                }
+
+                const foldersRef = ref(database, 'folders');
+                const foldersSnapshot = await get(foldersRef);
+                
+                if (foldersSnapshot.exists()) {
+                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
+                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
+                        const folderKeysSnapshot = await get(folderKeysRef);
+                        
+                        if (folderKeysSnapshot.exists()) {
+                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
+                                totalKeys++;
+                                if (keyData.active) {
+                                    if (keyData.isPaused) {
+                                        pausedKeys++;
+                                    } else if (!keyData.expiresAt || keyData.expiresAt > now) {
+                                        activeKeys++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                const usersRef = ref(database, 'users');
+                const usersSnapshot = await get(usersRef);
+                
+                let totalUsers = 0;
+                if (usersSnapshot.exists()) {
+                    totalUsers = Object.keys(usersSnapshot.val()).length;
+                }
+
+                const walletsRef = ref(database, 'wallets');
+                const walletsSnapshot = await get(walletsRef);
+                
+                let totalBalance = 0;
+                if (walletsSnapshot.exists()) {
+                    walletsSnapshot.forEach((child) => {
+                        const wallet = child.val();
+                        totalBalance += wallet.balance || 0;
+                    });
+                }
+
+                const totalKeysEl = document.getElementById('totalKeys');
+                const activeKeysEl = document.getElementById('activeKeys');
+                const totalUsersEl = document.getElementById('totalUsers');
+                const totalBalanceEl = document.getElementById('totalBalance');
+                
+                if (totalKeysEl) totalKeysEl.textContent = totalKeys;
+                if (activeKeysEl) activeKeysEl.textContent = activeKeys;
+                if (totalUsersEl) totalUsersEl.textContent = totalUsers;
+                if (totalBalanceEl) totalBalanceEl.textContent = `R$ ${totalBalance.toFixed(2)}`;
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
             }
         }
 
@@ -3077,6 +3285,9 @@ function displayAllKeys(keys) {
                 
                 closeCleanFoldersModal();
                 loadFolders();
+                loadAllKeys();
+                loadPublicKeys();
+                loadStats();
                 
             } catch (error) {
                 console.error('Error cleaning folders:', error);
@@ -3157,6 +3368,7 @@ function displayAllKeys(keys) {
         }
 
         function openNewShopPlanModal() {
+            console.log('Abrindo modal de novo plano...');
             currentShopPlanId = null;
             shopFeatures = [];
             
@@ -3164,6 +3376,7 @@ function displayAllKeys(keys) {
             const shopPlanDescription = document.getElementById('shopPlanDescription');
             const shopPlanPrice = document.getElementById('shopPlanPrice');
             const shopPlanKeyDays = document.getElementById('shopPlanKeyDays');
+            const shopPlanPopular = document.getElementById('shopPlanPopular');
             const shopFeaturesContainer = document.getElementById('shopFeaturesContainer');
             const newFeature = document.getElementById('newFeature');
             const shopPlanError = document.getElementById('shopPlanError');
@@ -3172,6 +3385,7 @@ function displayAllKeys(keys) {
             if (shopPlanDescription) shopPlanDescription.value = '';
             if (shopPlanPrice) shopPlanPrice.value = '';
             if (shopPlanKeyDays) shopPlanKeyDays.value = '7';
+            if (shopPlanPopular) shopPlanPopular.checked = false;
             if (shopFeaturesContainer) shopFeaturesContainer.innerHTML = '';
             if (newFeature) newFeature.value = '';
             if (shopPlanError) shopPlanError.style.display = 'none';
@@ -3181,6 +3395,10 @@ function displayAllKeys(keys) {
             const modal = document.getElementById('manageShopPlanModal');
             if (modal) {
                 modal.classList.add('active');
+                console.log('Modal aberto com sucesso!');
+            } else {
+                console.error('Modal não encontrado!');
+                alert('Erro: Modal não encontrado. Recarregue a página.');
             }
         }
 
@@ -3344,13 +3562,17 @@ function displayAllKeys(keys) {
         }
 
         async function loadShopPlans() {
+            console.log('Carregando planos do shop...');
+            
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                console.log('Usuário não é admin');
                 return;
             }
 
             try {
                 const container = document.getElementById('shopPlansList');
                 if (!container) {
+                    console.error('Container shopPlansList não encontrado!');
                     return;
                 }
 
@@ -3358,6 +3580,8 @@ function displayAllKeys(keys) {
 
                 const shopPlansRef = ref(database, 'shopPlans');
                 const snapshot = await get(shopPlansRef);
+                
+                console.log('Snapshot recebido:', snapshot.exists() ? 'tem dados' : 'vazio');
 
                 if (!snapshot.exists()) {
                     container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 40px;">Nenhum plano cadastrado no shop.</p>';
@@ -3373,11 +3597,31 @@ function displayAllKeys(keys) {
                     });
                 });
 
+                console.log(`${plans.length} planos encontrados`);
+
                 plans.sort((a, b) => b.createdAt - a.createdAt);
+
+                const popularPlans = plans.filter(plan => plan.isPopular);
+                console.log(`${popularPlans.length} planos populares encontrados`);
+
+                if (popularPlans.length > 1) {
+                    let firstPopular = true;
+                    for (const plan of plans) {
+                        if (plan.isPopular) {
+                            if (firstPopular) {
+                                firstPopular = false;
+                            } else {
+                                plan.isPopular = false;
+                                update(ref(database, 'shopPlans/' + plan.id), { isPopular: false });
+                            }
+                        }
+                    }
+                }
 
                 container.innerHTML = '<div class="shop-plans-manager">';
                 
                 plans.forEach((plan) => {
+                    console.log('Criando card para plano:', plan.name);
                     const planCard = document.createElement('div');
                     planCard.className = `shop-plan-card ${plan.isPopular ? 'popular' : ''}`;
                     
@@ -3420,6 +3664,7 @@ function displayAllKeys(keys) {
                 });
                 
                 container.innerHTML += '</div>';
+                console.log('Planos carregados com sucesso!');
                 
             } catch (error) {
                 console.error('Error loading shop plans:', error);
@@ -3448,12 +3693,14 @@ function displayAllKeys(keys) {
                 const shopPlanDescription = document.getElementById('shopPlanDescription');
                 const shopPlanPrice = document.getElementById('shopPlanPrice');
                 const shopPlanKeyDays = document.getElementById('shopPlanKeyDays');
+                const shopPlanPopular = document.getElementById('shopPlanPopular');
                 const shopPlanError = document.getElementById('shopPlanError');
                 
                 if (shopPlanName) shopPlanName.value = plan.name || '';
                 if (shopPlanDescription) shopPlanDescription.value = plan.description || '';
                 if (shopPlanPrice) shopPlanPrice.value = plan.price || '';
                 if (shopPlanKeyDays) shopPlanKeyDays.value = plan.keyDays || '7';
+                if (shopPlanPopular) shopPlanPopular.checked = plan.isPopular || false;
                 if (shopPlanError) shopPlanError.style.display = 'none';
                 
                 await loadShopFolders();
@@ -3535,146 +3782,11 @@ function displayAllKeys(keys) {
             }
         }
 
-        // 🔴 **FUNÇÃO QUE CORRIGE HWID AUTOMATICAMENTE PARA TODAS AS KEYS**
-        function openFixHwidModal() {
-            document.getElementById('fixHwidModal').classList.add('active');
-        }
-
-        function closeFixHwidModal() {
-            document.getElementById('fixHwidModal').classList.remove('active');
-        }
-
-        async function autoFixAllHWID() {
-            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
-                alert('Você precisa estar logado como administrador!');
-                return;
-            }
-
-            if (!confirm('🚨 ATENÇÃO!\n\nEsta função irá adicionar automaticamente o campo "hwid" em TODAS as keys que não possuem.\n\nExecute apenas UMA VEZ para corrigir keys antigas.\n\nContinuar?')) {
-                return;
-            }
-
-            try {
-                const keysRef = ref(database, 'keys');
-                const snapshot = await get(keysRef);
-
-                if (!snapshot.exists()) {
-                    alert('Não há keys para corrigir!');
-                    return;
-                }
-
-                let fixedCount = 0;
-                let alreadyHaveHwid = 0;
-                let totalKeys = 0;
-
-                const statusDiv = document.getElementById('fixHwidStatus');
-                if (statusDiv) {
-                    statusDiv.innerHTML = '<div style="color: #8a2be2; text-align: center;"><div class="loading"></div><p>Corrigindo HWIDs...</p></div>';
-                }
-
-                // Array para armazenar todas as atualizações
-                const updatePromises = [];
-
-                snapshot.forEach((child) => {
-                    totalKeys++;
-                    const keyData = child.val();
-                    
-                    // Se o campo hwid NÃO existe (undefined), adiciona
-                    if (keyData.hwid === undefined) {
-                        updatePromises.push(
-                            update(ref(database, 'keys/' + child.key), {
-                                hwid: null
-                            })
-                        );
-                        fixedCount++;
-                    } else {
-                        alreadyHaveHwid++;
-                    }
-                });
-
-                if (updatePromises.length > 0) {
-                    await Promise.all(updatePromises);
-                    
-                    if (statusDiv) {
-                        statusDiv.innerHTML = `
-                            <div class="success-message">
-                                <h3>✅ CORREÇÃO CONCLUÍDA!</h3>
-                                <p><strong>Total de keys:</strong> ${totalKeys}</p>
-                                <p><strong>HWID corrigidos:</strong> ${fixedCount}</p>
-                                <p><strong>Já tinham HWID:</strong> ${alreadyHaveHwid}</p>
-                            </div>
-                        `;
-                    }
-                    
-                    setTimeout(() => {
-                        alert(`✅ Correção concluída!\n\nTotal de keys: ${totalKeys}\nHWID corrigidos: ${fixedCount}\nJá tinham HWID: ${alreadyHaveHwid}`);
-                        closeFixHwidModal();
-                        loadAllKeys(); // Recarrega a lista
-                    }, 2000);
-                } else {
-                    if (statusDiv) {
-                        statusDiv.innerHTML = `
-                            <div class="success-message">
-                                <h3>✅ TODAS AS KEYS JÁ TÊM HWID!</h3>
-                                <p>Todas as ${totalKeys} keys já possuem o campo HWID configurado.</p>
-                            </div>
-                        `;
-                    }
-                    
-                    setTimeout(() => {
-                        alert(`✅ Todas as ${totalKeys} keys já possuem HWID!`);
-                        closeFixHwidModal();
-                    }, 2000);
-                }
-
-            } catch (error) {
-                console.error('Error fixing HWID:', error);
-                const statusDiv = document.getElementById('fixHwidStatus');
-                if (statusDiv) {
-                    statusDiv.innerHTML = `<div class="error-message">Erro ao corrigir HWID: ${error.message}</div>`;
-                }
-                alert('Erro ao corrigir HWID: ' + error.message);
-            }
-        }
-
         function initializeSystem() {
+            console.log('Inicializando sistema...');
             createParticles();
+            loadPublicKeys();
             console.log('Sistema LIPHYR HUB ADMIN inicializado com sucesso!');
-            
-            // 🔴 **INICIALIZAÇÃO AUTOMÁTICA: Verifica se há keys sem HWID**
-            setTimeout(() => {
-                if (auth.currentUser && isAdmin(auth.currentUser.email)) {
-                    checkMissingHWID();
-                }
-            }, 5000);
-        }
-
-        async function checkMissingHWID() {
-            try {
-                const keysRef = ref(database, 'keys');
-                const snapshot = await get(keysRef);
-                
-                if (!snapshot.exists()) return;
-                
-                let missingHwidCount = 0;
-                snapshot.forEach((child) => {
-                    const keyData = child.val();
-                    if (keyData.hwid === undefined) {
-                        missingHwidCount++;
-                    }
-                });
-                
-                if (missingHwidCount > 0) {
-                    console.warn(`⚠️ Encontradas ${missingHwidCount} keys sem campo HWID!`);
-                    
-                    // Mostra alerta apenas se for admin
-                    if (confirm(`⚠️ ALERTA DE SISTEMA!\n\nForam encontradas ${missingHwidCount} keys sem o campo HWID.\n\nDeseja corrigir automaticamente AGORA?`)) {
-                        openFixHwidModal();
-                    }
-                }
-            } catch (error) {
-                console.error('Error checking HWID:', error);
-            }
         }
     </script>
 </body>
