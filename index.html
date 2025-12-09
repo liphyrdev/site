@@ -1987,8 +1987,8 @@ const keyData = {
                 const now = Date.now();
                 
                 // 🔴 **CORREÇÃO: Verifica se HWID existe, se não, assume null**
-                const hasHwid = keyData.hwid !== undefined;
-                const hwidValue = hasHwid ? keyData.hwid : null;
+                const hwidValue = data.hwid !== undefined ? data.hwid : "";
+                const hasHwid = hwidValue !== ""; // Verifica se NÃO é string vazia
                 
                 // Verificar status
                 let status = '';
@@ -2103,109 +2103,112 @@ const keyData = {
             container.innerHTML = html;
         }
 
-        // 🔴 **FUNÇÃO MELHORADA PARA EXIBIR TODAS AS KEYS**
-        function displayAllKeys(keys) {
-            const container = document.getElementById('adminKeysList');
-            if (!container) return;
-            
-            if (!keys || Object.keys(keys).length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 20px;">Nenhuma key cadastrada.</p>';
-                return;
-            }
+        // 🔴 **VERSÃO CORRETA - Sem duplicação**
+function displayAllKeys(keys) {
+    const container = document.getElementById('adminKeysList');
+    if (!container) return;
+    
+    if (!keys || Object.keys(keys).length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 20px;">Nenhuma key cadastrada.</p>';
+        return;
+    }
 
-            const keysArray = [];
-            for (const [keyId, keyData] of Object.entries(keys)) {
-                keysArray.push({
-                    ...keyData,
-                    firebaseKey: keyId
-                });
-            }
+    const keysArray = [];
+    for (const [keyId, keyData] of Object.entries(keys)) {
+        keysArray.push({
+            ...keyData,
+            firebaseKey: keyId
+        });
+    }
 
-            // Ordenar por data de criação (mais recentes primeiro)
-            keysArray.sort((a, b) => b.createdAt - a.createdAt);
+    // Ordenar por data de criação (mais recentes primeiro)
+    keysArray.sort((a, b) => b.createdAt - a.createdAt);
 
-            let html = '';
-            keysArray.forEach((data) => {
-                const now = Date.now();
-                
-                // 🔴 **CORREÇÃO: Verifica se HWID existe**
-                const hasHwid = data.hwid !== undefined;
-                const hwidValue = hasHwid ? data.hwid : null;
-                
-                // Determinar status
-                let status = '';
-                let statusClass = '';
-                
-                if (!data.active) {
-                    status = 'Inativa';
-                    statusClass = 'status-inativa';
-                } else if (data.paused) {
-                    status = 'Pausada';
-                    statusClass = 'status-pausada';
-                } else if (data.expiresAt && now > data.expiresAt) {
-                    status = 'Expirada';
-                    statusClass = 'status-expirada';
-                } else if (hwidValue === null) {
-                    status = 'Ativa (Não usada)';
-                    statusClass = 'status-naousada';
-                } else {
-                    status = 'Ativa';
-                    statusClass = 'status-ativa';
-                }
-                
-                const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
-                const expiresDate = data.expiresAt ? new Date(data.expiresAt).toLocaleDateString('pt-BR') : 'Vitalícia';
-                
-                // Formatar HWID para display
-                let hwidDisplay = 'HWID: Nenhum';
-                let hwidClass = 'none';
-                if (hwidValue) {
-                    const shortHwid = hwidValue.substring(0, 8);
-                    hwidDisplay = `HWID: ${shortHwid}-XXXX`;
-                    hwidClass = 'linked';
-                } else if (!hasHwid) {
-                    hwidDisplay = 'HWID: Campo ausente!';
-                    hwidClass = 'none';
-                }
-                
-                const folderInfo = data.folderName ? 
-                    `<small>Pasta: ${data.folderName}</small>` : 
-                    '<small>Local: Global</small>';
-
-                // Botão dinâmico - Pausar/Retomar
-                const pauseResumeButton = data.paused ? 
-                    `<button class="btn btn-success action-btn-small" onclick="resumeKey('${data.firebaseKey}')">Retomar</button>` : 
-                    `<button class="btn btn-warning action-btn-small" onclick="pauseKey('${data.firebaseKey}')">Pausar</button>`;
-
-                // Botão Reset HWID (só mostra se tiver HWID)
-                const resetHWIDButton = hwidValue ? 
-                    `<button class="btn btn-info action-btn-small" onclick="clearHWID('${data.firebaseKey}')">Reset HWID</button>` : 
-                    '';
-
-                html += `
-                    <div class="admin-key-item">
-                        <div class="key-details">
-                            <strong>${data.key}</strong>
-                            <small>Cliente: ${data.client}</small>
-                            ${folderInfo}
-                            <small>Duração: ${data.days || 30} dias</small>
-                            <small>Criado em: ${createdDate}</small>
-                            <small>Expira em: ${expiresDate}</small>
-                            <small>Criado por: ${data.createdBy || 'Admin'}</small>
-                            <div class="hwid-info ${hwidClass}">${hwidDisplay}</div>
-                            <span class="status-badge ${statusClass}">${status}</span>
-                        </div>
-                        <div class="key-actions">
-                            ${pauseResumeButton}
-                            ${resetHWIDButton}
-                            <button class="btn btn-danger action-btn-small" onclick="showConfirmDelete('${data.firebaseKey}', '${data.key}')">Deletar</button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
+    let html = '';
+    keysArray.forEach((data) => {
+        const now = Date.now();
+        
+        // 🔴 **CORREÇÃO: Verifica se HWID existe**
+        const hwidValue = data.hwid !== undefined ? data.hwid : "";
+        const hasHwid = hwidValue !== "" && hwidValue !== null; // Verifica se tem valor
+        
+        // Determinar status
+        let status = '';
+        let statusClass = '';
+        
+        if (!data.active) {
+            status = 'Inativa';
+            statusClass = 'status-inativa';
+        } else if (data.paused) {
+            status = 'Pausada';
+            statusClass = 'status-pausada';
+        } else if (data.expiresAt && now > data.expiresAt) {
+            status = 'Expirada';
+            statusClass = 'status-expirada';
+        } else if (!hasHwid) {
+            status = 'Ativa (Não usada)';
+            statusClass = 'status-naousada';
+        } else {
+            status = 'Ativa';
+            statusClass = 'status-ativa';
         }
+        
+        const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
+        const expiresDate = data.expiresAt ? new Date(data.expiresAt).toLocaleDateString('pt-BR') : 'Vitalícia';
+        
+        // Formatar HWID para display
+        let hwidDisplay = 'HWID: Nenhum';
+        let hwidClass = 'none';
+        if (hasHwid && hwidValue && hwidValue !== "") {
+            const shortHwid = hwidValue.substring(0, 8);
+            hwidDisplay = `HWID: ${shortHwid}-XXXX`;
+            hwidClass = 'linked';
+        } else if (hwidValue === "") {
+            hwidDisplay = 'HWID: Não vinculado';
+            hwidClass = 'none';
+        } else {
+            hwidDisplay = 'HWID: Campo ausente!';
+            hwidClass = 'none';
+        }
+        
+        const folderInfo = data.folderName ? 
+            `<small>Pasta: ${data.folderName}</small>` : 
+            '<small>Local: Global</small>';
+
+        // Botão dinâmico - Pausar/Retomar
+        const pauseResumeButton = data.paused ? 
+            `<button class="btn btn-success action-btn-small" onclick="resumeKey('${data.firebaseKey}')">Retomar</button>` : 
+            `<button class="btn btn-warning action-btn-small" onclick="pauseKey('${data.firebaseKey}')">Pausar</button>`;
+
+        // Botão Reset HWID (só mostra se tiver HWID)
+        const resetHWIDButton = hasHwid && hwidValue && hwidValue !== "" ? 
+            `<button class="btn btn-info action-btn-small" onclick="clearHWID('${data.firebaseKey}')">Reset HWID</button>` : 
+            '';
+
+        html += `
+            <div class="admin-key-item">
+                <div class="key-details">
+                    <strong>${data.key}</strong>
+                    <small>Cliente: ${data.client}</small>
+                    ${folderInfo}
+                    <small>Duração: ${data.days || 30} dias</small>
+                    <small>Criado em: ${createdDate}</small>
+                    <small>Expira em: ${expiresDate}</small>
+                    <small>Criado por: ${data.createdBy || 'Admin'}</small>
+                    <div class="hwid-info ${hwidClass}">${hwidDisplay}</div>
+                    <span class="status-badge ${statusClass}">${status}</span>
+                </div>
+                <div class="key-actions">
+                    ${pauseResumeButton}
+                    ${resetHWIDButton}
+                    <button class="btn btn-danger action-btn-small" onclick="showConfirmDelete('${data.firebaseKey}', '${data.key}')">Deletar</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
 
         function showConfirmDelete(keyId, keyValue) {
             document.getElementById('confirmTitle').textContent = 'Confirmar Exclusão';
