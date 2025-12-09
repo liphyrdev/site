@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LIPHYR HUB - Sistema de Keys (Admin)</title>
     <style>
+        /* ESTILOS EXISTENTES (mantidos) */
         * {
             margin: 0;
             padding: 0;
@@ -1044,10 +1045,232 @@
         .clean-folders-btn:hover {
             background: #b71c1c;
         }
+
+        /* NOVOS ESTILOS PARA SISTEMA HWID E PAUSA */
+        .hwid-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .hwid-none {
+            background: rgba(0, 123, 255, 0.2);
+            color: #007bff;
+            border: 1px solid rgba(0, 123, 255, 0.3);
+        }
+        
+        .hwid-set {
+            background: rgba(108, 117, 125, 0.2);
+            color: #6c757d;
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .status-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .status-paused {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        .status-expired {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .status-unused {
+            background: rgba(0, 123, 255, 0.2);
+            color: #007bff;
+            border: 1px solid rgba(0, 123, 255, 0.3);
+        }
+        
+        .status-inactive {
+            background: rgba(108, 117, 125, 0.2);
+            color: #6c757d;
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+        
+        .btn-pause {
+            background: #ffc107;
+            color: #000;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-pause:hover {
+            background: #e0a800;
+        }
+        
+        .btn-resume {
+            background: #28a745;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-resume:hover {
+            background: #218838;
+        }
+        
+        .btn-clear-hwid {
+            background: #6c757d;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-clear-hwid:hover {
+            background: #5a6268;
+        }
+        
+        .mass-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mass-action-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .btn-pause-all {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .btn-pause-all:hover {
+            background: #e0a800;
+        }
+        
+        .btn-resume-all {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-resume-all:hover {
+            background: #218838;
+        }
+        
+        .refresh-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(138, 43, 226, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(138, 43, 226, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .stats-grid-extended {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .stat-card-small {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .stat-card-small h4 {
+            color: #8a2be2;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        
+        .stat-card-small .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .csv-export-btn {
+            background: #20c997;
+            color: white;
+        }
+        
+        .csv-export-btn:hover {
+            background: #17a589;
+        }
     </style>
 </head>
 <body>
     <div class="particles" id="particles"></div>
+    
+    <!-- Refresh Indicator -->
+    <div class="refresh-indicator" id="refreshIndicator" style="display: none;">
+        <span>🔄 Atualizando...</span>
+    </div>
 
     <!-- Modal Login Admin -->
     <div class="modal" id="loginModal">
@@ -1056,7 +1279,7 @@
             <h2>Login Administrador</h2>
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" id="adminEmail" placeholder="seu@email.com">
+                <input type="email" id="adminEmail" placeholder="admin@email.com" value="admin@email.com">
             </div>
             <div class="form-group">
                 <label>Senha:</label>
@@ -1253,24 +1476,48 @@
                 </div>
             </div>
 
-            <!-- ESTATÍSTICAS -->
-            <div class="stats-grid" id="adminStats">
-                <div class="stat-card">
-                    <h4>Total de Keys</h4>
+            <!-- ESTATÍSTICAS ESTENDIDAS -->
+            <div class="stats-grid-extended" id="adminStatsExtended">
+                <div class="stat-card-small">
+                    <h4>Total Keys</h4>
                     <div class="value" id="totalKeys">0</div>
                 </div>
-                <div class="stat-card">
-                    <h4>Keys Ativas</h4>
+                <div class="stat-card-small">
+                    <h4>Ativas</h4>
                     <div class="value" id="activeKeys">0</div>
                 </div>
-                <div class="stat-card">
-                    <h4>Total de Usuários</h4>
-                    <div class="value" id="totalUsers">0</div>
+                <div class="stat-card-small">
+                    <h4>Pausadas</h4>
+                    <div class="value" id="pausedKeys">0</div>
                 </div>
-                <div class="stat-card">
-                    <h4>Saldo Total</h4>
-                    <div class="value" id="totalBalance">R$ 0,00</div>
+                <div class="stat-card-small">
+                    <h4>Expiradas</h4>
+                    <div class="value" id="expiredKeys">0</div>
                 </div>
+                <div class="stat-card-small">
+                    <h4>Não Usadas</h4>
+                    <div class="value" id="unusedKeys">0</div>
+                </div>
+                <div class="stat-card-small">
+                    <h4>Com HWID</h4>
+                    <div class="value" id="hwidKeys">0</div>
+                </div>
+            </div>
+
+            <!-- AÇÕES EM MASSA -->
+            <div class="mass-actions">
+                <button class="mass-action-btn btn-pause-all" onclick="pauseAllKeys()">
+                    ⏸️ Pausar Todas
+                </button>
+                <button class="mass-action-btn btn-resume-all" onclick="resumeAllKeys()">
+                    ▶️ Retomar Todas
+                </button>
+                <button class="mass-action-btn btn-danger" onclick="cleanExpiredKeys()">
+                    🗑️ Limpar Expiradas
+                </button>
+                <button class="mass-action-btn csv-export-btn" onclick="exportCSV()">
+                    📊 Exportar CSV
+                </button>
             </div>
 
             <div class="admin-actions">
@@ -1353,31 +1600,16 @@
                 </div>
             </div>
 
-            <!-- FORMULÁRIO PARA GERAR KEY -->
+            <!-- FORMULÁRIO PARA GERAR KEY (ATUALIZADO) -->
             <div class="key-form" id="keyForm">
                 <h3 style="color: #8a2be2; margin-bottom: 20px;">Gerar Nova Key</h3>
                 <div class="form-group">
                     <label>Nome do Cliente:</label>
                     <input type="text" id="clientName" placeholder="Ex: João Silva">
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Duração (número):</label>
-                        <input type="number" id="durationValue" placeholder="Ex: 30" value="30" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label>Unidade de tempo:</label>
-                        <select id="timeUnit">
-                            <option value="seconds">Segundos</option>
-                            <option value="minutes">Minutos</option>
-                            <option value="hours" selected>Horas</option>
-                            <option value="days">Dias</option>
-                            <option value="weeks">Semanas</option>
-                            <option value="months">Meses</option>
-                            <option value="years">Anos</option>
-                            <option value="lifetime">Vitalícia</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label>Duração (dias):</label>
+                    <input type="number" id="daysValue" placeholder="Ex: 30" value="30" min="1">
                 </div>
                 <div class="form-group">
                     <label>Salvar na pasta:</label>
@@ -1388,12 +1620,13 @@
                 <button class="btn" onclick="generateKey()" style="width: 100%; margin-top: 20px;">Gerar Key</button>
             </div>
 
-            <!-- LISTA DE TODAS AS KEYS -->
+            <!-- LISTA DE TODAS AS KEYS (ATUALIZADA) -->
             <div class="admin-keys-list">
-                <h3>Todas as Licenças</h3>
+                <h3>Todas as Licenças <span id="keysCount" style="font-size: 14px; color: #8a2be2;"></span></h3>
                 <div id="adminKeysList">
                     <div style="text-align: center; color: #8a2be2; padding: 20px;">
                         <div class="loading"></div>
+                        <p>Carregando lista de keys...</p>
                     </div>
                 </div>
             </div>
@@ -1420,8 +1653,7 @@
             getAuth, 
             signInWithEmailAndPassword, 
             signOut,
-            onAuthStateChanged,
-            createUserWithEmailAndPassword
+            onAuthStateChanged
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         
         import { 
@@ -1432,7 +1664,9 @@
             remove, 
             onValue,
             push,
-            update
+            update,
+            query,
+            orderByChild
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
@@ -1450,10 +1684,12 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
-        const ADMIN_EMAIL = 'liphyrdev@gmail.com';
+        const ADMIN_EMAIL = 'admin@email.com';
 
         let currentShopPlanId = null;
         let shopFeatures = [];
+        let keysUnsubscribe = null;
+        let autoRefreshInterval = null;
 
         // CORREÇÃO: Adicionar todos os event listeners primeiro
         document.addEventListener('DOMContentLoaded', function() {
@@ -1518,6 +1754,12 @@
         window.editShopPlan = editShopPlan;
         window.deleteShopPlan = deleteShopPlan;
         window.toggleShopPlanPopular = toggleShopPlanPopular;
+        window.pauseKey = pauseKey;
+        window.resumeKey = resumeKey;
+        window.clearHWID = clearHWID;
+        window.pauseAllKeys = pauseAllKeys;
+        window.resumeAllKeys = resumeAllKeys;
+        window.exportCSV = exportCSV;
 
         function createParticles() {
             const container = document.getElementById('particles');
@@ -1563,13 +1805,71 @@
                 loadStats();
                 loadFolders();
                 loadShopPlans();
+                
+                // Iniciar auto-refresh
+                startAutoRefresh();
+                
+                // Configurar listener em tempo real
+                setupRealtimeListeners();
             } else {
                 const adminPanel = document.getElementById('adminPanel');
                 if (adminPanel) adminPanel.classList.remove('active');
                 updateUserUI(user);
                 loadPublicKeys();
+                
+                // Parar auto-refresh
+                stopAutoRefresh();
+                if (keysUnsubscribe) {
+                    keysUnsubscribe();
+                    keysUnsubscribe = null;
+                }
             }
         });
+
+        function setupRealtimeListeners() {
+            // Listener para keys
+            const keysRef = ref(database, 'keys');
+            keysUnsubscribe = onValue(keysRef, (snapshot) => {
+                console.log('Firebase: Keys atualizadas em tempo real');
+                loadStats();
+                if (auth.currentUser && isAdmin(auth.currentUser.email)) {
+                    loadAllKeys();
+                }
+                loadPublicKeys();
+            }, (error) => {
+                console.error('Erro no listener de keys:', error);
+            });
+        }
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            
+            autoRefreshInterval = setInterval(() => {
+                showRefreshIndicator();
+                loadStats();
+                if (auth.currentUser && isAdmin(auth.currentUser.email)) {
+                    loadAllKeys();
+                }
+                loadPublicKeys();
+            }, 30000); // 30 segundos
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        function showRefreshIndicator() {
+            const indicator = document.getElementById('refreshIndicator');
+            if (indicator) {
+                indicator.style.display = 'flex';
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 2000);
+            }
+        }
 
         function openAdminPanel() {
             if (auth.currentUser && isAdmin(auth.currentUser.email)) {
@@ -1652,6 +1952,12 @@
                 if (userInfo) userInfo.style.display = 'none';
                 const adminNav = document.getElementById('adminNav');
                 if (adminNav) adminNav.style.display = 'inline';
+                
+                stopAutoRefresh();
+                if (keysUnsubscribe) {
+                    keysUnsubscribe();
+                    keysUnsubscribe = null;
+                }
             } catch (error) {
                 console.error('Logout error:', error);
             }
@@ -1667,11 +1973,11 @@
             if (usersListSection) usersListSection.style.display = 'none';
             
             if (form.classList.contains('active')) {
+                loadFolders();
                 form.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // CORREÇÃO: Função openShopManager corrigida
         function openShopManager() {
             const shopManager = document.getElementById('shopManager');
             if (!shopManager) {
@@ -1685,23 +1991,72 @@
             const usersListSection = document.getElementById('usersListSection');
             if (usersListSection) usersListSection.style.display = 'none';
             
-            // Carregar planos quando abrir o manager
             loadShopPlans();
             
             shopManager.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // MODIFICAÇÃO AQUI: Função para gerar keys no formato compatível com o site dos clientes
+        // Gera key no formato XXXX-XXXX-XXXX-XXXX
         function generateRandomKey() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let key = '';
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
-                    key += chars.charAt(Math.floor(Math.random() * chars.length));
+            for (let i = 0; i < 16; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+                if ((i + 1) % 4 === 0 && i < 15) {
+                    key += '-';
                 }
-                if (i < 3) key += '-';
             }
             return key;
+        }
+
+        // Converte dias para timestamp
+        function daysToTimestamp(days) {
+            const now = Date.now();
+            return now + (days * 24 * 60 * 60 * 1000);
+        }
+
+        // Obtém status da key
+        function getKeyStatus(keyData) {
+            const now = Date.now();
+            
+            if (!keyData.active) {
+                return 'inactive';
+            }
+            
+            if (keyData.paused) {
+                return 'paused';
+            }
+            
+            if (keyData.expiresAt && now > keyData.expiresAt) {
+                return 'expired';
+            }
+            
+            if (!keyData.hwid) {
+                return 'unused';
+            }
+            
+            return 'active';
+        }
+
+        // Obtém badge do status
+        function getStatusBadge(status) {
+            const badges = {
+                'active': '<span class="status-badge status-active">🟢 Ativa</span>',
+                'paused': '<span class="status-badge status-paused">🟡 Pausada</span>',
+                'expired': '<span class="status-badge status-expired">🔴 Expirada</span>',
+                'unused': '<span class="status-badge status-unused">🔵 Não Usada</span>',
+                'inactive': '<span class="status-badge status-inactive">⚫ Inativa</span>'
+            };
+            return badges[status] || '';
+        }
+
+        // Obtém badge do HWID
+        function getHWIDBadge(hwid) {
+            if (!hwid) {
+                return '<span class="hwid-status hwid-none">HWID: Nenhum</span>';
+            }
+            const shortHWID = hwid.length > 8 ? hwid.substring(0, 8) + '...' : hwid;
+            return `<span class="hwid-status hwid-set" title="${hwid}">HWID: ${shortHWID}</span>`;
         }
 
         async function generateKey() {
@@ -1711,76 +2066,44 @@
             }
 
             const clientName = document.getElementById('clientName')?.value.trim();
-            const durationValue = parseInt(document.getElementById('durationValue')?.value);
-            const timeUnit = document.getElementById('timeUnit')?.value;
+            const daysValue = parseInt(document.getElementById('daysValue')?.value);
             const folderSelect = document.getElementById('folderSelect')?.value;
 
-            if (!clientName || !durationValue || durationValue <= 0) {
+            if (!clientName || !daysValue || daysValue <= 0) {
                 alert('Preencha todos os campos corretamente!');
                 return;
             }
 
-            let durationInMs = 0;
-            if (timeUnit === 'lifetime') {
-                durationInMs = 9999999999999;
-            } else {
-                const multipliers = {
-                    'seconds': 1000,
-                    'minutes': 1000 * 60,
-                    'hours': 1000 * 60 * 60,
-                    'days': 1000 * 60 * 60 * 24,
-                    'weeks': 1000 * 60 * 60 * 24 * 7,
-                    'months': 1000 * 60 * 60 * 24 * 30,
-                    'years': 1000 * 60 * 60 * 24 * 365
-                };
-                durationInMs = durationValue * multipliers[timeUnit];
-            }
-
-            // MODIFICAÇÃO: Usar a função generateRandomKey que gera no formato XXXX-XXXX-XXXX-XXXX
+            // Gerar key no novo formato
             const newKeyValue = generateRandomKey();
             const now = Date.now();
-            const expiresAt = timeUnit === 'lifetime' ? null : now + durationInMs;
+            const expiresAt = daysToTimestamp(daysValue);
 
-            let folderName = '';
-            if (folderSelect) {
-                try {
-                    const folderRef = ref(database, 'folders/' + folderSelect);
-                    const folderSnapshot = await get(folderRef);
-                    if (folderSnapshot.exists()) {
-                        folderName = folderSnapshot.val().name;
-                    }
-                } catch (error) {
-                    console.error('Error fetching folder:', error);
-                }
-            }
+            // Criar ID seguro para Firebase
+            const keyId = newKeyValue.replace(/-/g, '_');
 
             const keyData = {
                 key: newKeyValue,
                 client: clientName,
-                duration: durationValue,
-                timeUnit: timeUnit,
+                days: daysValue,
                 createdAt: now,
                 expiresAt: expiresAt,
                 active: true,
+                hwid: null, // Inicialmente null
+                paused: false,
+                pausedAt: null,
+                pausedBy: null,
                 createdBy: auth.currentUser.email,
                 createdById: auth.currentUser.uid,
-                folderId: folderSelect || null,
-                folderName: folderName || null
+                folderId: folderSelect || null
             };
 
             try {
-                if (folderSelect && folderSelect !== '') {
-                    const keyId = 'key_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    const keyRef = ref(database, `folders/${folderSelect}/keys/${keyId}`);
-                    await set(keyRef, keyData);
-                } else {
-                    // MODIFICAÇÃO: Criar ID da key usando o próprio valor da key (sem caracteres especiais)
-                    const keyId = newKeyValue.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-                    const keyRef = ref(database, 'keys/' + keyId);
-                    await set(keyRef, keyData);
-                }
+                const keyRef = ref(database, 'keys/' + keyId);
+                await set(keyRef, keyData);
                 
-                if (folderSelect && folderName) {
+                if (folderSelect) {
+                    // Atualizar contador da pasta
                     const folderRef = ref(database, 'folders/' + folderSelect);
                     const folderSnapshot = await get(folderRef);
                     
@@ -1795,21 +2118,15 @@
                     }
                 }
                 
-                const durationText = timeUnit === 'lifetime' ? 'Vitalícia' : `${durationValue} ${timeUnit}`;
-                const folderText = folderName ? `\nPasta: ${folderName}` : '';
+                alert(`✅ Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${daysValue} dias\nHWID: Nenhum (aguardando uso)`);
                 
-                alert(`Key gerada com sucesso!\n\nKey: ${newKeyValue}\nCliente: ${clientName}\nValidade: ${durationText}${folderText}`);
-                
+                // Limpar formulário
                 if (document.getElementById('clientName')) document.getElementById('clientName').value = '';
-                if (document.getElementById('durationValue')) document.getElementById('durationValue').value = '30';
+                if (document.getElementById('daysValue')) document.getElementById('daysValue').value = '30';
                 
-                loadAllKeys();
-                loadPublicKeys();
-                loadStats();
-                loadFolders();
             } catch (error) {
                 console.error('Error generating key:', error);
-                alert('Erro ao gerar key: ' + error.message);
+                alert('❌ Erro ao gerar key: ' + error.message);
             }
         }
 
@@ -1838,7 +2155,7 @@
             
             if (!resultDiv) return;
 
-            if (!keyInput || keyInput.length !== 19) {
+            if (!keyInput || !keyInput.match(/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/)) {
                 resultDiv.className = 'verify-result result-error';
                 resultDiv.innerHTML = '<h3>Formato inválido!</h3><p>Digite uma key no formato XXXX-XXXX-XXXX-XXXX</p>';
                 resultDiv.style.display = 'block';
@@ -1846,86 +2163,68 @@
             }
 
             try {
-                let keyFound = false;
-                let keyData = null;
+                // Converter para ID do Firebase
+                const keyId = keyInput.replace(/-/g, '_');
+                const keyRef = ref(database, 'keys/' + keyId);
+                const snapshot = await get(keyRef);
 
-                const foldersRef = ref(database, 'folders');
-                const foldersSnapshot = await get(foldersRef);
-                
-                if (foldersSnapshot.exists()) {
-                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
-                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
-                        const keysSnapshot = await get(folderKeysRef);
-                        
-                        if (keysSnapshot.exists()) {
-                            for (const [childKey, childData] of Object.entries(keysSnapshot.val())) {
-                                if (childData.key === keyInput) {
-                                    keyFound = true;
-                                    keyData = childData;
-                                    keyData.folderName = folderData.name;
-                                    break;
-                                }
-                            }
-                        }
-                        if (keyFound) break;
-                    }
-                }
-
-                if (!keyFound) {
-                    // MODIFICAÇÃO: Buscar key usando o ID correto (sem caracteres especiais)
-                    const keyId = keyInput.replace(/-/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-                    const keyRef = ref(database, 'keys/' + keyId);
-                    const keySnapshot = await get(keyRef);
-                    
-                    if (keySnapshot.exists()) {
-                        keyFound = true;
-                        keyData = keySnapshot.val();
-                    }
-                }
-
-                if (!keyFound) {
+                if (!snapshot.exists()) {
                     resultDiv.className = 'verify-result result-error';
                     resultDiv.innerHTML = '<h3>Key não encontrada!</h3><p>Esta key não existe no sistema.</p>';
                     resultDiv.style.display = 'block';
                     return;
                 }
 
+                const keyData = snapshot.val();
+                const status = getKeyStatus(keyData);
                 const now = Date.now();
                 
-                if (!keyData.active) {
-                    resultDiv.className = 'verify-result result-error';
-                    resultDiv.innerHTML = '<h3>Key inativa!</h3><p>Esta key foi desativada pelo administrador.</p>';
-                } else if (keyData.expiresAt && now > keyData.expiresAt) {
-                    resultDiv.className = 'verify-result result-error';
-                    resultDiv.innerHTML = '<h3>Key expirada!</h3><p>Esta key não é mais válida.</p>';
-                } else {
-                    let timeLeftText = '';
-                    if (keyData.timeUnit === 'lifetime') {
-                        timeLeftText = 'Vitalícia';
-                    } else if (keyData.expiresAt) {
-                        const timeLeft = keyData.expiresAt - now;
-                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                        
-                        if (days > 0) timeLeftText = `${days} dias, ${hours} horas`;
-                        else if (hours > 0) timeLeftText = `${hours} horas, ${minutes} minutos`;
-                        else timeLeftText = `${minutes} minutos`;
-                    }
-                    
-                    const createdDate = new Date(keyData.createdAt).toLocaleDateString('pt-BR');
-                    const folderInfo = keyData.folderName ? `<p><strong>Pasta:</strong> ${keyData.folderName}</p>` : '';
-                    
-                    resultDiv.className = 'verify-result result-success';
-                    resultDiv.innerHTML = `
-                        <h3>Key válida!</h3>
-                        <p><strong>Cliente:</strong> ${keyData.client}</p>
-                        ${folderInfo}
-                        <p><strong>Status:</strong> Ativa</p>
-                        <p><strong>Tempo restante:</strong> ${timeLeftText}</p>
-                        <p><strong>Criada em:</strong> ${createdDate}</p>
-                    `;
+                let statusText = '';
+                switch (status) {
+                    case 'active':
+                        statusText = '🟢 ATIVA';
+                        break;
+                    case 'paused':
+                        statusText = '🟡 PAUSADA';
+                        break;
+                    case 'expired':
+                        statusText = '🔴 EXPIRADA';
+                        break;
+                    case 'unused':
+                        statusText = '🔵 NÃO USADA';
+                        break;
+                    case 'inactive':
+                        statusText = '⚫ INATIVA';
+                        break;
                 }
+                
+                let timeLeftText = '';
+                if (keyData.expiresAt) {
+                    const timeLeft = keyData.expiresAt - now;
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    
+                    if (days > 0) timeLeftText = `${days} dias, ${hours} horas`;
+                    else if (hours > 0) timeLeftText = `${hours} horas`;
+                    else timeLeftText = 'Menos de 1 hora';
+                }
+                
+                const createdDate = new Date(keyData.createdAt).toLocaleDateString('pt-BR');
+                const expiresDate = keyData.expiresAt ? new Date(keyData.expiresAt).toLocaleDateString('pt-BR') : 'Não expira';
+                const hwidText = keyData.hwid ? `XXXX-${keyData.hwid.substring(keyData.hwid.length - 4)}` : 'Nenhum';
+                
+                resultDiv.className = 'verify-result result-success';
+                resultDiv.innerHTML = `
+                    <h3>${statusText}</h3>
+                    <p><strong>Key:</strong> ${keyData.key}</p>
+                    <p><strong>Cliente:</strong> ${keyData.client}</p>
+                    <p><strong>HWID:</strong> ${hwidText}</p>
+                    <p><strong>Status:</strong> ${statusText.replace(/[🔴🟡🟢🔵⚫]/g, '')}</p>
+                    <p><strong>Duração:</strong> ${keyData.days} dias</p>
+                    <p><strong>Tempo restante:</strong> ${timeLeftText}</p>
+                    <p><strong>Criada em:</strong> ${createdDate}</p>
+                    <p><strong>Expira em:</strong> ${expiresDate}</p>
+                `;
                 
                 resultDiv.style.display = 'block';
             } catch (error) {
@@ -1943,44 +2242,29 @@
             container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 40px;"><div class="loading"></div><p style="margin-top: 10px;">Carregando keys...</p></div>';
 
             async function fetchAllPublicKeys() {
-                const allKeys = [];
-                const now = Date.now();
-
                 try {
-                    const foldersRef = ref(database, 'folders');
-                    const foldersSnapshot = await get(foldersRef);
+                    const keysRef = ref(database, 'keys');
+                    const snapshot = await get(keysRef);
                     
-                    if (foldersSnapshot.exists()) {
-                        for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
-                            const folderKeysRef = ref(database, `folders/${folderId}/keys`);
-                            const keysSnapshot = await get(folderKeysRef);
+                    const allKeys = [];
+                    const now = Date.now();
+                    
+                    if (snapshot.exists()) {
+                        snapshot.forEach((child) => {
+                            const keyData = child.val();
+                            const status = getKeyStatus(keyData);
                             
-                            if (keysSnapshot.exists()) {
-                                for (const [keyId, keyData] of Object.entries(keysSnapshot.val())) {
-                                    if (keyData.active && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                                        allKeys.push({
-                                            ...keyData,
-                                            folderName: folderData.name
-                                        });
-                                    }
-                                }
+                            // Mostrar apenas keys ativas e não expiradas
+                            if (status === 'active' || status === 'unused') {
+                                allKeys.push({
+                                    id: child.key,
+                                    ...keyData,
+                                    status: status
+                                });
                             }
-                        }
+                        });
                     }
 
-                    // MODIFICAÇÃO: Buscar todas as keys do caminho principal
-                    const defaultKeysRef = ref(database, 'keys');
-                    const defaultSnapshot = await get(defaultKeysRef);
-                    
-                    if (defaultSnapshot.exists()) {
-                        for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
-                            if (keyData.active && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                                allKeys.push(keyData);
-                            }
-                        }
-                    }
-
-                    allKeys.sort((a, b) => b.createdAt - a.createdAt);
                     displayPublicKeys(allKeys);
 
                 } catch (error) {
@@ -2003,13 +2287,13 @@
                 return;
             }
 
+            keys.sort((a, b) => b.createdAt - a.createdAt);
+
             keys.forEach((data) => {
                 const now = Date.now();
-                
                 let timeLeftText = '';
-                if (data.timeUnit === 'lifetime') {
-                    timeLeftText = 'Vitalícia';
-                } else if (data.expiresAt) {
+                
+                if (data.expiresAt) {
                     const timeLeft = data.expiresAt - now;
                     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -2019,20 +2303,18 @@
                     else timeLeftText = 'Menos de 1 hora';
                 }
                 
-                const statusClass = data.timeUnit === 'lifetime' ? 'status-active' : 
-                                 (data.expiresAt - now < 24 * 60 * 60 * 1000) ? 'status-expiring' : 'status-active';
-                
-                const folderBadge = data.folderName ? 
-                    `<span class="folder-badge">${data.folderName}</span>` : '';
+                const statusBadge = getStatusBadge(data.status);
+                const hwidBadge = getHWIDBadge(data.hwid);
 
                 const card = document.createElement('div');
                 card.className = 'key-card';
                 card.innerHTML = `
                     <div class="key-info">
-                        <h3>${data.client} ${folderBadge}</h3>
+                        <h3>${data.client} ${statusBadge}</h3>
                         <div class="key-value">${data.key}</div>
+                        ${hwidBadge}
                         <div class="key-status">
-                            <span>Status: <span class="${statusClass}">Ativa</span></span>
+                            <span>Duração: ${data.days} dias</span>
                             <span>Expira: <strong>${timeLeftText}</strong></span>
                         </div>
                     </div>
@@ -2050,45 +2332,22 @@
                 const container = document.getElementById('adminKeysList');
                 if (!container) return;
                 
-                container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 20px;"><div class="loading"></div></div>';
+                container.innerHTML = '<div style="text-align: center; color: #8a2be2; padding: 20px;"><div class="loading"></div><p>Carregando lista de keys...</p></div>';
 
-                let allKeys = [];
-
-                const defaultKeysRef = ref(database, 'keys');
-                const defaultSnapshot = await get(defaultKeysRef);
+                const keysRef = ref(database, 'keys');
+                const snapshot = await get(keysRef);
                 
-                if (defaultSnapshot.exists()) {
-                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
+                const allKeys = [];
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        const keyData = child.val();
                         allKeys.push({
+                            id: child.key,
                             ...keyData,
-                            firebaseKey: keyId,
-                            source: 'default',
-                            folderId: null,
-                            folderName: null
+                            status: getKeyStatus(keyData)
                         });
-                    }
-                }
-
-                const foldersRef = ref(database, 'folders');
-                const foldersSnapshot = await get(foldersRef);
-                
-                if (foldersSnapshot.exists()) {
-                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
-                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
-                        const folderKeysSnapshot = await get(folderKeysRef);
-                        
-                        if (folderKeysSnapshot.exists()) {
-                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
-                                allKeys.push({
-                                    ...keyData,
-                                    firebaseKey: keyId,
-                                    folderId: folderId,
-                                    folderName: folderData.name || 'Sem nome',
-                                    source: 'folder'
-                                });
-                            }
-                        }
-                    }
+                    });
                 }
 
                 displayAllKeys(allKeys);
@@ -2113,58 +2372,63 @@
                 return;
             }
 
+            // Atualizar contador
+            const keysCount = document.getElementById('keysCount');
+            if (keysCount) keysCount.textContent = `(${keys.length} keys)`;
+
             keys.sort((a, b) => b.createdAt - a.createdAt);
 
             keys.forEach((data) => {
-                const now = Date.now();
-                let status = 'Ativa';
-                let statusClass = 'status-active';
+                const statusBadge = getStatusBadge(data.status);
+                const hwidBadge = getHWIDBadge(data.hwid);
+                const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
+                const expiresDate = data.expiresAt ? new Date(data.expiresAt).toLocaleDateString('pt-BR') : 'Não expira';
                 
-                if (!data.active) {
-                    status = 'Inativa';
-                    statusClass = 'status-expired';
-                } else if (data.expiresAt && now > data.expiresAt) {
-                    status = 'Expirada';
-                    statusClass = 'status-expired';
-                } else if (data.expiresAt && (data.expiresAt - now) < 24 * 60 * 60 * 1000) {
-                    status = 'Expirando';
-                    statusClass = 'status-expiring';
+                // Botões de ação baseados no status
+                let actionButtons = '';
+                
+                if (data.status === 'active' || data.status === 'unused') {
+                    actionButtons += `
+                        <button class="btn btn-pause" onclick="pauseKey('${data.id}', '${data.key}')">⏸️ Pausar</button>
+                    `;
+                } else if (data.status === 'paused') {
+                    actionButtons += `
+                        <button class="btn btn-resume" onclick="resumeKey('${data.id}', '${data.key}')">▶️ Retomar</button>
+                    `;
                 }
                 
-                const createdDate = new Date(data.createdAt).toLocaleDateString('pt-BR');
-                const timeUnitText = data.timeUnit === 'lifetime' ? 'Vitalícia' : 
-                                   `${data.duration} ${data.timeUnit}`;
+                if (data.hwid) {
+                    actionButtons += `
+                        <button class="btn btn-clear-hwid" onclick="clearHWID('${data.id}', '${data.key}')">🗑️ Limpar HWID</button>
+                    `;
+                }
                 
-                const folderInfo = data.folderName ? 
-                    `<small>Pasta: ${data.folderName}</small>` : 
-                    '<small>Local: Global (sem pasta)</small>';
-                
-                const deleteButton = data.source === 'folder' ?
-                    `<button class="btn btn-danger" onclick="deleteKeyFromFolder('${data.folderId}', '${data.firebaseKey}', '${data.key}')">Deletar</button>` :
-                    `<button class="btn btn-danger" onclick="deleteKey('${data.firebaseKey}', '${data.key}')">Deletar</button>`;
+                actionButtons += `
+                    <button class="btn btn-danger" onclick="deleteKey('${data.id}', '${data.key}')">🗑️ Deletar</button>
+                `;
 
                 const item = document.createElement('div');
                 item.className = 'admin-key-item';
                 item.innerHTML = `
                     <div class="key-details">
-                        <strong>${data.key}</strong>
+                        <strong>${data.key} ${statusBadge}</strong>
+                        ${hwidBadge}
                         <small>Cliente: ${data.client}</small>
-                        ${folderInfo}
-                        <small>Validade: ${timeUnitText}</small>
+                        <small>Duração: ${data.days} dias</small>
                         <small>Criado em: ${createdDate}</small>
+                        <small>Expira em: ${expiresDate}</small>
                         <small>Criado por: ${data.createdBy || 'Admin'}</small>
-                        <small>Status: <span class="${statusClass}">${status}</span></small>
-                        <small>Origem: ${data.source === 'folder' ? 'Pasta personalizada' : 'Global'}</small>
+                        <small>Status: ${data.status.toUpperCase()}</small>
                     </div>
                     <div class="key-actions">
-                        ${deleteButton}
+                        ${actionButtons}
                     </div>
                 `;
                 container.appendChild(item);
             });
         }
 
-        async function deleteKey(firebaseKey, originalKey) {
+        async function deleteKey(keyId, originalKey) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
                 return;
@@ -2175,57 +2439,191 @@
             }
 
             try {
-                const keyRef = ref(database, 'keys/' + firebaseKey);
+                const keyRef = ref(database, 'keys/' + keyId);
                 await remove(keyRef);
                 
-                alert('Key deletada com sucesso!');
-                loadAllKeys();
-                loadPublicKeys();
-                loadStats();
+                alert('✅ Key deletada com sucesso!');
                 
             } catch (error) {
                 console.error('Error deleting key:', error);
-                alert('Erro ao deletar key: ' + error.message);
+                alert('❌ Erro ao deletar key: ' + error.message);
             }
         }
 
-        async function deleteKeyFromFolder(folderId, firebaseKey, originalKey) {
+        async function pauseKey(keyId, keyValue) {
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
                 alert('Você precisa estar logado como administrador!');
                 return;
             }
             
-            if (!confirm(`Tem certeza que deseja deletar a key:\n${originalKey}\n\nEsta ação não pode ser desfeita!`)) {
+            if (!confirm(`Deseja pausar a key:\n${keyValue}\n\nA key ficará inativa até ser retomada.`)) {
                 return;
             }
 
             try {
-                const keyRef = ref(database, `folders/${folderId}/keys/${firebaseKey}`);
-                await remove(keyRef);
+                const keyRef = ref(database, 'keys/' + keyId);
+                await update(keyRef, {
+                    active: false,
+                    paused: true,
+                    pausedAt: Date.now(),
+                    pausedBy: auth.currentUser.email
+                });
                 
-                const folderRef = ref(database, 'folders/' + folderId);
-                const folderSnapshot = await get(folderRef);
-                
-                if (folderSnapshot.exists()) {
-                    const folderData = folderSnapshot.val();
-                    const currentCount = folderData.keyCount || 0;
-                    const newCount = Math.max(0, currentCount - 1);
-                    
-                    await update(folderRef, {
-                        keyCount: newCount,
-                        lastUpdated: Date.now()
-                    });
-                }
-                
-                alert('Key deletada da pasta com sucesso!');
-                loadAllKeys();
-                loadPublicKeys();
-                loadStats();
-                loadFolders();
+                alert('✅ Key pausada com sucesso!');
                 
             } catch (error) {
-                console.error('Error deleting key from folder:', error);
-                alert('Erro ao deletar key: ' + error.message);
+                console.error('Error pausing key:', error);
+                alert('❌ Erro ao pausar key: ' + error.message);
+            }
+        }
+
+        async function resumeKey(keyId, keyValue) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+            
+            if (!confirm(`Deseja retomar a key:\n${keyValue}\n\nA key voltará a ficar ativa.`)) {
+                return;
+            }
+
+            try {
+                const keyRef = ref(database, 'keys/' + keyId);
+                await update(keyRef, {
+                    active: true,
+                    paused: false,
+                    pausedAt: null,
+                    pausedBy: null
+                });
+                
+                alert('✅ Key retomada com sucesso!');
+                
+            } catch (error) {
+                console.error('Error resuming key:', error);
+                alert('❌ Erro ao retomar key: ' + error.message);
+            }
+        }
+
+        async function clearHWID(keyId, keyValue) {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+            
+            if (!confirm(`Deseja limpar o HWID da key:\n${keyValue}\n\nO HWID será removido e a key poderá ser usada em outro dispositivo.`)) {
+                return;
+            }
+
+            try {
+                const keyRef = ref(database, 'keys/' + keyId);
+                await update(keyRef, {
+                    hwid: null
+                });
+                
+                alert('✅ HWID limpo com sucesso! A key pode ser usada em outro dispositivo.');
+                
+            } catch (error) {
+                console.error('Error clearing HWID:', error);
+                alert('❌ Erro ao limpar HWID: ' + error.message);
+            }
+        }
+
+        async function pauseAllKeys() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+            
+            if (!confirm('Deseja pausar TODAS as keys ativas?\n\nEsta ação afetará todas as keys do sistema.')) {
+                return;
+            }
+
+            try {
+                const keysRef = ref(database, 'keys');
+                const snapshot = await get(keysRef);
+                
+                if (!snapshot.exists()) {
+                    alert('Não há keys para pausar!');
+                    return;
+                }
+
+                const updatePromises = [];
+                const now = Date.now();
+                
+                snapshot.forEach((child) => {
+                    const keyData = child.val();
+                    const status = getKeyStatus(keyData);
+                    
+                    // Pausar apenas keys ativas e não expiradas
+                    if (status === 'active' || status === 'unused') {
+                        updatePromises.push(update(ref(database, 'keys/' + child.key), {
+                            active: false,
+                            paused: true,
+                            pausedAt: now,
+                            pausedBy: auth.currentUser.email
+                        }));
+                    }
+                });
+                
+                if (updatePromises.length > 0) {
+                    await Promise.all(updatePromises);
+                    alert(`✅ ${updatePromises.length} key(s) pausada(s) com sucesso!`);
+                } else {
+                    alert('⚠️ Nenhuma key ativa encontrada para pausar.');
+                }
+                
+            } catch (error) {
+                console.error('Error pausing all keys:', error);
+                alert('❌ Erro ao pausar keys: ' + error.message);
+            }
+        }
+
+        async function resumeAllKeys() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                alert('Você precisa estar logado como administrador!');
+                return;
+            }
+            
+            if (!confirm('Deseja retomar TODAS as keys pausadas?\n\nEsta ação afetará todas as keys pausadas do sistema.')) {
+                return;
+            }
+
+            try {
+                const keysRef = ref(database, 'keys');
+                const snapshot = await get(keysRef);
+                
+                if (!snapshot.exists()) {
+                    alert('Não há keys para retomar!');
+                    return;
+                }
+
+                const updatePromises = [];
+                const now = Date.now();
+                
+                snapshot.forEach((child) => {
+                    const keyData = child.val();
+                    
+                    // Retomar apenas keys pausadas e não expiradas
+                    if (keyData.paused && keyData.active === false) {
+                        updatePromises.push(update(ref(database, 'keys/' + child.key), {
+                            active: true,
+                            paused: false,
+                            pausedAt: null,
+                            pausedBy: null
+                        }));
+                    }
+                });
+                
+                if (updatePromises.length > 0) {
+                    await Promise.all(updatePromises);
+                    alert(`✅ ${updatePromises.length} key(s) retomada(s) com sucesso!`);
+                } else {
+                    alert('⚠️ Nenhuma key pausada encontrada para retomar.');
+                }
+                
+            } catch (error) {
+                console.error('Error resuming all keys:', error);
+                alert('❌ Erro ao retomar keys: ' + error.message);
             }
         }
 
@@ -2235,81 +2633,44 @@
                 return;
             }
 
-            if (!confirm('Deseja remover todas as keys expiradas e inativas?\n\nEsta ação não pode ser desfeita.')) {
+            if (!confirm('Deseja remover todas as keys expiradas?\n\nEsta ação não pode ser desfeita.')) {
                 return;
             }
 
             try {
-                let deletedCount = 0;
+                const keysRef = ref(database, 'keys');
+                const snapshot = await get(keysRef);
+                
+                if (!snapshot.exists()) {
+                    alert('Não há keys para limpar!');
+                    return;
+                }
+
+                const deletePromises = [];
                 const now = Date.now();
-
-                const defaultKeysRef = ref(database, 'keys');
-                const defaultSnapshot = await get(defaultKeysRef);
+                let expiredCount = 0;
                 
-                if (defaultSnapshot.exists()) {
-                    const deletePromises = [];
-                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
-                        const isExpired = keyData.expiresAt && now > keyData.expiresAt;
-                        const isInactive = !keyData.active;
-                        
-                        if (isExpired || isInactive) {
-                            deletePromises.push(remove(ref(database, 'keys/' + keyId)));
-                            deletedCount++;
-                        }
-                    }
+                snapshot.forEach((child) => {
+                    const keyData = child.val();
+                    const status = getKeyStatus(keyData);
                     
-                    if (deletePromises.length > 0) {
-                        await Promise.all(deletePromises);
+                    // Remover apenas keys expiradas
+                    if (status === 'expired') {
+                        deletePromises.push(remove(ref(database, 'keys/' + child.key)));
+                        expiredCount++;
                     }
-                }
-
-                const foldersRef = ref(database, 'folders');
-                const foldersSnapshot = await get(foldersRef);
+                });
                 
-                if (foldersSnapshot.exists()) {
-                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
-                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
-                        const folderKeysSnapshot = await get(folderKeysRef);
-                        
-                        if (folderKeysSnapshot.exists()) {
-                            const folderDeletePromises = [];
-                            let folderDeletedCount = 0;
-                            
-                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
-                                const isExpired = keyData.expiresAt && now > keyData.expiresAt;
-                                const isInactive = !keyData.active;
-                                
-                                if (isExpired || isInactive) {
-                                    folderDeletePromises.push(remove(ref(database, `folders/${folderId}/keys/${keyId}`)));
-                                    folderDeletedCount++;
-                                    deletedCount++;
-                                }
-                            }
-                            
-                            if (folderDeletePromises.length > 0) {
-                                await Promise.all(folderDeletePromises);
-                                
-                                const currentCount = folderData.keyCount || 0;
-                                const newCount = Math.max(0, currentCount - folderDeletedCount);
-                                
-                                await update(ref(database, 'folders/' + folderId), {
-                                    keyCount: newCount,
-                                    lastUpdated: Date.now()
-                                });
-                            }
-                        }
-                    }
+                if (deletePromises.length > 0) {
+                    await Promise.all(deletePromises);
+                    alert(`✅ ${expiredCount} key(s) expirada(s) removida(s) com sucesso!`);
+                } else {
+                    alert('⚠️ Nenhuma key expirada encontrada.');
                 }
-
-                alert(`${deletedCount} key(s) removida(s) com sucesso!`);
                 
-                loadAllKeys();
-                loadPublicKeys();
-                loadStats();
-                loadFolders();
             } catch (error) {
                 console.error('Error cleaning expired keys:', error);
-                alert('Erro ao limpar keys: ' + error.message);
+                alert('❌ Erro ao limpar keys: ' + error.message);
             }
         }
 
@@ -2350,8 +2711,6 @@
             }
 
             try {
-                console.log('Procurando carteira para:', userEmail);
-                
                 const walletsRef = ref(database, 'wallets');
                 const snapshot = await get(walletsRef);
                 
@@ -2364,7 +2723,6 @@
                         if (walletData.userEmail === userEmail) {
                             walletFound = walletData;
                             walletId = child.key;
-                            console.log('Carteira encontrada:', walletId);
                         }
                     });
                 }
@@ -2380,7 +2738,6 @@
                     };
                     
                     await set(ref(database, 'wallets/' + walletId), walletFound);
-                    console.log('Nova carteira criada:', walletId);
                 }
 
                 const oldBalance = walletFound.balance || 0;
@@ -2405,22 +2762,7 @@
                     lastUpdated: Date.now()
                 });
 
-                const transactionId = 'trans_' + Date.now();
-                const transactionData = {
-                    walletId: walletId,
-                    userEmail: userEmail,
-                    amount: amount,
-                    type: 'credit',
-                    message: message || 'Saldo enviado pelo administrador',
-                    adminEmail: auth.currentUser.email,
-                    timestamp: Date.now(),
-                    previousBalance: oldBalance,
-                    newBalance: newBalance
-                };
-
-                await set(ref(database, 'transactions/' + transactionId), transactionData);
-
-                alert(`Saldo enviado com sucesso!\n\nUsuário: ${userEmail}\nValor: R$ ${amount.toFixed(2)}\nSaldo Anterior: R$ ${oldBalance.toFixed(2)}\nNovo Saldo: R$ ${newBalance.toFixed(2)}`);
+                alert(`✅ Saldo enviado com sucesso!\n\nUsuário: ${userEmail}\nValor: R$ ${amount.toFixed(2)}\nNovo Saldo: R$ ${newBalance.toFixed(2)}`);
                 
                 closeSendBalanceModal();
                 loadStats();
@@ -2640,18 +2982,7 @@
                     });
                 }
 
-                const logId = 'log_' + Date.now();
-                await set(ref(database, 'logs/' + logId), {
-                    action: 'update_user',
-                    userId: currentManagingUserId,
-                    userEmail: currentManagingUserEmail,
-                    adminEmail: auth.currentUser.email,
-                    newBalance: newBalance,
-                    newStatus: newStatus,
-                    timestamp: Date.now()
-                });
-
-                alert('Usuário atualizado com sucesso!');
+                alert('✅ Usuário atualizado com sucesso!');
                 closeManageUserModal();
                 loadAllUsers();
                 loadStats();
@@ -2689,23 +3020,14 @@
                     });
                 }
 
-                const logId = 'log_' + Date.now();
-                await set(ref(database, 'logs/' + logId), {
-                    action: 'delete_user',
-                    userId: currentManagingUserId,
-                    userEmail: currentManagingUserEmail,
-                    adminEmail: auth.currentUser.email,
-                    timestamp: Date.now()
-                });
-
-                alert('Conta excluída com sucesso!');
+                alert('✅ Conta excluída com sucesso!');
                 closeManageUserModal();
                 loadAllUsers();
                 loadStats();
 
             } catch (error) {
                 console.error('Error deleting user:', error);
-                alert('Erro ao excluir conta: ' + error.message);
+                alert('❌ Erro ao excluir conta: ' + error.message);
             }
         }
 
@@ -2715,69 +3037,52 @@
             }
 
             try {
+                const keysRef = ref(database, 'keys');
+                const snapshot = await get(keysRef);
+                
                 let totalKeys = 0;
                 let activeKeys = 0;
-                const now = Date.now();
-
-                const defaultKeysRef = ref(database, 'keys');
-                const defaultSnapshot = await get(defaultKeysRef);
+                let pausedKeys = 0;
+                let expiredKeys = 0;
+                let unusedKeys = 0;
+                let hwidKeys = 0;
                 
-                if (defaultSnapshot.exists()) {
-                    for (const [keyId, keyData] of Object.entries(defaultSnapshot.val())) {
+                if (snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        const keyData = child.val();
                         totalKeys++;
-                        if (keyData.active && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                            activeKeys++;
-                        }
-                    }
-                }
-
-                const foldersRef = ref(database, 'folders');
-                const foldersSnapshot = await get(foldersRef);
-                
-                if (foldersSnapshot.exists()) {
-                    for (const [folderId, folderData] of Object.entries(foldersSnapshot.val())) {
-                        const folderKeysRef = ref(database, `folders/${folderId}/keys`);
-                        const folderKeysSnapshot = await get(folderKeysRef);
                         
-                        if (folderKeysSnapshot.exists()) {
-                            for (const [keyId, keyData] of Object.entries(folderKeysSnapshot.val())) {
-                                totalKeys++;
-                                if (keyData.active && (!keyData.expiresAt || keyData.expiresAt > now)) {
-                                    activeKeys++;
-                                }
-                            }
+                        const status = getKeyStatus(keyData);
+                        
+                        if (status === 'active') {
+                            activeKeys++;
+                        } else if (status === 'paused') {
+                            pausedKeys++;
+                        } else if (status === 'expired') {
+                            expiredKeys++;
+                        } else if (status === 'unused') {
+                            unusedKeys++;
                         }
-                    }
-                }
-
-                const usersRef = ref(database, 'users');
-                const usersSnapshot = await get(usersRef);
-                
-                let totalUsers = 0;
-                if (usersSnapshot.exists()) {
-                    totalUsers = Object.keys(usersSnapshot.val()).length;
-                }
-
-                const walletsRef = ref(database, 'wallets');
-                const walletsSnapshot = await get(walletsRef);
-                
-                let totalBalance = 0;
-                if (walletsSnapshot.exists()) {
-                    walletsSnapshot.forEach((child) => {
-                        const wallet = child.val();
-                        totalBalance += wallet.balance || 0;
+                        
+                        if (keyData.hwid) {
+                            hwidKeys++;
+                        }
                     });
                 }
 
                 const totalKeysEl = document.getElementById('totalKeys');
                 const activeKeysEl = document.getElementById('activeKeys');
-                const totalUsersEl = document.getElementById('totalUsers');
-                const totalBalanceEl = document.getElementById('totalBalance');
+                const pausedKeysEl = document.getElementById('pausedKeys');
+                const expiredKeysEl = document.getElementById('expiredKeys');
+                const unusedKeysEl = document.getElementById('unusedKeys');
+                const hwidKeysEl = document.getElementById('hwidKeys');
                 
                 if (totalKeysEl) totalKeysEl.textContent = totalKeys;
                 if (activeKeysEl) activeKeysEl.textContent = activeKeys;
-                if (totalUsersEl) totalUsersEl.textContent = totalUsers;
-                if (totalBalanceEl) totalBalanceEl.textContent = `R$ ${totalBalance.toFixed(2)}`;
+                if (pausedKeysEl) pausedKeysEl.textContent = pausedKeys;
+                if (expiredKeysEl) expiredKeysEl.textContent = expiredKeys;
+                if (unusedKeysEl) unusedKeysEl.textContent = unusedKeys;
+                if (hwidKeysEl) hwidKeysEl.textContent = hwidKeys;
 
             } catch (error) {
                 console.error('Error loading stats:', error);
@@ -2852,11 +3157,63 @@
                 linkElement.setAttribute('download', exportFileDefaultName);
                 linkElement.click();
 
-                alert('Dados exportados com sucesso!');
+                alert('✅ Dados exportados com sucesso!');
 
             } catch (error) {
                 console.error('Error exporting data:', error);
-                alert('Erro ao exportar dados: ' + error.message);
+                alert('❌ Erro ao exportar dados: ' + error.message);
+            }
+        }
+
+        async function exportCSV() {
+            if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
+                return;
+            }
+
+            try {
+                const keysRef = ref(database, 'keys');
+                const snapshot = await get(keysRef);
+                
+                if (!snapshot.exists()) {
+                    alert('Não há keys para exportar!');
+                    return;
+                }
+
+                let csvContent = "Key,Cliente,Dias,HWID,Status,Ativa,Pausada,Criado em,Expira em,Criado por\n";
+                
+                snapshot.forEach((child) => {
+                    const keyData = child.val();
+                    const status = getKeyStatus(keyData);
+                    
+                    const row = [
+                        `"${keyData.key}"`,
+                        `"${keyData.client || ''}"`,
+                        keyData.days || '0',
+                        `"${keyData.hwid || ''}"`,
+                        `"${status}"`,
+                        keyData.active ? 'Sim' : 'Não',
+                        keyData.paused ? 'Sim' : 'Não',
+                        `"${new Date(keyData.createdAt).toLocaleDateString('pt-BR')}"`,
+                        keyData.expiresAt ? `"${new Date(keyData.expiresAt).toLocaleDateString('pt-BR')}"` : '""',
+                        `"${keyData.createdBy || ''}"`
+                    ].join(',');
+                    
+                    csvContent += row + '\n';
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `liphyr-keys-${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+                URL.revokeObjectURL(url);
+                
+                alert(`✅ CSV exportado com ${snapshot.size} keys!`);
+                
+            } catch (error) {
+                console.error('Error exporting CSV:', error);
+                alert('❌ Erro ao exportar CSV: ' + error.message);
             }
         }
 
@@ -2904,7 +3261,7 @@
 
                 await set(ref(database, 'folders/' + folderId), folderData);
                 
-                alert(`Pasta criada com sucesso!\n\nNome: ${folderName}\n\nAgora quando você gerar uma key, pode selecionar esta pasta no dropdown.`);
+                alert(`✅ Pasta criada com sucesso!\n\nNome: ${folderName}`);
                 
                 closeCreateFolderModal();
                 loadFolders();
@@ -2959,7 +3316,7 @@
 
                 await remove(foldersRef);
                 
-                alert(`Todas as pastas foram removidas com sucesso!\n\n${folderCount} pastas e ${keyCount} keys foram deletadas.`);
+                alert(`✅ Todas as pastas foram removidas com sucesso!\n\n${folderCount} pastas e ${keyCount} keys foram deletadas.`);
                 
                 closeCleanFoldersModal();
                 loadFolders();
@@ -3045,9 +3402,7 @@
             }
         }
 
-        // CORREÇÃO: Função openNewShopPlanModal corrigida
         function openNewShopPlanModal() {
-            console.log('Abrindo modal de novo plano...');
             currentShopPlanId = null;
             shopFeatures = [];
             
@@ -3074,10 +3429,6 @@
             const modal = document.getElementById('manageShopPlanModal');
             if (modal) {
                 modal.classList.add('active');
-                console.log('Modal aberto com sucesso!');
-            } else {
-                console.error('Modal não encontrado!');
-                alert('Erro: Modal não encontrado. Recarregue a página.');
             }
         }
 
@@ -3226,7 +3577,7 @@
 
                 await set(ref(database, 'shopPlans/' + planId), planData);
 
-                alert(`Plano ${currentShopPlanId ? 'atualizado' : 'criado'} com sucesso!\n\nNome: ${planName}\nPreço: R$ ${planPrice.toFixed(2)}\nDuração da Key: ${keyDays} dias\nPasta: ${planData.folderName || 'Global'}`);
+                alert(`✅ Plano ${currentShopPlanId ? 'atualizado' : 'criado'} com sucesso!\n\nNome: ${planName}`);
                 
                 closeManageShopPlanModal();
                 loadShopPlans();
@@ -3240,19 +3591,14 @@
             }
         }
 
-        // CORREÇÃO: Função loadShopPlans corrigida
         async function loadShopPlans() {
-            console.log('Carregando planos do shop...');
-            
             if (!auth.currentUser || !isAdmin(auth.currentUser.email)) {
-                console.log('Usuário não é admin');
                 return;
             }
 
             try {
                 const container = document.getElementById('shopPlansList');
                 if (!container) {
-                    console.error('Container shopPlansList não encontrado!');
                     return;
                 }
 
@@ -3260,8 +3606,6 @@
 
                 const shopPlansRef = ref(database, 'shopPlans');
                 const snapshot = await get(shopPlansRef);
-                
-                console.log('Snapshot recebido:', snapshot.exists() ? 'tem dados' : 'vazio');
 
                 if (!snapshot.exists()) {
                     container.innerHTML = '<p style="text-align: center; color: #8a2be2; padding: 40px;">Nenhum plano cadastrado no shop.</p>';
@@ -3277,14 +3621,10 @@
                     });
                 });
 
-                console.log(`${plans.length} planos encontrados`);
-
                 plans.sort((a, b) => b.createdAt - a.createdAt);
 
                 // Verificar se há algum plano marcado como popular
                 const popularPlans = plans.filter(plan => plan.isPopular);
-                console.log(`${popularPlans.length} planos populares encontrados`);
-
                 if (popularPlans.length > 1) {
                     let firstPopular = true;
                     for (const plan of plans) {
@@ -3293,7 +3633,6 @@
                                 firstPopular = false;
                             } else {
                                 plan.isPopular = false;
-                                // Atualizar no Firebase
                                 update(ref(database, 'shopPlans/' + plan.id), { isPopular: false });
                             }
                         }
@@ -3304,7 +3643,6 @@
                 container.innerHTML = '<div class="shop-plans-manager">';
                 
                 plans.forEach((plan) => {
-                    console.log('Criando card para plano:', plan.name);
                     const planCard = document.createElement('div');
                     planCard.className = `shop-plan-card ${plan.isPopular ? 'popular' : ''}`;
                     
@@ -3347,7 +3685,6 @@
                 });
                 
                 container.innerHTML += '</div>';
-                console.log('Planos carregados com sucesso!');
                 
             } catch (error) {
                 console.error('Error loading shop plans:', error);
@@ -3415,11 +3752,11 @@
 
             try {
                 await remove(ref(database, 'shopPlans/' + planId));
-                alert('Plano removido com sucesso!');
+                alert('✅ Plano removido com sucesso!');
                 loadShopPlans();
             } catch (error) {
                 console.error('Error deleting shop plan:', error);
-                alert('Erro ao remover plano: ' + error.message);
+                alert('❌ Erro ao remover plano: ' + error.message);
             }
         }
 
@@ -3456,20 +3793,20 @@
                     updatedAt: Date.now()
                 });
                 
-                alert(`Plano ${makePopular ? 'marcado como POPULAR' : 'removido do status POPULAR'}!`);
+                alert(`✅ Plano ${makePopular ? 'marcado como POPULAR' : 'removido do status POPULAR'}!`);
                 loadShopPlans();
                 
             } catch (error) {
                 console.error('Error toggling shop plan popular status:', error);
-                alert('Erro ao atualizar plano: ' + error.message);
+                alert('❌ Erro ao atualizar plano: ' + error.message);
             }
         }
 
         function initializeSystem() {
-            console.log('Inicializando sistema...');
+            console.log('Inicializando sistema LIPHYR HUB ADMIN...');
             createParticles();
             loadPublicKeys();
-            console.log('Sistema LIPHYR HUB ADMIN inicializado com sucesso!');
+            console.log('Sistema inicializado com sucesso!');
         }
     </script>
 </body>
