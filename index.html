@@ -1855,7 +1855,7 @@
                 }
             }
 
-            // ESTRUTURA CORRETA DO FIREBASE
+            // 🔴 CORREÇÃO: ADICIONAR O CAMPO 'hwid' com valor null
             const keyData = {
                 key: newKeyValue,
                 client: clientName,
@@ -1863,7 +1863,7 @@
                 createdAt: now,
                 expiresAt: expiresAt,
                 active: true,
-                hwid: null,
+                hwid: null, // 🔴 AGORA O CAMPO 'hwid' É CRIADO
                 paused: false,
                 pausedAt: null,
                 pausedBy: null,
